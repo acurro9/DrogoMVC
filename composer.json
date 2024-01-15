@@ -1,0 +1,19 @@
+{
+  "name": "2daw/drogo",
+  "description": "Empresa de envios anonimos a lockers con estructura MVC y objetos",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "2daw\\Drogo\\": "src/",
+      "MVC\\": "./",
+      "Controllers\\": "./controllers",
+      "Model\\": "./models"
+    }
+  },
+  "authors": [
+    {
+      "name": "Aaron, Cristina y Eliazar"
+    }
+  ],
+  "require": {}
+}

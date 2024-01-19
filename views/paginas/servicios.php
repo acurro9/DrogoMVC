@@ -1,6 +1,6 @@
 
 <!--Se importan los css necesarios-->
-<link rel="stylesheet" href="./css/servicios.css">
+<!-- <link rel="stylesheet" href="./css/servicios.css"> -->
 
 <h1 class="serv_titulo" style="color: white; margin-bottom: 100px;">Servicios ofrecidos</h1>
 <section class="contenedor">

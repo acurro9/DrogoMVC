@@ -1,0 +1,46 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:100,300,400);
+
+:root {
+  --bg-green: #06c36f;
+  --brand: #0b5021;
+  --msg: #17893e;
+  --dark-gray: hsl(0, 0%, 63%);
+  --black: hsl(0, 0%, 0%);
+  --white: hsl(0, 0%, 100%);
+  --very-dark-gray: hsl(0, 0%, 27%);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-image: url(../img/images/cartera.jpg);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position-y: -380px;
+  font-family: "Lato", sans-serif;
+}
+
+main {
+  height: 600px;
+}
+
+h1 {
+  margin-top: 40px;
+  text-align: center;
+  color: #fff;
+}
+
+form {
+  margin: 3rem auto;
+  background-color: rgba(255, 255, 255, 0.13);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+  padding: 50px 35px;
+  display: flex;
+}

@@ -16,7 +16,7 @@
                 <p class="main__paragraph">
                     Drogo es la solución ideal para proteger tu privacidad y confidencialidad. Ofrecemos un método seguro y discreto para realizar envíos sin revelar tu identidad ni la de tus receptores; nuestro servicio garantiza la llegada de los envíos manteniendo el contenido a salvo y en secreto. Gracias a nuestra amplia red de distribución y protocolos de seguridad, puedes confiar en que tus envíos llegarán a su destino de manera puntual y confidencial. Ya se trata del envío de documentos importantes, regalos sorpresa o cualquier otro artículo, Drop and Go te brinda la tranquilidad de mantener tus datos personales y la privacidad de tus destinatarios protegidos. Nuestro compromiso es garantizar que tu experiencia de envío sea segura y sin preocupaciones.
                 </p>
-                <a href="servicios.php" class="main__cta">Saber más <img src="./assets/images/icon-arrow.svg" alt="arrow icon" class="main__arrow"></a>
+                <a href="/servicios" class="main__cta">Saber más <img src="../build/img/images/icon-arrow.svg" alt="arrow icon" class="main__arrow"></a>
             </div>
         </section>
         

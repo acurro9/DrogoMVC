@@ -38,25 +38,25 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Drogo</title>
-        <link rel="stylesheet" href="/css/styles.css">
+        <link rel="stylesheet" href="../build/css/styles.css">
     </head>
     <body>
         <div id="header">
             <div class="logo">
                 <a href="index.php">
-                    <img src="/assets/logoimg/minuscula.png" alt="drogo logo" class="brand__img">
+                    <img src="../build/img/logoimg/minuscula.png" alt="drogo logo" class="brand__img">
                 </a>
-                    <img src="/assets/logoimg/paquete.png" class="brand__img hand" alt="drogo icono" id="hand">
+                    <img src="../build/img/logoimg/paquete.png" class="brand__img hand" alt="drogo icono" id="hand">
             </div>  
             <section class="nave">
                 <!-- Menú -->
                 <nav id="navigation">
                     <ul>
                         <li>
-                        <a href="/index.php" class="link_nav">Home</a>
-                        <a href="/servicios.php" class="link_nav">Servicios</a>
-                        <a href="/equipo.php" class="link_nav">Equipo</a>
-                        <a href="/preguntas-frecuentes.php" class="link_nav">Preguntas Frecuentes</a>
+                        <a href="/" class="link_nav">Home</a>
+                        <a href="/servicios" class="link_nav">Servicios</a>
+                        <a href="/nosotros" class="link_nav">Equipo</a>
+                        <a href="/preguntasFrecuentes" class="link_nav">Preguntas Frecuentes</a>
                         <a href="/form-contacto.php" class="link_nav">Contacto</a>
                         </li>
                     </ul>
@@ -69,7 +69,7 @@
                     if ($_SESSION['tipo']=='Administrador'){?>
                     <!--Opciones del admin-->
                     <div class="desplegable">
-                        <button class="boton" id="btn"><img src="/assets/images/imagenPerfil.jpg" alt=""></button>
+                        <button class="boton" id="btn"><img src="../build/images/imagenPerfil.jpg" alt=""></button>
                         <section id="links" class="oculto">
                             <div class="links">
                                 <a href="/areaPersonalAdmin.php">Area Admin</a>
@@ -83,7 +83,7 @@
                     <?php } else{ ?>
                     <!--Opciones del usuario-->
                     <div class="desplegable">
-                        <button class="boton" id="btn"><img src="/assets/images/imagenPerfil.jpg" alt=""></button>
+                        <button class="boton" id="btn"><img src="../build/img/images/imagenPerfil.jpg" alt=""></button>
                         <section id="links" class="oculto">
                             <div class="links">
                                 <a href="/areaPersonal.php">Ir a mi área personal</a>
@@ -116,21 +116,21 @@
                 <div class="footer-cta">
                     <div class="row">
                             <div class="single-cta">
-                                <img src="/assets/icons/location.svg" alt="" class="cta-icon">
+                                <img src="../build/img/icons/location.svg" alt="" class="cta-icon">
                                 <div class="cta-text">
                                     <h4>Encuéntranos</h4>
                                     <span>C. Ana Benítez, 15, 35014 Las Palmas de Gran Canaria, Las Palmas</span>
                                 </div>
                             </div>
                             <div class="single-cta">
-                                <img src="/assets/icons/phone.svg" alt="" class="cta-icon">
+                                <img src="../build/img/icons/phone.svg" alt="" class="cta-icon">
                                 <div class="cta-text">
                                     <h4>Llámanos</h4>
                                     <span>928 09 14 32</span>
                                 </div>
                             </div>
                             <div class="single-cta">
-                                <img src="/assets/icons/mail.svg" alt="" class="cta-icon">
+                                <img src="../build/img/icons/mail.svg" alt="" class="cta-icon">
                                 <div class="cta-text">
                                     <h4>Escríbenos</h4>
                                     <span>drogo@info.com</span>
@@ -142,16 +142,16 @@
                     <div class=" row footer-content-row">
                             <div class="footer-widget">
                                 <div class="footer-logo">
-                                    <a href="index.php"><img src="/assets/logoimg/banner-msg.png" class="" alt="logo"></a>
+                                    <a href="/index"><img src="../build/img/logoimg/banner-msg.png" class="" alt="logo"></a>
                                 </div>
                                 <div class="footer-text">
                                     <p>Servicio de envíos anónimos: seguro y confidencial. Por el respeto a la privacidad y al libre intercambio. </p>
                                 </div>
                                 <div class="footer-social-icon">
                                     <span>Síguenos</span>
-                                    <a href="#"><img src="./assets/icons/redes/fb.svg" alt=""></a>
-                                    <a href="#"><img src="./assets/icons/redes/ig.svg" alt=""></a>
-                                    <a href="#"><img src="./assets/icons/redes/x.svg" alt=""></a>
+                                    <a href="#"><img src="../build/img/icons/redes/fb.svg" alt=""></a>
+                                    <a href="#"><img src="../build/img/icons/redes/ig.svg" alt=""></a>
+                                    <a href="#"><img src="../build/img/icons/redes/x.svg" alt=""></a>
                                 </div>
                         </div>
                         <div class="subscription">
@@ -177,7 +177,7 @@
             </div>
         </footer>
     <!-- Se incluye los archivos de javascript -->
-    <script src="/js/header.js"></script>
-    <script src="/js/index.js"></script>
+    <script src="../build/js/header.js"></script>
+    <script src="../build/js/index.js"></script>
     </body>
 </html>      

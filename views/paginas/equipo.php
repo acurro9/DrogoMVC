@@ -1,6 +1,6 @@
 
     <!--Se importan los css necesarios-->
-    <link rel="stylesheet" href="./css/equipo.css">
+    <link rel="stylesheet" href="../build/css/equipo.css">
     <h1 class="team_titulo">Nuestro equipo</h1>
         
     <section class="contenedor">
@@ -47,7 +47,7 @@
 
       <section class="banner_bottom">
         <div class="icon_drogo_div">
-            <img src="./assets/logoimg/icon_green.png" alt="icono drogo" class="icon_drogo">
+            <img src="../build/img/logoimg/icon_green.png" alt="icono drogo" class="icon_drogo">
         </div>
         <!-- Botón para ir al registro -->
         <a href="registro.php" class="registro">Registro</a>

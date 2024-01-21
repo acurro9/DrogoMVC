@@ -57,7 +57,7 @@
                         <a href="/servicios" class="link_nav">Servicios</a>
                         <a href="/nosotros" class="link_nav">Equipo</a>
                         <a href="/preguntasFrecuentes" class="link_nav">Preguntas Frecuentes</a>
-                        <a href="/form-contacto.php" class="link_nav">Contacto</a>
+                        <a href="/contacto" class="link_nav">Contacto</a>
                         </li>
                     </ul>
                 </nav>
@@ -93,15 +93,15 @@
                                     <a href="/Pedidos/pedidos.php">Ver Pedidos</a>
                                 <?php }?>
                                 <a href="/borrar-cuenta.php" id="borrar">Borrar Cuenta</a>
-                                <a href="/cerrar-sesion.php">Cerrar Sesión</a>
+                                <a href="/logout">Cerrar Sesión</a>
                             </div>
                         </section>
                     </div>
                     <?php } } else{ ?>
                     <!--En caso de que no esté logeado se muestran dos link, para iniciar sesión y para registrarse-->
                     <div class="botones_nav" id="btn_nav">
-                        <a href="/login.php" class="btn_nav login_nav">Login</a>
-                        <a href="/registro.php" class="btn_nav registro_nav">Registro</a>
+                        <a href="/login" class="btn_nav login_nav">Login</a>
+                        <a href="/logout" class="btn_nav registro_nav">Registro</a>
                     </div>
                     <?php  }?>
                 </nav>
@@ -162,10 +162,7 @@
                             <!-- Formulario para suscribirse al newsletter -->
                             <div class="subscribe-form">
                                 <form method="POST" action="<?php $_SERVER[ 'PHP_SELF' ]; ?>" enctype="multipart/form-data">
-                                    <div class="news">
-                                        <input type="text" placeholder="Dirección de Email" class="text" name="email" value="">
-                                        <input type="submit" class="botonSus" value="Suscribirme" name="Suscribirse">
-                                    </div>
+                                <?php include __DIR__ . '/../includes/templates/forms/formulario_newsletter.php'; ?>
                                 </form>
                             </div>
                         </div>

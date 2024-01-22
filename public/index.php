@@ -18,6 +18,7 @@ $router->get('/', [PaginasController::class, 'index']);
 $router->get('/nosotros', [PaginasController::class, 'equipo']);
 $router->get('/preguntasFrecuentes', [PaginasController::class, 'preguntasFrecuentes']);
 $router->get('/servicios', [PaginasController::class, 'servicios']);
+$router->get('/contacto', [PaginasController::class, 'contacto']);
 
 
 //LoginController
@@ -35,16 +36,16 @@ $router->get('/areaPersonal', [LoginController::class, 'areaPersonal']);
 $router->get('/areaPersonalAdmin', [LoginController::class, 'areaPersonalAdmin']);
 
 
-$router->get('/usuario', [PaginasController::class, 'usuario']);
-$router->get('/actualizarUsuario', [PaginasController::class, 'actualizarUsuario']);
+// $router->get('/usuario', [PaginasController::class, 'usuario']);
+// $router->get('/actualizarUsuario', [PaginasController::class, 'actualizarUsuario']);
 
 
 // $router->post('/login', [PaginasController::class, 'login']);
 $router->post('/loginAdmin', [LoginController::class, 'loginAdmin']);
 
 //Sayunara, b****
-$router->post('/cerrarSesion', [LoginController::class, 'cerrarSesion']);
-$router->post('/borrarCuenta', [UsuariosController::class, 'borrarCuenta']);
+$router->post('/logout', [LoginController::class, 'logout']);
+$router->get('/borrarCuenta', [UsuariosController::class, 'borrarCuenta']);
 
 //Datos que cambiamos
 
@@ -54,9 +55,6 @@ $router->post('/modDatos', [LoginController::class, 'modDatos']);
 $router->get('/datos', [LoginController::class, 'datos']);
 $router->post('/datos', [LoginController::class, 'datos']);
 
-
-$router->get('/datos', [LoginController::class, 'datos']);
-$router->post('/datos', [LoginController::class, 'datos']);
 
 //Zona Registro
 
@@ -76,7 +74,6 @@ $router->post('/bloquearUsuario', [UsuariosController::class, 'bloquearUsuario']
 
 $router->get('/actualizarUsuario', [UsuariosController::class, 'actualizarUsuario']);
 $router->post('/actualizarUsuario', [UsuariosController::class, 'actualizarUsuario']);
-
 
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
 $router->comprobarRutas();

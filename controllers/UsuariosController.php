@@ -29,7 +29,8 @@
             'usuarios' => $usuarios,
             'totalPaginas' => $totalPaginas,
             'paginaActual' => $pagina,
-            'ppp' => $ppp
+            'ppp' => $ppp,
+            'totalUsuarios' => $totalUsuarios
            
         ]);
     }

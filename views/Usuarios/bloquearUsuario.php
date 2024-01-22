@@ -174,48 +174,15 @@
     // }
 ?>
 <!--Se importan los css necesarios-->
-<link rel="stylesheet" href="../../build/css/styles.css">
-<link rel="stylesheet" href="../../build/css/bloqUsuario.css">
+<link rel="stylesheet" href="../build/css/styles.css">
+<link rel="stylesheet" href="../build/css/bloqUsuario.css">
 
 
 <div class="bloq">
     <!-- Formulario para la búsqueda del usuario -->
     <form action="bloquearUsuario" method="POST" class="formu">
-        <fieldset>
-            <h1>Buscar Usuario: </h1>
-    
-            <label for="name">Nombre de usuario: </label>
-            <input type="text" name="name" placeholder="Username">
-    
-            <label for="email">Correo electrónico: </label>
-            <input type="email" name="correo" placeholder="Email">
-    
-            <label for="id">Hash de usuario: </label>
-            <input type="text" name="id" placeholder="ID">
-    
-            <input type="submit" name="buscar" value="Buscar">
-        </fieldset>
+        <?php include __DIR__ . '/../../includes/templates/forms/formulario_bloqUsu.php'; ?>        
     </form>
-
-    <!-- Formulario para bloquear o desbloquear al usuario -->
-    <!-- Asumiendo que $usuario es el usuario encontrado y $accion es el estado del bloqueo -->
-    <?php if (isset($usuario)): ?>
-        <form action="bloquearUsuario" method="POST" class="formu">
-            <fieldset>
-                <h1><?= $accion == 1 ? 'Bloquear' : 'Desbloquear'; ?> Usuario: </h1>
-                <input type="hidden" name="action" value="<?= $accion; ?>">
-                <input type="hidden" name="idBloq" value="<?= $usuario->id; ?>">
-
-                <label for="nameBloq">Nombre de usuario: </label>
-                <input type="text" name="nameBloq" value="<?= $usuario->username; ?>" readonly>
-        
-                <label for="correoBloq">Correo electrónico: </label>
-                <input type="email" name="correoBloq" value="<?= $usuario->email; ?>" readonly>
-        
-                <input type="submit" name="bloquear" value="<?= $accion == 1 ? 'Bloquear' : 'Desbloquear'; ?>">
-            </fieldset>
-        </form>
-    <?php endif; ?>
 </div>
 
 <div class="centro margen">

@@ -38,12 +38,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Drogo</title>
+        <link rel="shortcut icon" href="../build/img/logos/drogobanner - copia.png">
         <link rel="stylesheet" href="../build/css/styles.css">
     </head>
     <body>
         <div id="header">
             <div class="logo">
-                <a href="index.php">
+                <a href="/">
                     <img src="../build/img/logoimg/minuscula.png" alt="drogo logo" class="brand__img">
                 </a>
                     <img src="../build/img/logoimg/paquete.png" class="brand__img hand" alt="drogo icono" id="hand">
@@ -66,33 +67,33 @@
             <nav class="desplegable">
                 <?php
                     if($auth){ 
-                    if ($_SESSION['tipo']=='Administrador'){?>
+                    if ($_SESSION['tipo']=='Administrador' && $_SESSION['log']==2){?>
                     <!--Opciones del admin-->
                     <div class="desplegable">
-                        <button class="boton" id="btn"><img src="../build/images/imagenPerfil.jpg" alt=""></button>
+                        <button class="boton" id="btn"><img src="../build/img/images/imagenPerfil.jpg" alt=""></button>
                         <section id="links" class="oculto">
                             <div class="links">
-                                <a href="/areaPersonalAdmin.php">Area Admin</a>
+                                <a href="/areaPersonalAdmin">Area Admin</a>
                                 <a href="/Admin/contacto.php">Contacto</a>
                                 <a href="/Admin/newsletter.php">Newsletter</a>
-                                <a href="/bloquearUsuario.php">Bloquear Usuario</a>
-                                <a href="/cerrar-sesion.php">Cerrar Sesión</a>
+                                <!-- <a href="/bloquearUsuario">Bloquear Usuario</a> -->
+                                <a href="/logout">Cerrar Sesión</a>
                             </div>
                         </section>
                     </div>
-                    <?php } else{ ?>
+                    <?php } else if($_SESSION['tipo']!=='Administrador'){ ?>
                     <!--Opciones del usuario-->
                     <div class="desplegable">
                         <button class="boton" id="btn"><img src="../build/img/images/imagenPerfil.jpg" alt=""></button>
                         <section id="links" class="oculto">
                             <div class="links">
-                                <a href="/areaPersonal.php">Ir a mi área personal</a>
-                                <a href="/modificarDatos.php">Modificar Datos</a>
+                                <a href="/areaPersonal">Ir a mi área personal</a>
+                                <a href="/modDatos">Modificar Datos</a>
                                 <!--Si es distribuidor no tiene pedidos por lo que no se muestran estas opción-->
                                 <?php if($_SESSION['tipo']!='Distribuidor'){ ?>
                                     <a href="/Pedidos/pedidos.php">Ver Pedidos</a>
                                 <?php }?>
-                                <a href="/borrar-cuenta.php" id="borrar">Borrar Cuenta</a>
+                                <a href="/borrarCuenta" id="borrar">Borrar Cuenta</a>
                                 <a href="/logout">Cerrar Sesión</a>
                             </div>
                         </section>

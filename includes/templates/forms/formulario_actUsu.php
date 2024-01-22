@@ -1,29 +1,29 @@
 <fieldset>
-        <legend>Actualizar Usuario: </legend>
+        <legend>Actualizar Usuario:</legend>
 
-        <label for="id">ID: </label>
-        <input type="text" name="id" value="<?php echo $ref; ?>">
+        <label for="id">ID:</label>
+        <input type="text" name="id" value="<?= htmlspecialchars($usuario->id); ?>" readonly>
+      
+        <label for="nombre">Nombre de usuario:</label>
+        <input type="text" name="username" value="<?= htmlspecialchars($usuario->username); ?>">
 
-        <label for="">Nombre de usuario: </label>
-        <input type="text" name="nombre" value="<?php echo $nombre; ?>">
+        <label for="correo">Email:</label>
+        <input type="text" name="email" value="<?= htmlspecialchars($usuario->email); ?>">
 
-        <label for="">Email: </label>
-        <input type="text" name="correo" value="<?php echo $correo; ?>">
+        <label for="password">Contraseña:</label>
+        <input type="password" name="password" value="">
 
-        <label for="">Contraseña: </label>
-        <input type="text" name="password" value="<?php echo $cont; ?>">
-
-        <label for="tipo">Tipo de usuario: </label>
-        <!-- Desplegable con las opciones de tipo de usuario -->
-        <select name="tip">
+        <label for="tipo">Tipo de usuario:</label>
+        <select name="tipo">
             <option value=""></option>
-            <option <?php echo $tip==1||$tip=='Comprador'?'selected':'';?> value="1">Comprador</option>
-            <option <?php echo $tip==2||$tip=='Vendedor'?'selected':'';?> value="2">Vendedor</option>
-            <option <?php echo $tip=='Distribuidor'||$tip==3?'selected':'';?> value="3">Distribuidor</option>
-    </select>
-        <!-- Botones de volver y de actualizar -->
+            <option value="1" <?php echo $usuario->tipo == 1 || $usuario->tipo == 'Comprador' ? 'selected' : ''; ?>>Comprador</option>
+            <option value="2" <?php echo $usuario->tipo == 2 || $usuario->tipo == 'Vendedor' ? 'selected' : ''; ?>>Vendedor</option>
+            <option value="3" <?php echo $usuario->tipo == 3 || $usuario->tipo == 'Distribuidor' ? 'selected' : ''; ?>>Distribuidor</option>
+        </select>
+
+
         <div class="botones">
             <input type="submit" value="Actualizar Usuario" class="registro">
-            <a href="/Usuarios/usuario.php" class="buton">Volver</a>
+            <a href="/usuario" class="buton">Volver</a>
         </div>
     </fieldset>

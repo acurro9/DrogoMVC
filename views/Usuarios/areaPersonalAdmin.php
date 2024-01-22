@@ -18,7 +18,7 @@
             <div class="user_inner_left">
                 <div class="userOpt account">
                     <img src="../build/img/icons/lock.svg" alt="" class="lock_icon">
-                    <a href="#" class="a_title">Usuarios</a>
+                    <a href="/usuario" class="a_title">Usuarios</a>
                 </div>
                 <div class="userOpt pedido">
                     <img src="../build/img/icons/lock.svg" alt="" class="lock_iconP">
@@ -32,7 +32,7 @@
         </div>
     </section>
 
-    <section class="miCuenta hidden">
+    <!-- <section class="miCuenta hidden">
                 <div class="userOptRight rightPannel">
                     <div class="user_inner_right">
                         <div class="userOptRight mostrar">
@@ -45,7 +45,7 @@
                         </div>
                     </div>
                 </div>
-    </section>  
+    </section>   -->
     <section class="miPedido hidden">
                 <div class="userOptRight rightPannel">
                     <div class="user_inner_right">

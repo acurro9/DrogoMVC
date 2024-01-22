@@ -1,5 +1,6 @@
 <?php 
     //Se realiza la conexión a la base de datos
+    // $db = new PDO('mysql:host=localhost;dbname=drogodb', 'root', '');
 function conectarDB() : mysqli {
     $db = new mysqli('localhost', 'root', '', 'drogoDB');
 

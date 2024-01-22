@@ -55,7 +55,7 @@ class Usuario extends ActiveRecord {
     
 
     public function existeUsuario() {
-        $query = "SELECT * FROM " . self::$tabla . " WHERE username = '{$this->username}' OR email = '{$this->email}' LIMIT 1";
+        $query = "SELECT * FROM " . self::$tabla . " WHERE username = '{$this->username}' OR email = '{$this->email}';";
         $resultado = self::$db->query($query);
         if(!$resultado->num_rows) {
             self::$errores[] = 'El Usuario No Existe';
@@ -65,33 +65,24 @@ class Usuario extends ActiveRecord {
     }
 
 
-    public function comprobarPassword($resultado) {
-        if ($resultado && $resultado->num_rows > 0) {
-            $usuario = $resultado->fetch_object();
-    
-            if (!$usuario) {
-                self::$errores[] = 'El Usuario No Existe';
-                return false;
-            }
-    
-            $autenticado = password_verify($_POST['password'], $usuario->password_hash);
-            // Resto del código...
-            if(!$autenticado) {
-                        self::$errores[] = 'El Password es Incorrecto';
-                        return false;
-                    } 
-            
-                //Esta solución es de chatGPT no me tiraba y se le ocurrió eso, por qué? ni idea    
-                $this->id = $usuario->id;
-                $this->username = $usuario->username;
-                $this->email = $usuario->email;
-                $this->tipo = $usuario->tipo;
-            
-                return true;
-                   
-        } else {
+    public function comprobarPassword($usuario) {
+        if (!$usuario) {
             self::$errores[] = 'El Usuario No Existe';
             return false;
+        }
+        $autenticado = password_verify($_POST['password'], $usuario->password_hash);
+        // Resto del código...
+        if(!$autenticado) {
+            self::$errores[] = 'El Password es Incorrecto';
+            return false;
+        } else{   
+            //Esta solución es de chatGPT no me tiraba y se le ocurrió eso, por qué? ni idea    
+            $this->id = $usuario->id;
+            $this->username = $usuario->username;
+            $this->email = $usuario->email;
+            $this->tipo = $usuario->tipo;
+            
+            return true;       
         }
     }
 
@@ -127,11 +118,6 @@ class Usuario extends ActiveRecord {
          $_SESSION['login'] = true;
          $_SESSION['tipo'] = $this->tipo;
          $_SESSION['id'] = $this->id; 
-        
-        if ($_SESSION['tipo'] === 'Administrador' && $this->passwordPlano == '1234') {
-            header('Location: /loginAdmin');
-            exit;
-        }
     
         // Redirige al área personal
         header('Location: /areaPersonal');
@@ -312,5 +298,15 @@ class Usuario extends ActiveRecord {
         }
         return $usuariosBloqueados;
     }
+
+    public static function userBloq($username) {
+        $query = "SELECT username FROM bloqueado WHERE username = '$username'";
+        $resultado = self::$db->query($query);
+        if($resultado && $resultado->num_rows > 0){
+            self::$errores[] = 'El Usuario está bloqueado';
+            return true;
+        }
+    }
+
 }
 

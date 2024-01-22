@@ -13,5 +13,5 @@
 
         <div class="user_actions">
         <!-- Botón para iniciar sesión -->
-            <input type="submit" value="Iniciar Sesión" class="boton">
+            <input type="submit" value="Iniciar Sesión" class="boton_login">
         </div>

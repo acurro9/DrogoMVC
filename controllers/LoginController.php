@@ -20,18 +20,21 @@ class LoginController{
                 $auth->email = filter_var($_POST['username'], FILTER_VALIDATE_EMAIL) ? $_POST['username'] : '';
     
                 $resultado = $auth->existeUsuario();
-    
-                if (!$resultado) {
+                $resulBloq = $auth->userBloq($_POST['username']);
+                if (!$resultado || $resulBloq) {
                     $errores = Usuario::getErrores();
                 } else {
                     $usuario = $resultado->fetch_object();
-    
                     if ($usuario) {
                         // Verificación de password para usuarios regulares
                         if ($usuario->tipo !== 'Administrador') {
-                            $autenticado = $auth->comprobarPassword($resultado);
-                            $_SESSION['id'] = $auth->id; 
-                            $auth->autenticar();
+                            $autenticado = $auth->comprobarPassword($usuario);
+                            if($autenticado){
+                                $_SESSION['id'] = $auth->id; 
+                                $auth->autenticar();
+                            } else{ 
+                                $errores = Usuario::getErrores();
+                            }
                         } else {
                             $errores = Usuario::getErrores();
                         }
@@ -132,6 +135,7 @@ class LoginController{
                         $_SESSION['login'] = true;
                         $_SESSION['tipo'] = $usuario->tipo;
                         $_SESSION['id'] = $usuario->id;
+                        $_SESSION['log']=2;
     
                         header('Location: /areaPersonalAdmin');
                         exit;

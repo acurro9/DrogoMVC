@@ -13,18 +13,11 @@ use Controllers\UsuariosController;
 $router = new Router();
 
 
-// Paginas Controller
+// Paginas Controller (Zona General)
 $router->get('/', [PaginasController::class, 'index']);
 $router->get('/nosotros', [PaginasController::class, 'equipo']);
 $router->get('/preguntasFrecuentes', [PaginasController::class, 'preguntasFrecuentes']);
 $router->get('/servicios', [PaginasController::class, 'servicios']);
-$router->get('/contacto', [PaginasController::class, 'contacto']);
-$router->get('/admin', [PaginasController::class, 'areaAdmin']);
-
-// Login Controller
-$router->get('/login', [LoginController::class, 'login']);
-$router->post('/login', [LoginController::class, 'login']);
-$router->get('/logout', [LoginController::class, 'logout']);
 
 
 //LoginController
@@ -67,7 +60,11 @@ $router->post('/datos', [LoginController::class, 'datos']);
 
 //Zona Registro
 
+$router->get('/registro', [RegistroController::class, 'registro']);
+$router->post('/registro', [RegistroController::class, 'registro']);
 
+$router->get('/registro2', [RegistroController::class, 'registro2']);
+$router->post('/registro2', [RegistroController::class, 'registro2']);
 
 //Zona Usuario
 

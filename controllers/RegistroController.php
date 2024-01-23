@@ -59,9 +59,14 @@
                     'tipo' => $_SESSION['tipo'] ?? null
                 ]);
                 $cartera = $_POST['cartera'];
-                $resultado = $auth->actualizarCartera($auth->id, (int)$auth->tipo, $cartera);
-                if($resultado){
-                    header("Location: /areaPersonal");
+                if($cartera==''){
+                    $errores[] = "Debes incluir la cartera";
+                }
+                if(empty($errores)){
+                    $resultado = $auth->actualizarCartera($auth->id, (int)$auth->tipo, $cartera);
+                    if($resultado){
+                        header("Location: /areaPersonal");
+                    }
                 }
             }
 

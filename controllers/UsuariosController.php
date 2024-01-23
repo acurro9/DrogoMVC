@@ -65,8 +65,8 @@
             $correo = $_GET['correo'] ?? '';
             $id = $_GET['id'] ?? '';
 
-            // Buscar por user
-            $usuarioBloqueado = Usuario::buscarPorCriterios($name, $correo, $id);
+            // // Buscar por user
+            // $usuarioBloqueado = Usuario::buscarPorCriterios($name, $correo, $id);
 
             // Mirmao si está bloqueado
             if ($usuarioBloqueado && Usuario::estaBloqueado($usuarioBloqueado->username)) {

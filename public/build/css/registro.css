@@ -34,6 +34,9 @@ form {
   box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
   padding: 50px 35px;
 }
+.form_registro2 {
+  height: auto;
+}
 .reg2 form {
   height: 450px;
 }
@@ -52,7 +55,19 @@ form h3 {
   line-height: 42px;
   text-align: center;
 }
-
+.news_form {
+  height: auto;
+  padding: 0;
+  border: none;
+  border-radius: 15px;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  -ms-border-radius: 15px;
+  -o-border-radius: 15px;
+}
+.news_form input {
+  margin-top: 0;
+}
 label {
   display: block;
   margin-top: 30px;
@@ -102,10 +117,6 @@ input:hover {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-}
-
-.container {
-  height: 1px;
 }
 
 input[type="radio"] {

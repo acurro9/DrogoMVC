@@ -8,6 +8,7 @@ use MVC\Router;
 use Controllers\PaginasController;
 use Controllers\LoginController;
 use Controllers\UsuariosController;
+use Controllers\RegistroController;
 
 
 $router = new Router();
@@ -19,6 +20,7 @@ $router->get('/nosotros', [PaginasController::class, 'equipo']);
 $router->get('/preguntasFrecuentes', [PaginasController::class, 'preguntasFrecuentes']);
 $router->get('/servicios', [PaginasController::class, 'servicios']);
 $router->get('/contacto', [PaginasController::class, 'contacto']);
+$router->post('/contacto', [PaginasController::class, 'contactoSQL']);
 
 
 //LoginController

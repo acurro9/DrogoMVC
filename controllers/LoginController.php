@@ -45,6 +45,7 @@ class LoginController{
                                     $_SESSION['login'] = true;
                                     $_SESSION['tipo'] = $usuario->tipo;
                                     $_SESSION['id'] = $usuario->id;
+                                    $_SESSION['log']=1;
                             
                                     header('Location: /loginAdmin');
                                     exit;
@@ -93,7 +94,7 @@ class LoginController{
     } else {
         header('Location: /login');
         exit;
-    }
+        }
     }
     public static function areaPersonalAdmin( Router $router ) {
         $router->render('usuarios/areaPersonalAdmin', [
@@ -164,7 +165,6 @@ class LoginController{
         $usuario = new Usuario();
         $usuario->eliminarUsuarioYCerrarSesion();
         $router->render('usuarios/usuario', [
-
         ]);
     }
 

@@ -18,7 +18,7 @@ class Usuario extends ActiveRecord {
 
     public function __construct($args = [])
     {
-        $this->id = $args['id'] ?? null;
+        $this->id = $args['id'] ?? '';
         $this->username = $args['username'] ?? null;
         $this->email = $args['email'] ?? null;
         $this->password_hash = $args['password_hash'] ?? '';
@@ -52,8 +52,37 @@ class Usuario extends ActiveRecord {
         }
         return self::$errores;
     }
+    public function validarRegistro() {
+        if(!$this->username){
+            self::$errores[] = "El nombre de usuario es obligatorio";
+        }
+        if(!$this->email) {
+            self::$errores[] = "El email del usuario es obligatorio";
+        }
+        if(!$this->password_hash) {
+            self::$errores[] = "El password del usuario es obligatorio";
+        }
+        if(!$this->passwordPlano) {
+            self::$errores[] = "Debe repetir el password";
+        }
+        if(!$this->tipo) {
+            self::$errores[] = "Elija un tipo de usuario";
+        }
+        if($this->password_hash!=$this->passwordPlano) {
+            self::$errores[] = "Los passwords deben coincidir";
+        }
+        return self::$errores;
+    }
     
-
+    public static function buscarID($usuario){
+        $query = "SELECT * FROM " . self::$tabla . " WHERE username = '$usuario';";
+        $resultado = self::$db->query($query);
+        if ($resultado){
+            $id=$resultado->fetch_assoc();
+            $dev=$id['id'];
+            return $dev;
+        }
+    }
     public function existeUsuario() {
         $query = "SELECT * FROM " . self::$tabla . " WHERE username = '{$this->username}' OR email = '{$this->email}';";
         $resultado = self::$db->query($query);
@@ -62,6 +91,15 @@ class Usuario extends ActiveRecord {
             return false;
         }
         return $resultado;
+    }
+    public function noExisteUsuario() {
+        $query = "SELECT * FROM " . self::$tabla . " WHERE username = '{$this->username}' OR email = '{$this->email}';";
+        $resultado = self::$db->query($query);
+        if($resultado->num_rows) {
+            self::$errores[] = 'El Usuario Ya Existe';
+            return false;
+        }
+        return true;
     }
 
 
@@ -75,37 +113,9 @@ class Usuario extends ActiveRecord {
         if(!$autenticado) {
             self::$errores[] = 'El Password es Incorrecto';
             return false;
-        } else{   
-            //Esta solución es de chatGPT no me tiraba y se le ocurrió eso, por qué? ni idea    
-            $this->id = $usuario->id;
-            $this->username = $usuario->username;
-            $this->email = $usuario->email;
-            $this->tipo = $usuario->tipo;
-            
+        } else{               
             return true;       
         }
-    }
-
-    public function crearUsuario() {
-        // Sanitizar los datos
-        $atributos = $this->sanitizarAtributos();
-        $customId = '';
-    
-        $id = $customId ?: md5(uniqid(rand(), true));
-    
-        // Para meterle la id
-        $query = "INSERT INTO " . static::$tabla . " (id, ";
-        $query .= join(', ', array_keys($atributos));
-        $query .= ") VALUES ('$id', '";
-        $query .= join("', '", array_values($atributos));
-        $query .= "')";
-
-
-        // Resultado de la consulta
-        $resultado = self::$db->query($query);
-
-    
-        return $resultado;
     }
     
     //La función estarAutenticado ahora pertenece a usuario 
@@ -131,7 +141,8 @@ class Usuario extends ActiveRecord {
     }
     
     public function generarId() {
-        $this->id = md5(uniqid(rand(), true));
+        $idHash = md5(uniqid(rand(), true));
+        $this->id=$idHash;
     }
 
 
@@ -180,27 +191,23 @@ class Usuario extends ActiveRecord {
     }
     
     public function crear() {
-        // Sanitización de datos
-        $atributos = $this->sanitizarAtributos();
-    
-        // Hashear la contraseña antes de guardar
-        $this->hashPass();
-    
-        // Insertar en la base de datos
-        $query = "INSERT INTO " . static::$tabla . " (";
-        $query .= join(', ', array_keys($atributos));
-        $query .= ") VALUES ('"; 
-        $query .= join("', '", array_values($atributos));
-        $query .= "')";
-    
-        $resultado = self::$db->query($query);
-    
-        // Opcional: Manejar el ID del nuevo usuario
-        if ($resultado) {
-            $this->id = self::$db->insert_id;
-        }
-    
-        return $resultado;
+       // Sanitizar los datos
+       $atributos = $this->sanitizarAtributos();
+   
+       $id =  md5(uniqid(rand(), true));
+   
+       // Para meterle la id
+       $query = "INSERT INTO " . static::$tabla . " (";
+       $query .= join(', ', array_keys($atributos));
+       $query .= ") VALUES ('$id";
+       $query .= join("', '", array_values($atributos));
+       $query .= "')";
+
+
+       // Resultado de la consulta
+       $resultado = self::$db->query($query);
+       
+       return $resultado;
     }    
     
     
@@ -219,6 +226,29 @@ class Usuario extends ActiveRecord {
         $query .= " LIMIT 1";
     
         return self::$db->query($query);
+    }
+    public function actualizarCartera($id, $tipo, $cartera){
+        if($tipo===1){
+            $tabla="Comprador";
+            $hash="hash_comprador";
+            $hashCartera="hash_carteraComprador";
+        } else if($tipo===2){
+            $tabla="Vendedor";
+            $hash="hash_vendedor";
+            $hashCartera="hash_carteraVendedor";
+        } else if($tipo===3){
+            $tabla="Distribuidor";
+            $hash="hash_distribuidor";
+            $hashCartera="hash_carteraDistribuidor";
+        }
+        // Se hashea la cartera
+        $cart=password_hash($cartera, PASSWORD_DEFAULT);
+        // Se inserta la cartera en la tabla del usuario
+        $query = "INSERT INTO $tabla ($hash, $hashCartera) values ('$id', '$cart');";
+
+        $resultado = self::$db->query($query);
+        return $resultado;
+
     }
 
     public function registrarCartera($cartera, $tipo) {

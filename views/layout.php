@@ -102,7 +102,7 @@
                     <!--En caso de que no esté logeado se muestran dos link, para iniciar sesión y para registrarse-->
                     <div class="botones_nav" id="btn_nav">
                         <a href="/login" class="btn_nav login_nav">Login</a>
-                        <a href="/logout" class="btn_nav registro_nav">Registro</a>
+                        <a href="/registro" class="btn_nav registro_nav">Registro</a>
                     </div>
                     <?php  }?>
                 </nav>
@@ -162,7 +162,7 @@
                             </div>
                             <!-- Formulario para suscribirse al newsletter -->
                             <div class="subscribe-form">
-                                <form method="POST" action="<?php $_SERVER[ 'PHP_SELF' ]; ?>" enctype="multipart/form-data">
+                                <form method="POST" class="news_form" action="<?php $_SERVER[ 'PHP_SELF' ]; ?>" enctype="multipart/form-data">
                                 <?php include __DIR__ . '/../includes/templates/forms/formulario_newsletter.php'; ?>
                                 </form>
                             </div>

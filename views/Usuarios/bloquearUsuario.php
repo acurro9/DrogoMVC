@@ -189,4 +189,4 @@
     <a href="/usuario" class="buton grande">Volver</a>
 </div>
 <!-- Se incluye los archivos de javascript -->
-<script src="../../build/js/index.js"></script>
+<script src="../build/js/index.js"></script>

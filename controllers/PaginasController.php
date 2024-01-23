@@ -24,18 +24,24 @@ class PaginasController {
 
         ]);
     }
-    public static function contacto( Router $router ) {
-        $router->render('paginas/form-contacto', [
-
-        ]);
-    }
     public static function areaAdmin( Router $router ) {
         $router->render('admin/areaPersonalAdmin', [
 
         ]);
     }
-    public static function contactoSQL() {
-        
+    public static function contacto( Router $router ) {
+        $router->render('paginas/form-contacto', [
+
+        ]);
     }
+    public static function contactoAdmin( Router $router ) {
+        $router->render('admin/contacto', [
+
+        ]);
+    }
+    public static function contactoSQL() {
+    }
+
+
 
 }

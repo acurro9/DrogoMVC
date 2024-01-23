@@ -14,42 +14,37 @@ use Controllers\RegistroController;
 $router = new Router();
 
 
-// Paginas Controller (Zona General)
+// PaginasController
 $router->get('/', [PaginasController::class, 'index']);
 $router->get('/nosotros', [PaginasController::class, 'equipo']);
 $router->get('/preguntasFrecuentes', [PaginasController::class, 'preguntasFrecuentes']);
 $router->get('/servicios', [PaginasController::class, 'servicios']);
 $router->get('/contacto', [PaginasController::class, 'contacto']);
 $router->post('/contacto', [PaginasController::class, 'contactoSQL']);
+$router->get('/verContacto', [PaginasController::class, 'contactoAdmin']);
+
 
 
 //LoginController
-
 //Autenticaciones
 $router->get('/login', [LoginController::class, 'login']);
 $router->post('/login', [LoginController::class, 'login']);
-$router->get('/logout', [LoginController::class, 'logout']);
+$router->get('/logout', [LoginController::class, 'cerrarSesion']);
+$router->post('/logout', [LoginController::class, 'cerrarSesion']);
+$router->get('/areaPersonal', [LoginController::class, 'areaPersonal']);
 
-
+//Autenticaciones Admin
 $router->get('/loginAdmin', [LoginController::class, 'loginAdmin']);
 $router->post('/loginAdmin', [LoginController::class, 'loginAdmin']);
-
-$router->get('/areaPersonal', [LoginController::class, 'areaPersonal']);
 $router->get('/areaPersonalAdmin', [LoginController::class, 'areaPersonalAdmin']);
 
 
-// $router->get('/usuario', [PaginasController::class, 'usuario']);
-// $router->get('/actualizarUsuario', [PaginasController::class, 'actualizarUsuario']);
 
 
-// $router->post('/login', [PaginasController::class, 'login']);
-$router->post('/loginAdmin', [LoginController::class, 'loginAdmin']);
 
-//Sayunara, b****
-$router->post('/logout', [LoginController::class, 'logout']);
+//UsuariosController
 $router->get('/borrarCuenta', [UsuariosController::class, 'borrarCuenta']);
-
-//Datos que cambiamos
+$router->post('/borrarCuenta', [UsuariosController::class, 'borrarCuenta']);
 
 $router->get('/modDatos', [LoginController::class, 'modDatos']);
 $router->post('/modDatos', [LoginController::class, 'modDatos']);
@@ -58,16 +53,14 @@ $router->get('/datos', [LoginController::class, 'datos']);
 $router->post('/datos', [LoginController::class, 'datos']);
 
 
-//Zona Registro
-
+//RegistroController
 $router->get('/registro', [RegistroController::class, 'registro']);
 $router->post('/registro', [RegistroController::class, 'registro']);
 
 $router->get('/registro2', [RegistroController::class, 'registro2']);
 $router->post('/registro2', [RegistroController::class, 'registro2']);
 
-//Zona Usuario
-
+//UsuariosController
 $router->get('/usuario', [UsuariosController::class, 'verCuentas']);
 $router->post('/usuario', [UsuariosController::class, 'verCuentas']);
 

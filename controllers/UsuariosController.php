@@ -25,7 +25,7 @@
         }
 
         // Renderizardo de la vista con los datos necesarios
-        $router->render('usuarios/usuario', [
+        $router->render('admin/usuario', [
             'usuarios' => $usuarios,
             'totalPaginas' => $totalPaginas,
             'paginaActual' => $pagina,
@@ -42,6 +42,8 @@
         $usuarioBloqueado = null;
         //Iniciazliación de la variable acción
         $accion=1; 
+        session_start();
+        $usuario=$_SESSION['userObj'];
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $accion = $_POST['action'] ?? null;
@@ -65,11 +67,11 @@
             $correo = $_GET['correo'] ?? '';
             $id = $_GET['id'] ?? '';
 
-            // // Buscar por user
-            // $usuarioBloqueado = Usuario::buscarPorCriterios($name, $correo, $id);
+            // Buscar por user
+            $usuarioBloqueado = Usuario::buscarPorCriterios($name, $correo, $id);
 
             // Mirmao si está bloqueado
-            if ($usuarioBloqueado && Usuario::estaBloqueado($usuarioBloqueado->username)) {
+            if ($usuarioBloqueado && Usuario::userBloq($usuarioBloqueado->username)) {
                 $accion = 2;
             }
         }
@@ -126,13 +128,13 @@
     
     public static function borrarCuenta(Router $router) {
         session_start();
+        $userId = Usuario::buscarID($_SESSION['usuario']);
 
-        if (!isset($_SESSION['id'])) {
+        if (!isset($userId)) {
             header('Location: /login');
             exit;
         }
 
-        $userId = $_SESSION['id'];
 
         // Encontrar al usuario actual
         $usuarioActual = Usuario::find($userId);

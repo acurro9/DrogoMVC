@@ -46,6 +46,7 @@ class LoginController{
                                     $_SESSION['tipo'] = $usuario->tipo;
                                     $_SESSION['id'] = $usuario->id;
                                     $_SESSION['log']=1;
+                                    $_SESSION['userObj']=$usuario;
                             
                                     header('Location: /loginAdmin');
                                     exit;
@@ -61,22 +62,8 @@ class LoginController{
             'errores' => $errores
         ]);
     }
-    
-    
-
-    public static function logout(Router $router){
-        $router->render('auth/logout', [
-
-        ]);
-    }
 
 
-
-    public static function actualizarUsuario( Router $router ) {
-        $router->render('usuarios/actualizarUsuario', [
-
-        ]);
-    }
     public static function areaPersonal(Router $router) {
         session_start();
 
@@ -101,13 +88,6 @@ class LoginController{
 
         ]);
     }
-
-    public static function bloquearUsuario( Router $router ) {
-        $router->render('usuarios/bloquearUsuario', [
-
-        ]);
-    }
-
     public static function loginAdmin(Router $router) {
         $errores = [];
     
@@ -159,21 +139,14 @@ class LoginController{
             'errores' => $errores
         ]);
     }
-    
-    
-    public static function usuario( Router $router ) {
-        $usuario = new Usuario();
-        $usuario->eliminarUsuarioYCerrarSesion();
-        $router->render('usuarios/usuario', [
-        ]);
-    }
 
     public static function modDatos(Router $router) {
         session_start();
         
         
         if (isset($_SESSION['id'])) {
-            $usuario = Usuario::find($_SESSION['id']);
+            $id = Usuario::buscarID($_SESSION['usuario']);
+            $usuario=Usuario::find($id);
     
             if (!$usuario) {
                 header('Location: /login');
@@ -190,8 +163,14 @@ class LoginController{
     }
 
     public static function cerrarSesion( Router $router ) {
-        Usuario::cerrarSesion();
-        //Nao precisa de render
+        if (!session_id()) {
+            session_start();
+        }
+
+        session_destroy();
+
+        header('Location: /');
+        exit;
     }
 
     
@@ -247,13 +226,5 @@ class LoginController{
             'errores' => $errores,
             'dataType' => $dataType
         ]);
+    }
 }
-
-
-
-}
-    
-
-  
-
-   

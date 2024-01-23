@@ -139,12 +139,6 @@ class Usuario extends ActiveRecord {
         $this->password_hash = password_hash($this->password_hash, PASSWORD_DEFAULT);
 
     }
-    
-    public function generarId() {
-        $idHash = md5(uniqid(rand(), true));
-        $this->id=$idHash;
-    }
-
 
     // Método para contar el total de usuarios
     public static function contarUsuarios() {
@@ -158,18 +152,6 @@ class Usuario extends ActiveRecord {
     public static function obtenerUsuariosPorPagina($limit, $offset) {
         $query = "SELECT * FROM usuario LIMIT {$limit} OFFSET {$offset}";
         return self::consultarSQL($query);
-    }
-
-    //Se añade la función cerrarSesion y se elimina como página
-    public static function cerrarSesion() {
-        if (!session_id()) {
-            session_start();
-        }
-
-        session_destroy();
-
-        header('Location: /');
-        exit;
     }
     //Para el fucking logn
     public static function buscarUsuario($username, $email) {
@@ -289,6 +271,13 @@ class Usuario extends ActiveRecord {
     //Para el bloquearUsuario
     public static function verificarPermisos() {
         $auth = $_SESSION['login'] ?? false;
+        if (!$auth) {
+            header('Location: /');
+            exit;
+        }
+    }
+    public static function verificarPermisosAdmin() {
+        $auth = $_SESSION['login'] ?? false;
         if (!$auth || $_SESSION['tipo'] != 'Administrador') {
             header('Location: /');
             exit;
@@ -312,13 +301,7 @@ class Usuario extends ActiveRecord {
         return $resultado ? array_shift($resultado) : null;
     }
 
-    // Método para comprobar si un usuario está bloqueado
-    public static function estaBloqueado($username) {
-        $query = "SELECT username FROM bloqueado WHERE username = '$username'";
-        $resultado = self::$db->query($query);
-        return $resultado && $resultado->num_rows > 0;
-    }
-
+    // Métodos para comprobar si un usuario está bloqueado
     public static function obtenerUsuariosBloqueados() {
         $query = "SELECT id FROM bloqueado";
         $resultado = self::$db->query($query);
@@ -336,6 +319,13 @@ class Usuario extends ActiveRecord {
             self::$errores[] = 'El Usuario está bloqueado';
             return true;
         }
+    }
+    public function eliminar() {
+        $idValue = self::$db->escape_string($this->id);
+        $query = "DELETE FROM " . static::$tabla . " WHERE id = '{$idValue}';";
+        $resultado = self::$db->query($query);
+        
+        return $resultado;
     }
 
 }

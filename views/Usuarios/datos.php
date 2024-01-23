@@ -22,7 +22,7 @@
             <form method="POST">
                 <h2>Cambiar Nombre de Usuario: </h2>
                 <input type="hidden" name="dataType" value="username">
-                <input type="text" name="new_value" placeholder="Nuevo Nombre de Usuario" value="<?php echo htmlspecialchars($datosUsuario->username); ?>">
+                <input type="text" name="new_value" placeholder="Nuevo Nombre de Usuario"0>
                 <input type="submit" value="Cambiar Nombre">
             </form>
         <?php elseif ($dataType == 'cartera'): ?>

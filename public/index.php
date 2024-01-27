@@ -9,7 +9,8 @@ use Controllers\PaginasController;
 use Controllers\LoginController;
 use Controllers\UsuariosController;
 use Controllers\RegistroController;
-
+use Controllers\LockersController;
+use Controllers\NewsletterController;
 
 $router = new Router();
 
@@ -20,7 +21,7 @@ $router->get('/nosotros', [PaginasController::class, 'equipo']);
 $router->get('/preguntasFrecuentes', [PaginasController::class, 'preguntasFrecuentes']);
 $router->get('/servicios', [PaginasController::class, 'servicios']);
 $router->get('/contacto', [PaginasController::class, 'contacto']);
-$router->post('/contacto', [PaginasController::class, 'contactoSQL']);
+$router->post('/contacto', [PaginasController::class, '']);
 $router->get('/verContacto', [PaginasController::class, 'contactoAdmin']);
 
 
@@ -69,6 +70,22 @@ $router->post('/bloquearUsuario', [UsuariosController::class, 'bloquearUsuario']
 
 $router->get('/actualizarUsuario', [UsuariosController::class, 'actualizarUsuario']);
 $router->post('/actualizarUsuario', [UsuariosController::class, 'actualizarUsuario']);
+
+//LockersController
+
+$router->get('/lockers', [LockersController::class, 'verLockers']);
+
+$router->get('/crearLocker', [LockersController::class, 'crearLocker']);
+$router->post('/crearLocker', [LockersController::class, 'crearLocker']);
+
+$router->get('/actualizarLocker', [LockersController::class, 'actualizarLocker']);
+$router->post('/actualizarLocker', [LockersController::class, 'actualizarLocker']);
+
+$router->get('/borrarLocker', [LockersController::class, 'borrarLocker']);
+$router->post('/borrarLocker', [LockersController::class, 'borrarLocker']);
+
+//NewsletterController
+$router->post('/newsletter', [NewsletterController::class, 'crearNewsletter']);
 
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
 $router->comprobarRutas();

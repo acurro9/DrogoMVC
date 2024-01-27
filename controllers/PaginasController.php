@@ -39,9 +39,4 @@ class PaginasController {
 
         ]);
     }
-    public static function contactoSQL() {
-    }
-
-
-
 }

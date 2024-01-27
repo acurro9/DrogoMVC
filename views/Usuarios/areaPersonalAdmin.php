@@ -69,11 +69,11 @@
                     <div class="user_inner_right">
                     <div class="userOptRight mostrar">
                             <img src="../build/img/icons/detective.svg" alt="detective">
-                            <a href="/Lockers/lockers.php" class="miCuentaOpcion p_title">Ver Lockers</a>
+                            <a href="/lockers" class="miCuentaOpcion p_title">Ver Lockers</a>
                         </div>
                         <div class="userOptRight miCuentaOpciones">
                             <img src="../build/img/icons/writer.svg" alt="punta de boli">
-                            <a href="/Lockers/crearLockers.php" class="miCuentaOpcion" class="a_title">Crear Lockers</a>
+                            <a href="/crearLockers" class="miCuentaOpcion" class="a_title">Crear Lockers</a>
                         </div>
                     </div>
                 </div>

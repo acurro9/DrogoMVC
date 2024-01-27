@@ -7,21 +7,21 @@
     </tr>
 </thead>
 <tbody>
-    <?php while ($fila=mysqli_fetch_assoc($datos)){ ?>
+<?php foreach ($lockers as $locker): ?>
         <tr>
-            <td><?php echo $fila['refLocker'] ?></td>
-            <td><?php echo $fila['direccion'] ?></td>
-            <td><?php echo $fila['passwordLocker'] ?></td>
+            <td><?=$locker->refLocker ?></td>
+            <td><?=$locker->direccion ?></td>
+            <td><?=$locker->passwordLocker ?></td>
             <td>
                 <div class="bloque">
                     <!-- Formulario para eliminar el locker seleccionado -->
-                    <form action="<?php $_SERVER[ 'PHP_SELF' ]; ?>" method="post" onsubmit="return confirmEliminado()" class="formEliminado">
+                    <form action="/borrarLocker?id=<?php echo $locker->refLocker; ?>" method="post" onsubmit="return confirmEliminado()" class="formEliminado">
                         <input class="bTabla" type="submit" value=" ">
-                        <input class="oculto" type="hidden" name="refLocker" value=<?php echo $fila['refLocker'];?>>
+                        <input class="oculto" type="hidden" name="refLocker" value=<?=$locker->refLocker ?>>
                     </form>
-                    <a href="/Lockers/actualizarLockers.php?locker=<?php echo $fila['refLocker'];?>" class="bTabla act"><img src="../build/img/icons/writer.svg" alt=""></a>
+                    <a href="/actualizarLocker?locker=<?=$locker->refLocker ?>" class="bTabla act"><img src="../build/img/icons/writer.svg" alt=""></a>
                 </div>
             </td>
         </tr>
-    <?php } ?>
+    <?php endforeach; ?>
 </tbody>

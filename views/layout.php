@@ -1,37 +1,3 @@
-<?php
-    //En caso de que no exista $_SESSION se inicia una session nueva y se comprueba si está logueado
-    if(!isset($_SESSION)){
-        session_start();
-    }
-    $auth=$_SESSION['login'] ?? false;
-    
-        //Se crea un vector para los errores
-        $errores=[];
-        //Se inicia la variable vacía
-        $correo="";
-    
-        //En caso de realizar un POST
-        if ($_SERVER['REQUEST_METHOD']==="POST"){
-            //Si se pulsa en el botón suscribirme se guarda y comprueba el email
-            if(isset($_POST["Suscribirse"])){
-                $correo=mysqli_real_escape_string($db, $_POST['email']);
-                if(!$correo){
-                    $errores[] = "Debes añadir un correo electrónico.";
-                }
-                //En caso de que no haya errores se realiza y envia la query a la base de datos
-                if(empty($errores)){
-                    $query = "INSERT INTO newsletter (email) values ('$correo');";
-                    $resultado=mysqli_query($db, $query);
-                    if($resultado){
-                        
-                    }
-                }
-                
-            }
-        }
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -162,7 +128,7 @@
                             </div>
                             <!-- Formulario para suscribirse al newsletter -->
                             <div class="subscribe-form">
-                                <form method="POST" class="news_form" action="<?php $_SERVER[ 'PHP_SELF' ]; ?>" enctype="multipart/form-data">
+                                <form method="POST" class="news_form" action="/newsletter" enctype="multipart/form-data">
                                 <?php include __DIR__ . '/../includes/templates/forms/formulario_newsletter.php'; ?>
                                 </form>
                             </div>

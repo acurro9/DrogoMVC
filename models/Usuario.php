@@ -74,7 +74,7 @@ class Usuario extends ActiveRecord {
         return self::$errores;
     }
 
-    public function mssgExitoAdmin($codigo){
+    public function mssgExito($codigo){
         switch($codigo){
             case 1:
                 return "Usuario bloqueado con éxito";
@@ -82,17 +82,31 @@ class Usuario extends ActiveRecord {
                 return "Usuario desbloqueado con éxito";
             case 3: 
                 return "Usuario actualizado con éxito";
+            case 4:
+                return "Nombre actualizado con éxito";
+            case 5:   
+                return "Email actualizado con éxito";
+            case 6: 
+                return "Contraseña actualizada con exito";
+            case 7: 
+                return "Cartera actualizada con exito";
             default:    
                 return "Operación realizada con éxito";
         }
     }
 
     public function validacionExito($codigo){
-        $mensaje=$this->mssgExitoAdmin($codigo);
+        $mensaje=$this->mssgExito($codigo);
         $_SESSION['mensaje_exito']=$mensaje;
-        header("Location: /usuario");
+        if ($this->tipo === 'Administrador') {
+            header("Location: /usuario");
+        } else {
+            header("Location: /areaPersonal");
+        }
         exit;
     }
+
+
     
     public static function buscarID($usuario){
         $query = "SELECT * FROM " . self::$tabla . " WHERE username = '$usuario';";

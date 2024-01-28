@@ -181,26 +181,47 @@ class LoginController{
             header('Location: /login');
             exit;
         }
+
+        $idUsuario = Usuario::buscarID($_SESSION['usuario']);
+       
         
-        $idUsuario = $_SESSION['id'] ?? null;
-        if (!$idUsuario) {
+        // $idUsuario = $_SESSION['id'] ?? null;
+        // if (!$idUsuario) {
+        //     header('Location: /login');
+        //     exit;
+        // }
+        $usuario = Usuario::find($idUsuario);
+        if(!$usuario instanceof Usuario) {
             header('Location: /login');
             exit;
         }
-        $usuario = Usuario::find($idUsuario);
         $dataType = $_GET['type'] ?? ''; 
         $errores = [];
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newValue = $_POST['new_value'] ?? '';
-            
-            if($usuario){
+            $tipoNumerico=$_SESSION['tipoUsuario']??null;
+            $tipoUsuario = $usuario->determinarTablaTipo($tipoNumerico);
+
+          
                 switch ($dataType) {
                     case 'username':
                         $usuario->username = $newValue;
+                        if (empty($errores)) {
+                            $usuario->guardar();
+                            $usuario->validacionExito(4);
+                            header('Location: /areaPersonal');
+                            exit;
+                        }
                         break;
                     case 'email':
                         $usuario->email = $newValue;
+                        if (empty($errores)) {
+                            $usuario->guardar();
+                            $usuario->validacionExito(5);
+                            header('Location: /areaPersonal');
+                            exit;
+                        }
                         break;
                     case 'password':
                         $newPassword = $_POST['newPassword'] ?? '';
@@ -209,27 +230,39 @@ class LoginController{
                         if ($newPassword === $confirmPassword) {
                             // Aquí deberías validar la nueva contraseña
                             $usuario->password_hash = password_hash($newPassword, PASSWORD_DEFAULT);
+                            $usuario->guardar();
+                            $usuario->validacionExito(6);
+                            header('Location: /areaPersonal');
+                            exit;
                         } else {
                             $errores[] = "Las contraseñas no coinciden";
                         }
                         break;
+                    case 'cartera':
+                        $nuevaCartera = $_POST['newCartera'] ?? '';
+                        $confirmarCartera = $_POST['confirmCartera'] ?? '';
+                       if($nuevaCartera === $confirmarCartera){
+                            $usuario->validacionExito(7);
+                            header('Location: /areaPersonal');
+                            exit;
+                       }else{
+                            $errores[]="Error al actualizar la cartera";
+                       }
+                       break;
                     default:
                         // Manejar casos no esperados
                         $errores[] = "Tipo de dato no válido";
                 }
             
-                if (empty($errores)) {
-                    $usuario->guardar();
-                    // Considera redirigir a otra página o mostrar un mensaje de éxito
-                    header('Location: /areaPersonal');
-                    exit;
-                } else{
-                    //Si el usuario no se encuentra
-                    $errores[] = "Usuario no encontrado.";
-                }
+                // if (empty($errores)) {
+                //     $usuario->guardar();
+                //     $usuario->validacionExito(3);
+                //     header('Location: /areaPersonal');
+                //     exit;
+            
             }
             
-        }
+        // }
         
         $router->render('usuarios/datos', [
             'datosUsuario' => $usuario,

@@ -5,24 +5,25 @@
 
     class UsuariosController {
         public static function verCuentas(Router $router){
+            Usuario::verificarPermisosAdmin();
             $tipo = $_SESSION["tipo"] ?? null;
             $errores = [];
             $res = $_GET['res'] ?? null;
     
             // Obtener datos para la paginación
             $ppp = $_GET["producto"] ?? 5; // Productos por página
-        $pagina = $_GET["pagina"] ?? 1;
-        $totalUsuarios = Usuario::contarUsuarios();
+            $pagina = $_GET["pagina"] ?? 1;
+            $totalUsuarios = Usuario::contarUsuarios();
 
-        $limit = $ppp;
-        $offset = ($pagina - 1) * $ppp;
-        $usuarios = Usuario::obtenerUsuariosPorPagina($limit, $offset);
-        $totalPaginas = ceil($totalUsuarios / $ppp);
+            $limit = $ppp;
+            $offset = ($pagina - 1) * $ppp;
+            $usuarios = Usuario::obtenerUsuariosPorPagina($limit, $offset);
+            $totalPaginas = ceil($totalUsuarios / $ppp);
 
-        $usuariosBloqueados = Usuario::obtenerUsuariosBloqueados();
-        foreach ($usuarios as $usuario) {
-            $usuario->bloqueado = in_array($usuario->id, $usuariosBloqueados);
-        }
+            $usuariosBloqueados = Usuario::obtenerUsuariosBloqueados();
+            foreach ($usuarios as $usuario) {
+                $usuario->bloqueado = in_array($usuario->id, $usuariosBloqueados);
+            }
 
         // Renderizardo de la vista con los datos necesarios
         $router->render('admin/usuario', [
@@ -36,13 +37,13 @@
     }
 
     public static function bloquearUsuario(Router $router) {
+        Usuario::verificarPermisosAdmin();
         // Usuario::verificarPermisos(); no va esto
 
         $errores = [];
         $usuarioBloqueado = null;
         //Iniciazliación de la variable acción
         $accion=1; 
-        session_start();
         $usuario=$_SESSION['userObj'];
         $usuario=new Usuario;
     
@@ -88,7 +89,7 @@
         ]);
     }
     public static function actualizarUsuario(Router $router) {
-        session_start();
+        Usuario::verificarPermisosAdmin();
         $errores = [];
         $usuario = null;
         $id = $_GET['usuario'] ?? null;
@@ -103,24 +104,24 @@
         if (!$usuario instanceof Usuario) {
             header('Location: /');
             exit;
-        }else{
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $usuario->sincronizar($_POST);
-        
-                if (!empty($_POST['password'])) {
-                    $usuario->password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
-                }
-        
-               
-                $errores = $usuario->validar($_POST['password'] !== '');
-        
-                if(empty($errores)) {
-                    if ($usuario->guardar()) {
-                        $usuario->validacionExito(3);
-                    } else {
-                        
-                        $errores[] = 'Error al actualizar usuario.';
-                    }
+        }
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $usuario->sincronizar($_POST);
+    
+            if (!empty($_POST['password'])) {
+                $usuario->password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            }
+    
+            $errores = $usuario->validar($_POST['password'] !== '');
+    
+            if(empty($errores)) {
+                if ($usuario->actualizar()) {
+                    header("Location: /usuario");
+                    exit;
+                } else {
+                    
+                    $errores[] = 'Error updating user.';
                 }
             }
         
@@ -134,7 +135,8 @@
     }
     
     public static function borrarCuenta(Router $router) {
-        session_start();
+        Usuario::verificarPermisos();
+
         $userId = Usuario::buscarID($_SESSION['usuario']);
 
         if (!isset($userId)) {

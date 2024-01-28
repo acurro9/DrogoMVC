@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="../build/css/styles.css">
 <main>
 <h1 class="abajo">Contacto</h1>
-<div class="centrado">
+    <div class="centrado">
         <!--Se le pide al usuario el número de pedidos por página-->
         <form class="paginado">
         <?php include __DIR__ . '/../../includes/templates/paginado.php'; ?>
@@ -12,7 +12,6 @@
 <main>
     
     <table class="tabla">
-        <?php echo '<p class="error">'.$errores.'</p>'?>
         <!-- Tabla de los mensajes -->
         <?php include __DIR__ . '/../../includes/templates/tables/tabla_contacto.php'; ?>
     </table>
@@ -22,7 +21,6 @@
             <?php for($i=1; $i<=$totalPaginas; $i++){ ?>
                 <a href="?producto=<?= $ppp ?>&pagina=<?= $i ?>" class="<?= $paginaActual == $i ? 'active' : '' ?>"><?= $i ?></a>
             <?php } ?>
-        </div>
     </div>
 </main>
 <!-- Se incluye los archivos de javascript -->

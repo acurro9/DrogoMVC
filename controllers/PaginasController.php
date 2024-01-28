@@ -29,14 +29,4 @@ class PaginasController {
 
         ]);
     }
-    public static function contacto( Router $router ) {
-        $router->render('paginas/form-contacto', [
-
-        ]);
-    }
-    public static function contactoAdmin( Router $router ) {
-        $router->render('admin/contacto', [
-
-        ]);
-    }
 }

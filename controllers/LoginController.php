@@ -39,15 +39,7 @@ class LoginController{
                             $errores = Usuario::getErrores();
                         }
                         // Verificación de password para admin
-                        if  ($usuario && $usuario->tipo === 'Administrador' && $_POST['password'] === '1234') {
-                                session_start();
-                                    $_SESSION['usuario'] = $usuario->username;
-                                    $_SESSION['login'] = true;
-                                    $_SESSION['tipo'] = $usuario->tipo;
-                                    $_SESSION['id'] = $usuario->id;
-                                    $_SESSION['log']=1;
-                                    $_SESSION['userObj']=$usuario;
-                            
+                        if  ($usuario && $usuario->tipo === 'Administrador' && $_POST['password'] === '1234') {                            
                                     header('Location: /loginAdmin');
                                     exit;
                             }                    
@@ -65,10 +57,11 @@ class LoginController{
 
 
     public static function areaPersonal(Router $router) {
-        session_start();
+        Usuario::verificarPermisos();
 
     if (isset($_SESSION['login']) && $_SESSION['login']) {
-        $usuario = Usuario::buscarUsuario($_SESSION['usuario'], $_SESSION['usuario']);
+        $id = Usuario::buscarID($_SESSION['usuario']);
+            $usuario=Usuario::find($id);
 
         if ($usuario) {
             $router->render('usuarios/areaPersonal', [
@@ -84,6 +77,7 @@ class LoginController{
         }
     }
     public static function areaPersonalAdmin( Router $router ) {
+        Usuario::verificarPermisosAdmin();
         $router->render('usuarios/areaPersonalAdmin', [
 
         ]);
@@ -112,11 +106,10 @@ class LoginController{
                     // Verifica si es administrador y la contraseña coincide con la hash almacenada
                     if ($usuario && $usuario->tipo === 'Administrador' && password_verify($_POST['password'], $usuario->password_hash)) {
                         session_start();
-                        $_SESSION['usuario'] = $usuario->username;
                         $_SESSION['login'] = true;
+                        $_SESSION['usuario'] = $usuario->username;
                         $_SESSION['tipo'] = $usuario->tipo;
                         $_SESSION['id'] = $usuario->id;
-                        $_SESSION['log']=2;
     
                         header('Location: /areaPersonalAdmin');
                         exit;
@@ -141,10 +134,10 @@ class LoginController{
     }
 
     public static function modDatos(Router $router) {
-        session_start();
+        Usuario::verificarPermisos();
         
         
-        if (isset($_SESSION['id'])) {
+        if (isset($_SESSION['usuario'])) {
             $id = Usuario::buscarID($_SESSION['usuario']);
             $usuario=Usuario::find($id);
     
@@ -164,9 +157,8 @@ class LoginController{
 
     public static function cerrarSesion( Router $router ) {
         if (!session_id()) {
-            session_start();
         }
-
+        session_start();
         session_destroy();
 
         header('Location: /');
@@ -175,31 +167,15 @@ class LoginController{
 
     
     public static function datos(Router $router) {
-        session_start();
+        Usuario::verificarPermisos();
+        $id = Usuario::buscarID($_SESSION['usuario']);
+        $usuario=Usuario::find($id);
 
-        if (!isset($_SESSION['login']) || !$_SESSION['login']) {
-            header('Location: /login');
-            exit;
-        }
-
-        $idUsuario = Usuario::buscarID($_SESSION['usuario']);
-       
-        
-        // $idUsuario = $_SESSION['id'] ?? null;
-        // if (!$idUsuario) {
-        //     header('Location: /login');
-        //     exit;
-        // }
-        $usuario = Usuario::find($idUsuario);
-        if(!$usuario instanceof Usuario) {
-            header('Location: /login');
-            exit;
-        }
         $dataType = $_GET['type'] ?? ''; 
         $errores = [];
-        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newValue = $_POST['new_value'] ?? '';
+
             $tipoNumerico=$_SESSION['tipoUsuario']??null;
             $tipoUsuario = $usuario->determinarTablaTipo($tipoNumerico);
 

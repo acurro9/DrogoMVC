@@ -11,6 +11,7 @@ use Controllers\UsuariosController;
 use Controllers\RegistroController;
 use Controllers\LockersController;
 use Controllers\NewsletterController;
+use Controllers\ContactoController;
 
 $router = new Router();
 
@@ -20,11 +21,6 @@ $router->get('/', [PaginasController::class, 'index']);
 $router->get('/nosotros', [PaginasController::class, 'equipo']);
 $router->get('/preguntasFrecuentes', [PaginasController::class, 'preguntasFrecuentes']);
 $router->get('/servicios', [PaginasController::class, 'servicios']);
-$router->get('/contacto', [PaginasController::class, 'contacto']);
-$router->post('/contacto', [PaginasController::class, 'crearContacto']);
-$router->get('/verContacto', [PaginasController::class, 'contactoAdmin']);
-
-
 
 //LoginController
 //Autenticaciones
@@ -87,6 +83,13 @@ $router->post('/borrarLocker', [LockersController::class, 'borrarLocker']);
 //NewsletterController
 $router->post('/añadirNewsletter', [NewsletterController::class, 'crearNewsletter']);
 $router->get('/newsletter', [NewsletterController::class, 'verNewsletters']);
+$router->post('/borrarNewsletter', [NewsletterController::class, 'borrarNewsletter']);
+
+//ContactoController
+$router->get('/contacto', [ContactoController::class, 'contacto']);
+$router->post('/contacto', [ContactoController::class, 'crearContacto']);
+$router->get('/verContacto', [ContactoController::class, 'verContacto']);
+$router->post('/borrarContacto', [ContactoController::class, 'borrarContacto']);
 
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
 $router->comprobarRutas();

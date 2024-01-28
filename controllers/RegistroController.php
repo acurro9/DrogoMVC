@@ -49,7 +49,7 @@
         }
         public static function registro2(Router $router){
             $errores = [];
-            session_start();
+            // session_start();
             $user = $_SESSION['usuario'];
             $userID = $_SESSION['id'];
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {

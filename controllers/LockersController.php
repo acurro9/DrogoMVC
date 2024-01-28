@@ -3,9 +3,11 @@
 namespace Controllers;
 use MVC\Router;
 use Model\Locker;
+use Model\Usuario;
 
 class LockersController{
     public static function crearLocker(Router $router){
+        Usuario::verificarPermisosAdmin();
         $errores = [];
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -40,6 +42,7 @@ class LockersController{
    
 
    public static function verLockers(Router $router){
+    Usuario::verificarPermisosAdmin();
     $errores = [];
 
     // Obtener datos para la paginación
@@ -63,6 +66,7 @@ class LockersController{
    }
 
     public static function actualizarLocker(Router $router){
+        Usuario::verificarPermisosAdmin();
         $errores = [];
         $locker = null;
         $id = $_GET['locker'] ?? null;
@@ -72,14 +76,11 @@ class LockersController{
             exit;
         }
     
-        $locker = Locker::findLocker($id);
+        $locker = Locker::find($id);
         if (!$locker) {
             header('Location: /');
             exit;
         }
-        echo "<pre>";
-        var_dump($locker);
-        echo "</pre>";
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $locker->sincronizar($_POST);
@@ -88,7 +89,7 @@ class LockersController{
             $errores = $locker->validar();
     
             if(empty($errores)) {
-                if ($locker->guardar()) {
+                if ($locker->actualizar()) {
                     header("Location: /lockers");
                     exit;
                 } else {
@@ -105,10 +106,11 @@ class LockersController{
         ]);
     }
     public static function borrarLocker(Router $router) {
+        Usuario::verificarPermisosAdmin();
         $lockerID = $_GET["id"];
 
         // Encontrar el locker
-        $locker = Locker::findLocker($lockerID);
+        $locker = Locker::find($lockerID);
         if (!$locker) {
             header('Location: /locker');
             exit;

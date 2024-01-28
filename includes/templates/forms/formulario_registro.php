@@ -41,7 +41,6 @@
                     <button type="submit" class="registro">Registrarme</button>
                     
                 </form>
-            <!-- <input type="submit" value="Registrarme" class="registro"> -->
-            <!-- Botón para ir al registro -->
+            <!-- Botón para ir al login -->
             <p>¿Ya tienes cuenta? Entra <a href="/login">aquí</a></p>
         </div>

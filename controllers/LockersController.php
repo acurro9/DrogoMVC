@@ -72,7 +72,7 @@ class LockersController{
             exit;
         }
     
-        $locker = Locker::findLocker($id);
+        $locker = Locker::find($id);
         if (!$locker) {
             header('Location: /');
             exit;
@@ -108,7 +108,7 @@ class LockersController{
         $lockerID = $_GET["id"];
 
         // Encontrar el locker
-        $locker = Locker::findLocker($lockerID);
+        $locker = Locker::find($lockerID);
         if (!$locker) {
             header('Location: /locker');
             exit;

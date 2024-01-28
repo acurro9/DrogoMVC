@@ -1,10 +1,10 @@
 <?php
     namespace Model;
 
-    class Conctacto extends ActiveRecord{
+    class Contacto extends ActiveRecord{
 
         protected static $tabla = 'contacto';
-    protected static $columnasDB = ['id', 'nombre', 'email', 'telefono', 'mensaje'];
+        protected static $columnasDB = ['id', 'nombre', 'email', 'telefono', 'mensaje'];
 
         public $id;
         public $nombre;
@@ -55,12 +55,49 @@
             return $resultado;
         }
 
-        public function borrar(){
+        public function eliminar(){
             $idValue = self::$db->escape_string($this->id);
             $query = "DELETE FROM " . static::$tabla . " WHERE id = '$this->id';";
             $resultado = self::$db->query($query);
 
             return $resultado;
         }
+        // Método para contar el total de contactos
+            public static function contarContactos() {
+                $query = "SELECT COUNT(*) as total FROM contacto";
+                $resultado = self::$db->query($query);
+                $fila = $resultado->fetch_assoc();
+                return $fila['total'];
+            }
+
+            // Método para obtener contactos con paginación
+            public static function obtenerContactosPorPagina($limit, $offset) {
+                $query = "SELECT * FROM contacto LIMIT {$limit} OFFSET {$offset}";
+                return self::consultarSQL($query);
+            }
+
+            public static function find($id) {
+                if (!$id) {
+                    return null; 
+                }
+            
+                try {
+                    $query = "SELECT * FROM " . static::$tabla . " WHERE id = '{$id}'"; 
+                    $resultado = self::consultarSQL($query);
+            
+                    if ($resultado === false) {
+                        // Log del error, p.ej. error_log('Error en la consulta SQL: ' . self::$db->error);
+                        return null;
+                    }
+            
+                    return array_shift($resultado);
+                } catch (\Exception $e) {
+                    // Aquí puedes manejar la excepción y, opcionalmente, registrarla
+                    error_log('Excepción capturada en find: ' . $e->getMessage());
+                    return null;
+                }
+            }   
+
+            
     }
 ?>

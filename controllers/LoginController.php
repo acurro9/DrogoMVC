@@ -112,8 +112,8 @@ class LoginController{
                     // Verifica si es administrador y la contraseña coincide con la hash almacenada
                     if ($usuario && $usuario->tipo === 'Administrador' && password_verify($_POST['password'], $usuario->password_hash)) {
                         session_start();
-                        $_SESSION['usuario'] = $usuario->username;
                         $_SESSION['login'] = true;
+                        $_SESSION['usuario'] = $usuario->username;
                         $_SESSION['tipo'] = $usuario->tipo;
                         $_SESSION['id'] = $usuario->id;
                         $_SESSION['log']=2;

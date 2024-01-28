@@ -1,9 +1,14 @@
 <?php  
     namespace Controllers;
     use MVC\Router;
-    use Model\Conctacto;
+    use Model\Contacto;
 
-    class ConctactoControllers{
+    class ContactoController{
+        public static function contacto( Router $router ) {
+            $router->render('paginas/form-contacto', [
+    
+            ]);
+        }
         public static function crearContacto(Router $router){
             $errores = [];
     
@@ -28,6 +33,48 @@
             $router->render('/', [
                 'errores' => $errores
             ]);
+        }
+
+        public static function verContacto(Router $router){
+            $errores = [];
+    
+            // Obtener datos para la paginación
+            $ppp = $_GET["producto"] ?? 5; // Productos por página
+            $pagina = $_GET["pagina"] ?? 1;
+            $totalContactos = Contacto::contarContactos();
+
+            $limit = $ppp;
+            $offset = ($pagina - 1) * $ppp;
+            $contactos = Contacto::obtenerContactosPorPagina($limit, $offset);
+            $totalPaginas = ceil($totalContactos / $ppp);
+
+            // Renderizardo de la vista con los datos necesarios
+            $router->render('admin/contacto', [
+                'contactos' => $contactos,
+                'totalPaginas' => $totalPaginas,
+                'paginaActual' => $pagina,
+                'ppp' => $ppp,
+                'totalContactos' => $totalContactos,
+                'errores' => $errores
+            
+            ]);
+        }
+        public static function borrarContacto(Router $router){
+            $id = $_GET["id"];
+
+            // Encontrar el contacto
+            $contacto = Contacto::find($id);
+            if (!$contacto) {
+                header('Location: /verContacto');
+                exit;
+            }
+    
+            // Eliminar el contacto actual
+            if ($contacto->eliminar()) {
+                // Se redirecciona a la tabla
+                header('Location: /verContacto');
+                exit;
+            } 
         }
     }
 ?>

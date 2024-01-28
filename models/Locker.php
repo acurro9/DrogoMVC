@@ -100,7 +100,7 @@ class Locker extends ActiveRecord {
         return true;
     }
     // Busca un registro por su id
-    public static function findLocker($id) {
+    public static function find($id) {
         if (!$id) {
             return null; 
         }

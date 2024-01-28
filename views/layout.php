@@ -40,8 +40,8 @@
                         <section id="links" class="oculto">
                             <div class="links">
                                 <a href="/areaPersonalAdmin">Area Admin</a>
-                                <a href="/Admin/contacto.php">Contacto</a>
-                                <a href="/Admin/newsletter.php">Newsletter</a>
+                                <a href="/verContacto">Contacto</a>
+                                <a href="/newsletter">Newsletter</a>
                                 <!-- <a href="/bloquearUsuario">Bloquear Usuario</a> -->
                                 <a href="/logout">Cerrar Sesión</a>
                             </div>
@@ -128,7 +128,7 @@
                             </div>
                             <!-- Formulario para suscribirse al newsletter -->
                             <div class="subscribe-form">
-                                <form method="POST" class="news_form" action="/newsletter" enctype="multipart/form-data">
+                                <form method="POST" class="news_form" action="/añadirNewsletter" enctype="multipart/form-data">
                                 <?php include __DIR__ . '/../includes/templates/forms/formulario_newsletter.php'; ?>
                                 </form>
                             </div>

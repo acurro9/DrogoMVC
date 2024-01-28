@@ -18,7 +18,7 @@
                     'nombre' => $_POST['nombre'] ?? null,
                     'email' => $_POST['email'] ?? null,
                     'telefono' => $_POST['telefono'] ?? null,
-                    'mensaje' => $_POST['mensaje'] ?? null,
+                    'mensaje' => $_POST['mensaje'] ?? null
                 ]);
                 $errores = $contacto->validar();
                 //En caso de que no haya errores se realiza y envia la query a la base de datos

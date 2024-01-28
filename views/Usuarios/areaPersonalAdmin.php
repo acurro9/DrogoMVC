@@ -73,7 +73,7 @@
                         </div>
                         <div class="userOptRight miCuentaOpciones">
                             <img src="../build/img/icons/writer.svg" alt="punta de boli">
-                            <a href="/crearLockers" class="miCuentaOpcion" class="a_title">Crear Lockers</a>
+                            <a href="/crearLocker" class="miCuentaOpcion" class="a_title">Crear Lockers</a>
                         </div>
                     </div>
                 </div>

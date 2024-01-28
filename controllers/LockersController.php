@@ -77,9 +77,6 @@ class LockersController{
             header('Location: /');
             exit;
         }
-        echo "<pre>";
-        var_dump($locker);
-        echo "</pre>";
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $locker->sincronizar($_POST);
@@ -88,7 +85,7 @@ class LockersController{
             $errores = $locker->validar();
     
             if(empty($errores)) {
-                if ($locker->guardar()) {
+                if ($locker->actualizar()) {
                     header("Location: /lockers");
                     exit;
                 } else {

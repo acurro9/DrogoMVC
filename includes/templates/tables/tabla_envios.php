@@ -14,29 +14,29 @@
             </tr>
         </thead>
         <tbody>
-        <?php while ($fila=mysqli_fetch_assoc($datos)){ ?>
+        <?php foreach ($envios as $envio):  ?>
             <tr>
-                <td><?php echo $fila['id']; ?></td>
-                <td><?php echo $fila['refCompra']; ?></td>
-                <td><?php echo $fila['fechaRecogida']; ?></td>
-                <td><?php echo $fila['fechaDeposito']; ?></td>
-                <td><?php echo $fila['lockerOrigen']; ?></td>
-                <td><?php echo $fila['lockerDeposito']; ?></td>
+                <td><?= $envio->id; ?></td>
+                <td><?= $envio->refCompra; ?></td>
+                <td><?= $envio->fechaRecogida; ?></td>
+                <td><?= $envio->fechaDeposito; ?></td>
+                <td><?= $envio->lockerOrigen; ?></td>
+                <td><?= $envio->lockerDeposito; ?></td>
 
                 <!-- Esto solo aparece si se es administrador -->
                 <?php if($tipo=='Administrador'){ ?>
-                    <td><?php echo $fila['hash_distribuidor']; ?></td>
+                    <td><?= $envio->hash_distribuidor; ?></td>
                     <td>
                         <div class="bloque">
                             <!-- Formulario para eliminar el pedido seleccionado -->
-                            <form action="<?php $_SERVER[ 'PHP_SELF' ]; ?>" method="post" onsubmit="return confirmEliminado()" class="formEliminado">
+                            <form action="/borrarEnvio?id=<?= $envio->id;?>" method="post" onsubmit="return confirmEliminado()" class="formEliminado">
                                 <input class="bTabla" type="submit" value=" ">
-                                <input class="oculto" type="hidden" name="refCompra" value=<?php echo $fila['id'];?>>
+                                <input class="oculto" type="hidden" name="refCompra" value=<?= $envio->id;?>>
                             </form>
-                            <a href="/Pedidos/distribuidor.php?pedido=<?php echo $fila['refCompra'];?>" class="bTabla act"><img src="../build/img/icons/writer.svg" alt=""></a>
+                            <a href="/actualizarPedido<?= $envio->id; ?>" class="bTabla act"><img src="../build/img/icons/writer.svg" alt=""></a>
                 </div>
                 <?php } ?>
                 </td>
             </tr>
-        <?php } ?>
+        <?php endforeach; ?>
         </tbody>

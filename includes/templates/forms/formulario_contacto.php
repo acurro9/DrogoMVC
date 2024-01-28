@@ -12,7 +12,7 @@
 <div class="formulario__grupo" id="grupo__correo">
     <label class="formulario__label">Correo Electonico</label>
     <div class="formulario__grupo-input">
-        <input type="email" class="formulario__input" name="correo" id="correo" placeholder="Email" value="<?php echo $correo;?>">
+        <input type="email" class="formulario__input" name="email" id="correo" placeholder="Email" value="<?php echo $correo;?>">
         <i class="formulario__validacion-estado fas fa-times-circle"></i>
     </div>
     <p class="formulario__input-error">El correo debe tener mÍnimo 4 caracteres y sólo se admiten números, letras y guión bajo.</p>

@@ -16,17 +16,6 @@ class Locker extends ActiveRecord {
         $this->direccion = $args['direccion'] ?? '';
         $this->passwordLocker = $args['passwordLocker'] ?? '';
     }
-
-    public function guardar() {  
-        if (isset($this->refLocker) && !empty($this->refLocker)) {
-            // Actualización
-            return $this->actualizar();
-        } else {
-            // Creación
-            return $this->crear();
-        }
-    }
-
     public function crear(){
         // Sanitizar los datos
       $atributos = $this->sanitizarAtributos();

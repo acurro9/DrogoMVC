@@ -2,6 +2,7 @@
     namespace Controllers;
     use Model\Envio;
     use MVC\Router;
+    
         class EnvioController{
             public static function verEnvio(Router $router){
                 $errores = [];

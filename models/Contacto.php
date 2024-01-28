@@ -4,7 +4,7 @@
     class Conctacto extends ActiveRecord{
 
         protected static $tabla = 'contacto';
-    protected static $columnasDB = ['id', 'nombre', 'email', 'telefono', 'mensaje'];
+        protected static $columnasDB = ['id', 'nombre', 'email', 'telefono', 'mensaje'];
 
         public $id;
         public $nombre;

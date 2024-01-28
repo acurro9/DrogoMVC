@@ -1,3 +1,10 @@
+<?php
+    //En caso de que no exista $_SESSION se inicia una session nueva y se comprueba si está logueado
+    if(!isset($_SESSION)){
+        session_start();
+    }
+    $auth=$_SESSION['login'] ?? false;
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -31,8 +38,8 @@
             </section>
                 <!-- Si está la sesión iniciada aparece un menú desplegable -->
             <nav class="desplegable">
-                <?php
-                    if($auth){ 
+                <?php 
+                if($auth){
                     if ($_SESSION['tipo']=='Administrador' && $_SESSION['log']==2){?>
                     <!--Opciones del admin-->
                     <div class="desplegable">
@@ -57,14 +64,14 @@
                                 <a href="/modDatos">Modificar Datos</a>
                                 <!--Si es distribuidor no tiene pedidos por lo que no se muestran estas opción-->
                                 <?php if($_SESSION['tipo']!='Distribuidor'){ ?>
-                                    <a href="/Pedidos/pedidos.php">Ver Pedidos</a>
+                                    <a href="/verPedidos">Ver Pedidos</a>
                                 <?php }?>
                                 <a href="/borrarCuenta" id="borrar">Borrar Cuenta</a>
                                 <a href="/logout">Cerrar Sesión</a>
                             </div>
                         </section>
                     </div>
-                    <?php } } else{ ?>
+                    <?php }} else{ ?>
                     <!--En caso de que no esté logeado se muestran dos link, para iniciar sesión y para registrarse-->
                     <div class="botones_nav" id="btn_nav">
                         <a href="/login" class="btn_nav login_nav">Login</a>
@@ -73,7 +80,6 @@
                     <?php  }?>
                 </nav>
         </div>
-
         <?php echo $contenido;?>
 
 

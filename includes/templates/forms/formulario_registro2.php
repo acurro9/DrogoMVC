@@ -5,7 +5,6 @@
 <input type="text" placeholder="Hash Cartera" id="cartera" name="cartera">
 
 <form action="/registro2" method="POST">
-<!--Corregir butón que pasa a ser submit -->
     <button type="submit" class="registro">Registrarme</button>
     
 </form>

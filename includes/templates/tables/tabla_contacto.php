@@ -9,20 +9,21 @@
         </tr>
     </thead>
     <tbody>
-    <?php while ($fila=mysqli_fetch_assoc($datos)){ ?>
+    <?php foreach ($contactos as $contacto): ?>
         <tr>
-            <td><?php echo $fila['id']; ?></td>
-            <td><?php echo $fila['nombre']; ?></td>
-            <td><?php echo $fila['email']; ?></td>
-            <td><?php echo $fila['telefono']; ?></td>
-            <td><?php echo $fila['mensaje']; ?></td>
+            <td><?= $contacto->id;?></td>
+            <td><?= $contacto->nombre;?></td>
+            <td><?= $contacto->email;?></td>
+            <td><?= $contacto->telefono;?></td>
+            <td><?= $contacto->mensaje;?></td>
+
             <td class="centrar">
                 <!-- Formulario para eliminar un mensaje -->
-                <form action="<?php $_SERVER[ 'PHP_SELF' ]; ?>" method="post" onsubmit="return confirmEliminado()" class="formEliminado">
+                <form action="/borrarContacto?id=<?php echo $contacto->id;?>" method="post" onsubmit="return confirmEliminado()" class="formEliminado">
                     <input class="bTabla" type="submit" value=" ">
-                    <input class="oculto" type="hidden" name="id" value=<?php echo $fila['id'];?>>
+                    <input class="oculto" type="hidden" name="id" value=<?php echo $contacto->id;?>>
                 </form>
             </td>
         </tr>
-    <?php } ?>
+    <?php endforeach; ?>
     </tbody>

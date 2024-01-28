@@ -5,6 +5,7 @@
 
     class UsuariosController {
         public static function verCuentas(Router $router){
+            Usuario::verificarPermisosAdmin();
             $tipo = $_SESSION["tipo"] ?? null;
             $errores = [];
             $res = $_GET['res'] ?? null;
@@ -36,6 +37,7 @@
     }
 
     public static function bloquearUsuario(Router $router) {
+        Usuario::verificarPermisosAdmin();
         // Usuario::verificarPermisos(); no va esto
 
         $errores = [];
@@ -88,6 +90,7 @@
         ]);
     }
     public static function actualizarUsuario(Router $router) {
+        Usuario::verificarPermisosAdmin();
         session_start();
         $errores = [];
         $usuario = null;
@@ -103,24 +106,25 @@
         if (!$usuario instanceof Usuario) {
             header('Location: /');
             exit;
-        }else{
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $usuario->sincronizar($_POST);
-        
-                if (!empty($_POST['password'])) {
-                    $usuario->password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
-                }
-        
-               
-                $errores = $usuario->validar($_POST['password'] !== '');
-        
-                if(empty($errores)) {
-                    if ($usuario->guardar()) {
-                        $usuario->validacionExito(3);
-                    } else {
-                        
-                        $errores[] = 'Error al actualizar usuario.';
-                    }
+        }
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $usuario->sincronizar($_POST);
+    
+            if (!empty($_POST['password'])) {
+                $usuario->password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            }
+    
+           
+            $errores = $usuario->validar($_POST['password'] !== '');
+    
+            if(empty($errores)) {
+                if ($usuario->actualizar()) {
+                    header("Location: /usuario");
+                    exit;
+                } else {
+                    
+                    $errores[] = 'Error updating user.';
                 }
             }
         
@@ -134,6 +138,7 @@
     }
     
     public static function borrarCuenta(Router $router) {
+        Usuario::verificarPermisos();
         session_start();
         $userId = Usuario::buscarID($_SESSION['usuario']);
 

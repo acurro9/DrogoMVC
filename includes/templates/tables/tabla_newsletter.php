@@ -5,16 +5,16 @@
     </tr>
 </thead>
 <tbody>
-<?php while ($fila=mysqli_fetch_assoc($datos)){ ?>
+<?php foreach ($newsletters as $news): ?>
     <tr>
-        <td><?php echo $fila['email']; ?></td>
+        <td><?= $news->email ?></td>
         <td class="centrar">
             <!-- Formulario para borrar un email -->
-            <form action="<?php $_SERVER[ 'PHP_SELF' ]; ?>" method="post" onsubmit="return confirmEliminado()" class="formEliminado">
+            <form action="/borrarNewsletter?id=<?php echo $news->email;?>" method="post" onsubmit="return confirmEliminado()" class="formEliminado">
                 <input class="bTabla" type="submit" value=" ">
-                <input class="oculto" type="hidden" name="id" value=<?php echo $fila['email'];?>>
+                <input class="oculto" type="hidden" name="id" value=<?php echo $news->email?>>
             </form>
         </td>
     </tr>
-<?php } ?>
+<?php endforeach; ?>
 </tbody>

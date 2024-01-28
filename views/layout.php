@@ -1,3 +1,10 @@
+<?php
+    //En caso de que no exista $_SESSION se inicia una session nueva y se comprueba si está logueado
+    if(!isset($_SESSION)){
+        session_start();
+    }
+    $auth=$_SESSION['login'] ?? false;
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -31,8 +38,8 @@
             </section>
                 <!-- Si está la sesión iniciada aparece un menú desplegable -->
             <nav class="desplegable">
-                <?php session_start();
-                if($_SESSION['login']){
+                <?php 
+                if($auth){
                     if ($_SESSION['tipo']=='Administrador' && $_SESSION['log']==2){?>
                     <!--Opciones del admin-->
                     <div class="desplegable">

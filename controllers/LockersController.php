@@ -3,9 +3,11 @@
 namespace Controllers;
 use MVC\Router;
 use Model\Locker;
+use Model\Usuario;
 
 class LockersController{
     public static function crearLocker(Router $router){
+        Usuario::verificarPermisosAdmin();
         $errores = [];
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -40,6 +42,7 @@ class LockersController{
    
 
    public static function verLockers(Router $router){
+    Usuario::verificarPermisosAdmin();
     $errores = [];
 
     // Obtener datos para la paginación
@@ -63,6 +66,7 @@ class LockersController{
    }
 
     public static function actualizarLocker(Router $router){
+        Usuario::verificarPermisosAdmin();
         $errores = [];
         $locker = null;
         $id = $_GET['locker'] ?? null;
@@ -102,6 +106,7 @@ class LockersController{
         ]);
     }
     public static function borrarLocker(Router $router) {
+        Usuario::verificarPermisosAdmin();
         $lockerID = $_GET["id"];
 
         // Encontrar el locker

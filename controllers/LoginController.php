@@ -65,10 +65,11 @@ class LoginController{
 
 
     public static function areaPersonal(Router $router) {
-        session_start();
+        Usuario::verificarPermisos();
 
     if (isset($_SESSION['login']) && $_SESSION['login']) {
-        $usuario = Usuario::buscarUsuario($_SESSION['usuario'], $_SESSION['usuario']);
+        $id = Usuario::buscarID($_SESSION['usuario']);
+            $usuario=Usuario::find($id);
 
         if ($usuario) {
             $router->render('usuarios/areaPersonal', [
@@ -84,11 +85,13 @@ class LoginController{
         }
     }
     public static function areaPersonalAdmin( Router $router ) {
+        Usuario::verificarPermisosAdmin();
         $router->render('usuarios/areaPersonalAdmin', [
 
         ]);
     }
     public static function loginAdmin(Router $router) {
+        Usuario::verificarPermisosAdmin();
         $errores = [];
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -141,10 +144,11 @@ class LoginController{
     }
 
     public static function modDatos(Router $router) {
+        Usuario::verificarPermisos();
         session_start();
         
         
-        if (isset($_SESSION['id'])) {
+        if (isset($_SESSION['usuario'])) {
             $id = Usuario::buscarID($_SESSION['usuario']);
             $usuario=Usuario::find($id);
     
@@ -175,21 +179,15 @@ class LoginController{
 
     
     public static function datos(Router $router) {
-        session_start();
+        Usuario::verificarPermisos();
+        $id = Usuario::buscarID($_SESSION['usuario']);
+        $usuario=Usuario::find($id);
 
-        if (!isset($_SESSION['login']) || !$_SESSION['login']) {
-            header('Location: /login');
-            exit;
-        }
-        
-        $idUsuario = $_SESSION['id'] ?? null;
-        $usuario = Usuario::find($idUsuario);
         $dataType = $_GET['type'] ?? ''; 
         $errores = [];
-        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newValue = $_POST['new_value'] ?? '';
-        
+            
             switch ($dataType) {
                 case 'username':
                     $usuario->username = $newValue;
@@ -214,7 +212,8 @@ class LoginController{
             }
         
             if (empty($errores)) {
-                $usuario->guardar();
+                $usuario->actualizar();
+                $_SESSION['usuario'] = $newValue;
                 // Considera redirigir a otra página o mostrar un mensaje de éxito
                 header('Location: /areaPersonal');
                 exit;

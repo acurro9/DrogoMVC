@@ -2,6 +2,7 @@
     namespace Controllers;
     use MVC\Router;
     use Model\Contacto;
+    use Model\Usuario;
 
     class ContactoController{
         public static function contacto( Router $router ) {
@@ -36,6 +37,7 @@
         }
 
         public static function verContacto(Router $router){
+            Usuario::verificarPermisosAdmin();
             $errores = [];
     
             // Obtener datos para la paginación
@@ -60,6 +62,7 @@
             ]);
         }
         public static function borrarContacto(Router $router){
+            Usuario::verificarPermisosAdmin();
             $id = $_GET["id"];
 
             // Encontrar el contacto

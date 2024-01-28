@@ -5,6 +5,7 @@
 
     class UsuariosController {
         public static function verCuentas(Router $router){
+            Usuario::verificarPermisosAdmin();
             $tipo = $_SESSION["tipo"] ?? null;
             $errores = [];
             $res = $_GET['res'] ?? null;
@@ -36,6 +37,7 @@
     }
 
     public static function bloquearUsuario(Router $router) {
+        Usuario::verificarPermisosAdmin();
         // Usuario::verificarPermisos(); no va esto
 
         $errores = [];
@@ -83,6 +85,7 @@
         ]);
     }
     public static function actualizarUsuario(Router $router) {
+        Usuario::verificarPermisosAdmin();
         session_start();
         $errores = [];
         $usuario = null;
@@ -110,7 +113,7 @@
             $errores = $usuario->validar($_POST['password'] !== '');
     
             if(empty($errores)) {
-                if ($usuario->guardar()) {
+                if ($usuario->actualizar()) {
                     header("Location: /usuario");
                     exit;
                 } else {
@@ -127,6 +130,7 @@
     }
     
     public static function borrarCuenta(Router $router) {
+        Usuario::verificarPermisos();
         session_start();
         $userId = Usuario::buscarID($_SESSION['usuario']);
 

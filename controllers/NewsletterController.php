@@ -3,6 +3,7 @@
 namespace Controllers;
 use MVC\Router;
 use Model\Newsletter;
+use Model\Usuario;
 
 class NewsletterController{
     public static function crearNewsletter(Router $router){
@@ -28,6 +29,7 @@ class NewsletterController{
         ]);
     }
     public static function verNewsletters(Router $router){
+        Usuario::verificarPermisosAdmin();
         $errores = [];
     
             // Obtener datos para la paginación
@@ -50,6 +52,7 @@ class NewsletterController{
             ]);
     }
     public static function borrarNewsletter(Router $router){
+        Usuario::verificarPermisosAdmin();
         $id = $_GET["id"];
 
         // Encontrar el newsletter

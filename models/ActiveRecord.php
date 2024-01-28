@@ -61,11 +61,11 @@ class ActiveRecord {
             $query = "SELECT * FROM " . static::$tabla . " WHERE id = '{$id}'"; 
             $resultado = self::consultarSQL($query);
     
-            if ($resultado === false) {
+            if ($resultado === false || empty($resultado)) {
                 // Log del error, p.ej. error_log('Error en la consulta SQL: ' . self::$db->error);
                 return null;
             }
-    
+          
             return array_shift($resultado);
         } catch (\Exception $e) {
             // Aquí puedes manejar la excepción y, opcionalmente, registrarla

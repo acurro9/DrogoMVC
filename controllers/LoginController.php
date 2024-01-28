@@ -188,6 +188,7 @@ class LoginController{
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newValue = $_POST['new_value'] ?? '';
             
+
             switch ($dataType) {
                 case 'username':
                     $usuario->username = $newValue;
@@ -218,6 +219,7 @@ class LoginController{
                 header('Location: /areaPersonal');
                 exit;
             }
+            
         }
         
         $router->render('usuarios/datos', [

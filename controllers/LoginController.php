@@ -156,8 +156,6 @@ class LoginController{
     }
 
     public static function cerrarSesion( Router $router ) {
-        if (!session_id()) {
-        }
         session_start();
         session_destroy();
 
@@ -176,16 +174,17 @@ class LoginController{
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newValue = $_POST['new_value'] ?? '';
 
-            $tipoNumerico=$_SESSION['tipoUsuario']??null;
-            $tipoUsuario = $usuario->determinarTablaTipo($tipoNumerico);
 
           
                 switch ($dataType) {
                     case 'username':
                         $usuario->username = $newValue;
                         if (empty($errores)) {
-                            $usuario->guardar();
+                            $usuario->actualizar();
+                            $_SESSION['usuario'] = $newValue;
                             $usuario->validacionExito(4);
+                            
+
                             header('Location: /areaPersonal');
                             exit;
                         }
@@ -193,7 +192,7 @@ class LoginController{
                     case 'email':
                         $usuario->email = $newValue;
                         if (empty($errores)) {
-                            $usuario->guardar();
+                            $usuario->actualizar();
                             $usuario->validacionExito(5);
                             header('Location: /areaPersonal');
                             exit;
@@ -206,7 +205,7 @@ class LoginController{
                         if ($newPassword === $confirmPassword) {
                             // Aquí deberías validar la nueva contraseña
                             $usuario->password_hash = password_hash($newPassword, PASSWORD_DEFAULT);
-                            $usuario->guardar();
+                            $usuario->actualizar();
                             $usuario->validacionExito(6);
                             header('Location: /areaPersonal');
                             exit;
@@ -218,6 +217,7 @@ class LoginController{
                         $nuevaCartera = $_POST['newCartera'] ?? '';
                         $confirmarCartera = $_POST['confirmCartera'] ?? '';
                        if($nuevaCartera === $confirmarCartera){
+                            $usuario->actualizarCartera2($nuevaCartera);
                             $usuario->validacionExito(7);
                             header('Location: /areaPersonal');
                             exit;

@@ -44,6 +44,7 @@
         $accion=1; 
         session_start();
         $usuario=$_SESSION['userObj'];
+        $usuario=new Usuario;
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $accion = $_POST['action'] ?? null;
@@ -53,8 +54,12 @@
     
             if ($accion == 1) {
                 Usuario::bloquear($usuarioId, $username, $email);
+                $usuario->validacionExito(1);
+                exit;
             } elseif ($accion == 2) {
                 Usuario::desbloquear($username);
+                $usuario->validacionExito(2);
+                exit;
             }
     
             header("Location: usuario?res=$accion");
@@ -94,32 +99,34 @@
         }
     
         $usuario = Usuario::find($id);
-        if (!$usuario) {
+        //Para asegurarnos de que realmente se crea una instancia de la clase Usuario
+        if (!$usuario instanceof Usuario) {
             header('Location: /');
             exit;
-        }
-    
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $usuario->sincronizar($_POST);
-    
-            if (!empty($_POST['password'])) {
-                $usuario->password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
-            }
-    
-           
-            $errores = $usuario->validar($_POST['password'] !== '');
-    
-            if(empty($errores)) {
-                if ($usuario->guardar()) {
-                    header("Location: /usuario");
-                    exit;
-                } else {
-                    
-                    $errores[] = 'Error updating user.';
+        }else{
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $usuario->sincronizar($_POST);
+        
+                if (!empty($_POST['password'])) {
+                    $usuario->password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                }
+        
+               
+                $errores = $usuario->validar($_POST['password'] !== '');
+        
+                if(empty($errores)) {
+                    if ($usuario->guardar()) {
+                        $usuario->validacionExito(3);
+                    } else {
+                        
+                        $errores[] = 'Error al actualizar usuario.';
+                    }
                 }
             }
+        
         }
     
+        
         $router->render('usuarios/actualizarUsuario', [
             'usuario' => $usuario,
             'errores' => $errores

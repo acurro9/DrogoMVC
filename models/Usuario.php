@@ -73,6 +73,26 @@ class Usuario extends ActiveRecord {
         }
         return self::$errores;
     }
+
+    public function mssgExitoAdmin($codigo){
+        switch($codigo){
+            case 1:
+                return "Usuario bloqueado con éxito";
+            case 2: 
+                return "Usuario desbloqueado con éxito";
+            case 3: 
+                return "Usuario actualizado con éxito";
+            default:    
+                return "Operación realizada con éxito";
+        }
+    }
+
+    public function validacionExito($codigo){
+        $mensaje=$this->mssgExitoAdmin($codigo);
+        $_SESSION['mensaje_exito']=$mensaje;
+        header("Location: /usuario");
+        exit;
+    }
     
     public static function buscarID($usuario){
         $query = "SELECT * FROM " . self::$tabla . " WHERE username = '$usuario';";

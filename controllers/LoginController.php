@@ -183,42 +183,52 @@ class LoginController{
         }
         
         $idUsuario = $_SESSION['id'] ?? null;
+        if (!$idUsuario) {
+            header('Location: /login');
+            exit;
+        }
         $usuario = Usuario::find($idUsuario);
         $dataType = $_GET['type'] ?? ''; 
         $errores = [];
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newValue = $_POST['new_value'] ?? '';
-        
-            switch ($dataType) {
-                case 'username':
-                    $usuario->username = $newValue;
-                    break;
-                case 'email':
-                    $usuario->email = $newValue;
-                    break;
-                case 'password':
-                    $newPassword = $_POST['newPassword'] ?? '';
-                    $confirmPassword = $_POST['confirmPassword'] ?? '';
-        
-                    if ($newPassword === $confirmPassword) {
-                        // Aquí deberías validar la nueva contraseña
-                        $usuario->password_hash = password_hash($newPassword, PASSWORD_DEFAULT);
-                    } else {
-                        $errores[] = "Las contraseñas no coinciden";
-                    }
-                    break;
-                default:
-                    // Manejar casos no esperados
-                    $errores[] = "Tipo de dato no válido";
+            
+            if($usuario){
+                switch ($dataType) {
+                    case 'username':
+                        $usuario->username = $newValue;
+                        break;
+                    case 'email':
+                        $usuario->email = $newValue;
+                        break;
+                    case 'password':
+                        $newPassword = $_POST['newPassword'] ?? '';
+                        $confirmPassword = $_POST['confirmPassword'] ?? '';
+            
+                        if ($newPassword === $confirmPassword) {
+                            // Aquí deberías validar la nueva contraseña
+                            $usuario->password_hash = password_hash($newPassword, PASSWORD_DEFAULT);
+                        } else {
+                            $errores[] = "Las contraseñas no coinciden";
+                        }
+                        break;
+                    default:
+                        // Manejar casos no esperados
+                        $errores[] = "Tipo de dato no válido";
+                }
+            
+                if (empty($errores)) {
+                    $usuario->guardar();
+                    // Considera redirigir a otra página o mostrar un mensaje de éxito
+                    header('Location: /areaPersonal');
+                    exit;
+                } else{
+                    //Si el usuario no se encuentra
+                    $errores[] = "Usuario no encontrado.";
+                }
             }
-        
-            if (empty($errores)) {
-                $usuario->guardar();
-                // Considera redirigir a otra página o mostrar un mensaje de éxito
-                header('Location: /areaPersonal');
-                exit;
-            }
+            
         }
         
         $router->render('usuarios/datos', [

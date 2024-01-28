@@ -12,18 +12,18 @@
     
             // Obtener datos para la paginación
             $ppp = $_GET["producto"] ?? 5; // Productos por página
-        $pagina = $_GET["pagina"] ?? 1;
-        $totalUsuarios = Usuario::contarUsuarios();
+            $pagina = $_GET["pagina"] ?? 1;
+            $totalUsuarios = Usuario::contarUsuarios();
 
-        $limit = $ppp;
-        $offset = ($pagina - 1) * $ppp;
-        $usuarios = Usuario::obtenerUsuariosPorPagina($limit, $offset);
-        $totalPaginas = ceil($totalUsuarios / $ppp);
+            $limit = $ppp;
+            $offset = ($pagina - 1) * $ppp;
+            $usuarios = Usuario::obtenerUsuariosPorPagina($limit, $offset);
+            $totalPaginas = ceil($totalUsuarios / $ppp);
 
-        $usuariosBloqueados = Usuario::obtenerUsuariosBloqueados();
-        foreach ($usuarios as $usuario) {
-            $usuario->bloqueado = in_array($usuario->id, $usuariosBloqueados);
-        }
+            $usuariosBloqueados = Usuario::obtenerUsuariosBloqueados();
+            foreach ($usuarios as $usuario) {
+                $usuario->bloqueado = in_array($usuario->id, $usuariosBloqueados);
+            }
 
         // Renderizardo de la vista con los datos necesarios
         $router->render('admin/usuario', [

@@ -8,27 +8,27 @@
 
     // Se guarda el email del usuario y se realiza la query para seleccionar los datos del usuario
     $usuario=$_SESSION['usuario'];
-    $query="SELECT * FROM usuario WHERE email='${usuario}';";
+    $query="SELECT * FROM usuario WHERE email='{$usuario}';";
     $resultado=mysqli_query($db, $query);
 
     if ($resultado) {
         $datosUsuario = mysqli_fetch_assoc($resultado);
     } 
     // Se realiza la query para seleccionar el tipo del usuario
-    $tipoQuery="SELECT tipo FROM usuario WHERE email='${usuario}';";
+    $tipoQuery="SELECT tipo FROM usuario WHERE email='{$usuario}';";
     $resultadoTipo=mysqli_query($db, $tipoQuery);
     if ($resultadoTipo) {
         $tipoUsuario=mysqli_fetch_assoc($resultadoTipo)['tipo'];
         // Dependiendo del tipo de usuario realizamos una consulta a una tabla o a otra
         switch($tipoUsuario){
             case 'Vendedor':
-                $queryHashCartera="SELECT hash_carteraVendedor FROM vendedor WHERE hash_vendedor=(SELECT id FROM usuario WHERE email='${usuario}');";
+                $queryHashCartera="SELECT hash_carteraVendedor FROM vendedor WHERE hash_vendedor=(SELECT id FROM usuario WHERE email='{$usuario}');";
                 break;
             case 'Comprador':
-                $queryHashCartera="SELECT hash_carteraComprador FROM comprador WHERE hash_comprador=(SELECT id FROM usuario WHERE email='${usuario}');";
+                $queryHashCartera="SELECT hash_carteraComprador FROM comprador WHERE hash_comprador=(SELECT id FROM usuario WHERE email='{$usuario}');";
                 break;
             case 'Distribuidor':
-                $queryHashCartera="SELECT hash_carteraDistribuidor FROM distribuidor WHERE hash_distribuidor=(SELECT id FROM usuario WHERE email='${usuario}');";
+                $queryHashCartera="SELECT hash_carteraDistribuidor FROM distribuidor WHERE hash_distribuidor=(SELECT id FROM usuario WHERE email='{$usuario}');";
                 break;
             default:
                 break;

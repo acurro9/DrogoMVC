@@ -24,22 +24,22 @@
 
         public function validar(){
             if(!$this->hash_distribuidor) {
-                self::$errores[] = "Es obligatorio poner el hash del distribuidor";
+                self::$errores[] = "Es obligatorio indicar el distribuidor";
             }
             if(!$this->refCompra) {
-                self::$errores[] = "Es obligatorio poner la referencia de la compra";
+                self::$errores[] = "Es obligatorio indicar la referencia de la compra";
             }
             if(!$this->fechaRecogida) {
-                self::$errores[] = "Es obligatorio poner la fecha de recogida";
+                self::$errores[] = "Es obligatorio indicar la fecha de recogida";
             }
             if(!$this->fechaDeposito) {
-                self::$errores[] = "Es obligatorio poner la fecha de deposito";
+                self::$errores[] = "Es obligatorio indicar la fecha de deposito";
             }
             if(!$this->lockerOrigen) {
-                self::$errores[] = "Es obligatorio poner los locker del origen";
+                self::$errores[] = "Es obligatorio indicar los locker del origen";
             }
             if(!$this->lockerDeposito) {
-                self::$errores[] = "Es obligatorio poner los locker del deposito";
+                self::$errores[] = "Es obligatorio indicar los locker del deposito";
             }
             return self::$errores;
         }
@@ -53,7 +53,7 @@
             // Para meterle la id
             $query = "INSERT INTO " . static::$tabla . " (";
             $query .= join(', ', array_keys($atributos));
-            $query .= ") VALUES (";
+            $query .= ") VALUES ('";
             $query .= join("', '", array_values($atributos));
             $query .= "')";
 

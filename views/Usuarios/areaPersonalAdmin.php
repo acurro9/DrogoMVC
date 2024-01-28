@@ -51,15 +51,15 @@
                     <div class="user_inner_right">
                     <div class="userOptRight mostrar">
                             <img src="../build/img/icons/detective.svg" alt="detective">
-                            <a href="/Pedidos/pedidos.php" class="miCuentaOpcion p_title">Ver Pedidos</a>
+                            <a href="/pedidos" class="miCuentaOpcion p_title">Ver Pedidos</a>
                         </div>
                         <div class="userOptRight miCuentaOpciones">
                             <img src="../build/img/icons/writer.svg" alt="punta de boli">
-                            <a href="Pedidos/crearPedido.php" class="miCuentaOpcion" class="a_title">Crear Pedidos</a>
+                            <a href="/crearPedido" class="miCuentaOpcion" class="a_title">Crear Pedidos</a>
                         </div>
                         <div class="userOptRight miCuentaOpciones">
                             <img src="../build/img/icons/send.svg" alt="punta de boli">
-                            <a href="Pedidos/entregas.php" class="miCuentaOpcion" class="a_title">Ver distribuciones</a>
+                            <a href="/envios" class="miCuentaOpcion" class="a_title">Ver distribuciones</a>
                         </div>
                     </div>
                 </div>

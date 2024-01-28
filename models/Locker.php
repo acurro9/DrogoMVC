@@ -110,4 +110,17 @@ class Locker extends ActiveRecord {
             return null;
         }
     }   
+    public static function obtenerDireccion(){
+        self::contarLockers();
+        $query = "SELECT refLocker, direccion FROM locker";
+        $lockers = self::$db->query($query);
+        $cont=0;
+        foreach ($lockers as $locker) {
+            $direccion[$cont][0]=$locker['refLocker'];
+            $direccion[$cont][1]=$locker['direccion'];
+            $cont++;
+        }
+        return $direccion;
+
+    }
 }

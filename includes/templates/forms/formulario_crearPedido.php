@@ -6,63 +6,65 @@
                 <select name="comp">
                     <option value="" class="black">--Seleccione--</option>
                     <!-- Desplegable con los compradores -->
-                    <?php while($comprador=mysqli_fetch_assoc($result)){?>
-                        <option <?php echo $hash_comprador==$comprador['id']?'selected':''; ?> value="<?php echo $comprador['id'];?>" class="black">
-                            <?php echo $comprador['username'];?>
+                    <?php foreach ($usuarios as $usuario) :?>
+                        <?php if($usuario->tipo == 'Comprador'){ ?>
+                            <option class="black" value="<?= $usuario->id; ?>">
+                            <?php echo $usuario->username; ?>
                         </option>
-                    <?php }?>    
+                    <?php } endforeach; ?>    
                 </select>
         
                 <label for="vend">Vendedor: </label>
                 <select name="vend">
                     <option value="" class="black">--Seleccione--</option>
                     <!-- Desplegable con los vendedores -->
-                    <?php while($vendedor=mysqli_fetch_assoc($result2)){ ?>
-                        <option <?php echo $hash_vendedor==$vendedor['id']?'selected':''; ?> value="<?php echo $vendedor['id'];?>" class="black">
-                            <?php echo $vendedor['username'];?>
+                    <?php foreach ($usuarios as $usuario) :?>
+                        <?php if($usuario->tipo == 'Vendedor'){ ?>
+                            <option class="black" value="<?= $usuario->id; ?>">
+                            <?php echo $usuario->username; ?>
                         </option>
-                    <?php }?>    
+                    <?php } endforeach; ?>   
                 </select>
                 
                 <label for="Locker">Locker: </label>
                 <select name="locker">
-                    <option value="" class="black">--Seleccione--</option>
+                <option value="" class="black">--Seleccione--</option>
                     <!-- Desplegable con los lockers -->
-                    <?php while($lockers=mysqli_fetch_assoc($result3)){ ?>
-                        <option <?php echo $locker==$lockers['refLocker']?'selected':''; ?> value="<?php echo $lockers['refLocker'];?>" class="black">
-                            <?php echo $lockers['direccion'];?>
+                    <?php foreach ($lockers as $locker) :?>
+                        <option class="black" value="<?= $locker->refLocker; ?>">
+                            <?php echo $locker->direccion; ?>
                         </option>
-                    <?php }?>    
+                    <?php endforeach; ?>
                 </select>
         
         
                 <label for="imp">Importe: </label>
-                <input type="number" name="imp" value="<?php echo $importe;?>">
+                <input type="number" name="imp">
             </div>
     
             <div class="part2">
                 <label for="carT">Cargo de transporte: </label>
-                <input type="number" name="carT" value="<?php echo $cargoTrans;?>">
+                <input type="number" name="carT">
         
                 <label for="carA">Cargos adicionales: </label>
-                <input type="number" name="carA" value="<?php echo $cargoAds;?>">
+                <input type="number" name="carA">
         
                 <label for="fecDeposito">Fecha de Depósito: </label>
-                <input type="date" name="deposito" value="<?php echo $fechaDep; ?>">
+                <input type="date" name="deposito">
         
                 <label for="fecRegistro">Fecha de Recogida: </label>
-                <input type="date" name="registro" value="<?php echo $fechaRec; ?>">
+                <input type="date" name="registro">
         
             </div>
         </div>
         <div class="dist">
             <label for="dist">Distribuidor: </label>
-            <input type="checkbox" name="dist" <?php echo $distribuidor==1?'checked':''; ?>>
+            <input type="checkbox" name="dist">
         </div>
         
         <!-- Botones para crear o volver -->
         <div class="botones">
             <input type="submit" value="Crear Pedido" class="registro">
-            <a href="/Pedidos/pedidos.php" class="buton">Volver</a>
+            <a href="/pedidos" class="buton">Volver</a>
         </div>
     </fieldset>

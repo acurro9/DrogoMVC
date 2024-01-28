@@ -2,27 +2,33 @@
 namespace Controllers;
 use MVC\Router;
 use Model\Pedido;
+use Model\Locker;
+use Model\Usuario;
+
     class PedidoController{
-        public static function verPedido(Router $router){
+        public static function verPedidos(Router $router){
             $errores = [];
 
             $ppp = $_GET["producto"] ?? 5; // Productos por página
             $pagina = $_GET["pagina"] ?? 1;
-            $totalPedido = Pedido::contarPedido();
+            $totalPedidos = Pedido::contarPedido();
 
             $limit = $ppp;
             $offset = ($pagina - 1) * $ppp;
-            $pedido = Pedido::obtenerPedidoPorPagina($limit, $offset);
-            $totalPaginas = ceil($totalPedido / $ppp);
+            $pedidos = Pedido::obtenerPedidoPorPagina($limit, $offset);
+            $totalPaginas = ceil($totalPedidos / $ppp);
 
+            $lockers = Locker::obtenerLockersPorPagina($limit, $offset);
+            $direccion = Locker::obtenerDireccion();
             // Renderizardo de la vista con los datos necesarios
             $router->render('Pedidos/pedidos', [
-                'pedido' => $pedido,
+                'lockers' => $lockers,
+                'pedidos' => $pedidos,
                 'totalPaginas' => $totalPaginas,
                 'paginaActual' => $pagina,
                 'ppp' => $ppp,
-                'totalPedido' => $totalPedido
-            
+                'totalPedidos' => $totalPedidos,
+                'direccion' => $direccion            
             ]);
         }
 
@@ -72,7 +78,7 @@ use Model\Pedido;
             // Eliminar el usuario actual
             if ($pedido->eliminar()) {
                 // Se destruye la sesión y se redirecciona al usuario al directorio raíz
-                header('Location: /pedido');
+                header('Location: /pedidos');
                 exit;
             } 
         }
@@ -82,17 +88,17 @@ use Model\Pedido;
     
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $pedido = new Pedido([
-                    'refCompra' => $_POST['refCompra'] ?? null,
-                    'hash_comprador' => $_POST['hash_comprador'] ?? null,
-                    'hash_vendedor' => $_POST['hash_vendedor'] ?? null,
-                    'fechaCompra' => $_POST['fechaCompra'] ?? null,
-                    'importe' => $_POST['importe'] ?? null,
-                    'cargoTransporte' => $_POST['cargoTransporte'] ?? null,
-                    'cargosAdicionales' => $_POST['cargosAdicionales'] ?? null,
-                    'fechaDeposito' => $_POST['fechaDeposito'] ?? null,
-                    'fechaRecogida' => $_POST['fechaRecogida'] ?? null,
-                    'refLocker' => $_POST['refLocker'] ?? null,
-                    'distribuidor' => $_POST['distribuidor'] ?? null,
+                    'refCompra' => md5(uniqid(rand(), true)),
+                    'hash_comprador' => $_POST['comp'] ?? null,
+                    'hash_vendedor' => $_POST['vend'] ?? null,
+                    'fechaCompra' => date('Y-m-d'),
+                    'importe' => $_POST['imp'] ?? null,
+                    'cargoTransporte' => $_POST['carT'] ?? null,
+                    'cargosAdicionales' => $_POST['carA'] ?? null,
+                    'fechaDeposito' => date($_POST['deposito']) ?? null,
+                    'fechaRecogida' => date($_POST['registro']) ?? null,
+                    'refLocker' => $_POST['locker'] ?? null,
+                    'distribuidor' => isset($_POST['dist']) ? 1 : 0
                 ]);
         
                 $errores = $pedido->validar();
@@ -104,16 +110,20 @@ use Model\Pedido;
                         $errores = Pedido::getErrores();
                     } else {
                         $resultado = $pedido->crear();
+
                         if($resultado){
-                            header("Location: /pedido");
+                            header("Location: /pedidos");
                         }
                     }
                 }
             }
-
-
-            $router->render('pedido/crearPedido', [
-                'errores' => $errores
+            $lockers = Locker::obtenerLockersPorPagina(200, 0);
+            $usuarios = Usuario::obtenerUsuariosPorPagina(200, 0);
+            
+            $router->render('pedidos/crearPedido', [
+                'errores' => $errores,
+                'lockers' => $lockers,
+                'usuarios' => $usuarios
             ]);
         }
     }

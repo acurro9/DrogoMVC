@@ -19,7 +19,6 @@
                 <a href="?producto=<?= $ppp ?>&pagina=<?= $i ?>" class="<?= $paginaActual == $i ? 'active' : '' ?>"><?= $i ?></a>
             <?php } ?>
         </div>
-    </div>
     <div class="centro">
         <a href="/crearLocker" class="buton grande">Crear Locker</a>
     </div>

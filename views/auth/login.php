@@ -1,15 +1,8 @@
-<?php 
-//Vista login
-
-    foreach ($errores as $error) {
-        // Se imprimen los errores si los hay
-    ?>
-        <div class="alerta error">
-            <?php echo $error; ?>
+<?php foreach($errores as $error): ?>
+        <div>
+            <p class="error"><?= htmlspecialchars($error); ?></p>
         </div>
-    <?php
-    }
-?>
+    <?php endforeach; ?>
 
     <!--Se importan los css necesarios-->
     <link rel="stylesheet" href="../build/css/login.css">

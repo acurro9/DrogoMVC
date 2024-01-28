@@ -4,7 +4,7 @@
     use MVC\Router;
     
         class EnvioController{
-            public static function verEnvio(Router $router){
+            public static function verEnvios(Router $router){
                 $errores = [];
     
                 $ppp = $_GET["producto"] ?? 5; // Productos por página
@@ -17,7 +17,7 @@
                 $totalPaginas = ceil($totalEnvio/ $ppp);
     
                 // Renderizardo de la vista con los datos necesarios
-                $router->render('Pedidos/pedidos', [
+                $router->render('Pedidos/envio', [
                     'envio' => $envio,
                     'totalPaginas' => $totalPaginas,
                     'paginaActual' => $pagina,

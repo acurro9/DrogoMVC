@@ -181,6 +181,11 @@
 <div class="bloq">
     <!-- Formulario para la búsqueda del usuario -->
     <form action="bloquearUsuario" method="POST" class="formu">
+    <?php foreach($errores as $error): ?>
+        <div>
+            <p class="error"><?= htmlspecialchars($error); ?></p>
+        </div>
+    <?php endforeach; ?>
         <?php include __DIR__ . '/../../includes/templates/forms/formulario_bloqUsu.php'; ?>        
     </form>
 </div>

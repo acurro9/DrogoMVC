@@ -12,6 +12,8 @@ use Controllers\RegistroController;
 use Controllers\LockersController;
 use Controllers\NewsletterController;
 use Controllers\ContactoController;
+use Controllers\EnvioController;
+use Controllers\PedidoController;
 
 $router = new Router();
 
@@ -90,6 +92,16 @@ $router->get('/contacto', [ContactoController::class, 'contacto']);
 $router->post('/contacto', [ContactoController::class, 'crearContacto']);
 $router->get('/verContacto', [ContactoController::class, 'verContacto']);
 $router->post('/borrarContacto', [ContactoController::class, 'borrarContacto']);
+
+//EnvioController
+$router->get('/envios', [EnvioController::class, 'verEnvios']);
+$router->get('/crearEnvio', [PedidoController::class, 'crearEnvio']);
+
+//PedidoController
+$router->get('/pedidos', [PedidoController::class, 'verPedidos']);
+$router->get('/crearPedido', [PedidoController::class, 'crearPedido']);
+$router->post('/crearPedido', [PedidoController::class, 'crearPedido']);
+$router->post('/borrarPedido', [PedidoController::class, 'borrarPedido']);
 
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
 $router->comprobarRutas();

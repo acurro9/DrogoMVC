@@ -32,34 +32,34 @@
 
         public function validar(){
             if(!$this->hash_comprador) {
-                self::$errores[] = "Es obligatorio poner el hash del comprador";
+                self::$errores[] = "Es obligatorio indicar el comprador";
             }
             if(!$this->hash_vendedor) {
-                self::$errores[] = "Es obligatorio poner el hash del vendedor";
+                self::$errores[] = "Es obligatorio indicar el vendedor";
             }
             if(!$this->fechaCompra) {
-                self::$errores[] = "Es obligatorio poner la fecha de compra";
+                self::$errores[] = "Es obligatorio indicar la fecha del pedido";
             }
             if(!$this->importe) {
-                self::$errores[] = "Es obligatorio poner los importes";
+                self::$errores[] = "Es obligatorio indicar los importes";
             }
             if(!$this->cargoTransporte) {
-                self::$errores[] = "Es obligatorio poner los cargos de transporte";
+                self::$errores[] = "Es obligatorio indicar los cargos de transporte";
             }
             if(!$this->cargosAdicionales) {
-                self::$errores[] = "Es obligatorio poner los cargos adicionales";
+                self::$errores[] = "Es obligatorio indicar los cargos adicionales";
             }
             if(!$this->fechaDeposito) {
-                self::$errores[] = "Es obligatorio poner la fecha de deposito";
+                self::$errores[] = "Es obligatorio indicar la fecha de deposito";
             }
             if(!$this->fechaRecogida) {
-                self::$errores[] = "Es obligatorio poner la fecha de recogida";
+                self::$errores[] = "Es obligatorio indicar la fecha de recogida";
             }
             if(!$this->refLocker) {
-                self::$errores[] = "Es obligatorio poner la referencia del locker";
+                self::$errores[] = "Es obligatorio indicar la direccion del locker";
             }
-            if(!$this->distribuidor) {
-                self::$errores[] = "Es obligatorio poner un distribuidor";
+            if($this->fechaDeposito>$this->fechaRecogida){
+                $errores[]="La fecha de recogida no puede ser anterior a la fecha de deposito.";
             }
             return self::$errores;
         }
@@ -73,10 +73,9 @@
             // Para meterle la id
             $query = "INSERT INTO " . static::$tabla . " (";
             $query .= join(', ', array_keys($atributos));
-            $query .= ") VALUES (";
+            $query .= ") VALUES ('";
             $query .= join("', '", array_values($atributos));
             $query .= "')";
-
 
             // Resultado de la consulta
             $resultado = self::$db->query($query);

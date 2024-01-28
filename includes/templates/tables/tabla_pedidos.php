@@ -1,6 +1,3 @@
-
-
-
         <thead>
             <tr>
                 <th>Referencia Pedido</th>
@@ -31,48 +28,46 @@
             </tr>
         </thead>
         <tbody>
-        <?php while ($fila=mysqli_fetch_assoc($datos)){ ?>
+        <?php foreach ($pedidos as $pedido): ?>
             <tr>
-                <td><?php echo $fila['refCompra']; ?></td>
-                <td><?php echo $fila['fechaCompra']; ?></td>
-                <td><?php echo $fila['importe']; ?></td>
-                <td><?php echo $fila['refLocker']; ?></td>
-                <td class="direccion"><?php echo $fila['direccion']; ?></td>
+                <td><?= $pedido->refCompra?></td>
+                <td><?= $pedido->fechaCompra?></td>
+                <td><?= $pedido->importe?></td>
+                <td><?= $pedido->refLocker?></td>
+                <td class="direccion"><?= $pedido->direccion?></td>
                 <!-- En el caso del comprador -->
                 <?php if($tipo=='Comprador'){?>
-                    <td><?php echo $fila['fechaRecogida'];?></td>   
+                    <td><?= $pedido->fechaRecogida?></td>
                 <!-- En el caso del vendedor -->
                 <?php } else if($tipo=='Vendedor'){?>
-                    <td><?php echo $fila['fechaDeposito'];?></td>   
-                    <td><?php echo $fila['cargoTransporte'];?></td>   
-                    <td><?php echo $fila['cargosAdicionales'];?></td>   
+                    <td><?= $pedido->fechaDeposito?></td>
+                    <td><?= $pedido->cargoTransporte?></td>
+                    <td><?= $pedido->cargosAdicionales?></td> 
                     <!-- Dependiendo de si hay distribución o no aparece una cosa u otra -->
                     <td>
                         <div class="row">
-
-                            <p><?php echo $fila['distribuidor']==1?'Si':'No';?></p>
+                            <p><?= $pedido->distribuidor==1?'Si':'No'?></p>
                             <?php 
-                                if($fila['distribuidor']==1){?>
-                                    <a href="/Pedidos/distribuidor.php?pedido=<?php echo $fila['refCompra'];?>" class="act"><img src="../build/img/icons/edit.svg" alt=""></a>
+                                if($pedido->distribuidor==1){?>
+                                    <a href="" class="act"><img src="../build/img/icons/edit.svg" alt=""></a>
                             <?php } ?>
                         </div>
                     </td> 
                     <!-- En el caso del administrador -->
                 <?php } else if($tipo=='Administrador'){ ?>
-                    <td><?php echo $fila['fechaRecogida'];?></td>   
-                    <td><?php echo $fila['fechaDeposito'];?></td>  
-                    <td><?php echo $fila['cargoTransporte'];?></td>   
-                    <td><?php echo $fila['cargosAdicionales'];?></td>    
-                    <td><?php echo $fila['hash_comprador'];?></td>  
-                    <td><?php echo $fila['hash_vendedor'];?></td> 
+                    <td><?= $pedido->fechaRecogida?></td>
+                    <td><?= $pedido->fechaDeposito?></td>
+                    <td><?= $pedido->cargoTransporte?></td>
+                    <td><?= $pedido->cargosAdicionales?></td>
+                    <td><?= $pedido->hash_comprador?></td>
+                    <td><?= $pedido->hash_vendedor?></td>
                     <!-- Dependiendo de si hay distribución o no aparece una cosa u otra -->
                     <td>
                         <div class="row">
-
-                            <p><?php echo $fila['distribuidor']==1?'Si':'No';?></p>
+                            <p><?= $pedido->distribuidor==1?'Si':'No'?></p>
                             <?php 
-                                if($fila['distribuidor']==1){?>
-                                    <a href="/Pedidos/distribuidor.php?pedido=<?php echo $fila['refCompra'];?>" class="act"><img src="../build/img/icons/edit.svg" alt=""></a>
+                                if($pedido->distribuidor==1){?>
+                                    <a href="" class="act"><img src="../build/img/icons/edit.svg" alt=""></a>
                             <?php } ?>
                         </div>
                     </td> 
@@ -81,12 +76,12 @@
                         <div class="bloque">
                             <form action="<?php $_SERVER[ 'PHP_SELF' ]; ?>" method="post" onsubmit="return confirmEliminado()" class="formEliminado">
                                 <input class="bTabla" type="submit" name="borrar" value=" ">
-                                <input class="oculto" type="hidden" name="refCompra" value=<?php echo $fila['refCompra'];?>>
+                                <input class="oculto" type="hidden" name="refCompra" value=<?= $pedido->refCompra;?>>
                             </form>
-                            <a href="/Pedidos/actualizarPedido.php?pedido=<?php echo $fila['refCompra'];?>" class="bTabla act"><img src="../build/img/icons/writer.svg" alt=""></a>
+                            <a href="/actualizarPedido.php?id=<?= $pedido->refCompra;?>" class="bTabla act"><img src="../build/img/icons/writer.svg" alt=""></a>
                 </div>
                 <?php } ?>
                 </td>
             </tr>
-        <?php } ?>
+        <?php endforeach; ?>
         </tbody>

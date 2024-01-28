@@ -47,10 +47,10 @@ INSERT INTO `bloqueado` (`username`, `email`, `id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `compra`
+-- Estructura de tabla para la tabla `pedido`
 --
 
-CREATE TABLE `compra` (
+CREATE TABLE `pedido` (
   `refCompra` char(32) NOT NULL,
   `hash_comprador` char(32) DEFAULT NULL,
   `hash_vendedor` char(32) DEFAULT NULL,
@@ -65,10 +65,10 @@ CREATE TABLE `compra` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `compra`
+-- Volcado de datos para la tabla `pedido`
 --
 
-INSERT INTO `compra` (`refCompra`, `hash_comprador`, `hash_vendedor`, `fechaCompra`, `importe`, `cargoTransporte`, `cargosAdicionales`, `fechaDeposito`, `fechaRecogida`, `refLocker`, `distribuidor`) VALUES
+INSERT INTO `pedido` (`refCompra`, `hash_comprador`, `hash_vendedor`, `fechaCompra`, `importe`, `cargoTransporte`, `cargosAdicionales`, `fechaDeposito`, `fechaRecogida`, `refLocker`, `distribuidor`) VALUES
 ('24149c5699cb0022c8961f7546ac72b1', '019ab87a4bfd785acb9758c3ea34aa53', 'a4ccf4be80e92a24f3a3cad35f09a516', '2023-11-16', 99.00, 10.00, 5.00, '2023-11-27', '2023-11-30', '2', 0),
 ('35e7913c0f699d58ee9b933efdbd50fc', '26706ab0ea93fa3f8d139c32e6174809', 'a4ccf4be80e92a24f3a3cad35f09a516', '2023-11-16', 2500.00, 100.00, 10.00, '2023-11-21', '2023-11-25', '1', 0),
 ('53a9e8b21083ead172193c497952f9f7', '26706ab0ea93fa3f8d139c32e6174809', 'a7ceb0de1bce60956191c8d72015665d', '2023-11-16', 230.00, 15.00, 10.00, '2023-11-17', '2023-11-19', '3', 1),
@@ -141,10 +141,10 @@ INSERT INTO `distribuidor` (`hash_distribuidor`, `hash_carteraDistribuidor`) VAL
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `entrega`
+-- Estructura de tabla para la tabla `envio`
 --
 
-CREATE TABLE `entrega` (
+CREATE TABLE `envio` (
   `id` int(11) NOT NULL,
   `hash_distribuidor` varchar(32) DEFAULT NULL,
   `refCompra` varchar(32) DEFAULT NULL,
@@ -155,10 +155,10 @@ CREATE TABLE `entrega` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `entrega`
+-- Volcado de datos para la tabla `envio`
 --
 
-INSERT INTO `entrega` (`id`, `hash_distribuidor`, `refCompra`, `fechaRecogida`, `fechaDeposito`, `lockerOrigen`, `lockerDeposito`) VALUES
+INSERT INTO `envio` (`id`, `hash_distribuidor`, `refCompra`, `fechaRecogida`, `fechaDeposito`, `lockerOrigen`, `lockerDeposito`) VALUES
 (6, NULL, '752948ccc71bb8222cba3ec2b682b258', NULL, NULL, NULL, NULL),
 (7, '0b8fb0e363169a7e789cc1416cbcf65d', '9c58f1cf54517e5ddde4e46bf5095041', '2023-11-17', '2023-11-18', '2', '1'),
 (8, NULL, '6bbac43c4d1537fbf9417c2ce34d1d58', NULL, NULL, NULL, NULL),
@@ -267,9 +267,9 @@ ALTER TABLE `bloqueado`
   ADD PRIMARY KEY (`username`);
 
 --
--- Indices de la tabla `compra`
+-- Indices de la tabla `pedido`
 --
-ALTER TABLE `compra`
+ALTER TABLE `pedido`
   ADD PRIMARY KEY (`refCompra`),
   ADD KEY `hash_comprador` (`hash_comprador`),
   ADD KEY `hash_vendedor` (`hash_vendedor`),
@@ -294,9 +294,9 @@ ALTER TABLE `distribuidor`
   ADD PRIMARY KEY (`hash_distribuidor`);
 
 --
--- Indices de la tabla `entrega`
+-- Indices de la tabla `envio`
 --
-ALTER TABLE `entrega`
+ALTER TABLE `envio`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -336,9 +336,9 @@ ALTER TABLE `contacto`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT de la tabla `entrega`
+-- AUTO_INCREMENT de la tabla `envio`
 --
-ALTER TABLE `entrega`
+ALTER TABLE `envio`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
@@ -346,12 +346,12 @@ ALTER TABLE `entrega`
 --
 
 --
--- Filtros para la tabla `compra`
+-- Filtros para la tabla `pedido`
 --
-ALTER TABLE `compra`
-  ADD CONSTRAINT `compra_ibfk_1` FOREIGN KEY (`hash_comprador`) REFERENCES `comprador` (`hash_comprador`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `compra_ibfk_2` FOREIGN KEY (`hash_vendedor`) REFERENCES `vendedor` (`hash_vendedor`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `compra_ibfk_3` FOREIGN KEY (`refLocker`) REFERENCES `locker` (`refLocker`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `pedido`
+  ADD CONSTRAINT `pedido_ibfk_1` FOREIGN KEY (`hash_comprador`) REFERENCES `comprador` (`hash_comprador`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `pedido_ibfk_2` FOREIGN KEY (`hash_vendedor`) REFERENCES `vendedor` (`hash_vendedor`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `pedido_ibfk_3` FOREIGN KEY (`refLocker`) REFERENCES `locker` (`refLocker`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `comprador`

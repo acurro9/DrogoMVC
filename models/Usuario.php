@@ -25,21 +25,22 @@ class Usuario extends ActiveRecord {
         $this->tipo = $args['tipo']??'';
         $this->passwordPlano = $args['passwordPlano']??'';
     }
-
-    public function validar() {
-        if(!$this->username){
-            self::$errores[] = "El nombre de usuario es obligatorio";
+    //Para el bloquearUsuario
+    public static function verificarPermisos() {
+        session_start();
+        $auth = $_SESSION['login'] ?? false;
+        if (!$auth) {
+            header('Location: /');
+            exit;
         }
-        if(!$this->email) {
-            self::$errores[] = "El Email del usuario es obligatorio";
+    }
+    public static function verificarPermisosAdmin() {
+        session_start();
+        $auth = $_SESSION['login'] ?? false;
+        if (!$auth || $_SESSION['tipo'] != 'Administrador') {
+            header('Location: /');
+            exit;
         }
-        if(!$this->password_hash) {
-            self::$errores[] = "El Password del usuario es obligatorio";
-        }
-        if(!$this->tipo) {
-            self::$errores[] = "Elija un tipo de usuario";
-        }
-        return self::$errores;
     }
 
     public function validarLogin() {
@@ -153,24 +154,6 @@ class Usuario extends ActiveRecord {
         $query = "SELECT * FROM usuario LIMIT {$limit} OFFSET {$offset}";
         return self::consultarSQL($query);
     }
-    //Para el fucking logn
-    public static function buscarUsuario($username, $email) {
-        $query = "SELECT * FROM " . static::$tabla . " WHERE username = '{$username}' OR email = '{$email}' LIMIT 1";
-        $resultado = self::consultarSQL($query);
-        return array_shift($resultado);
-    }
-
-    //Reload
-
-    public function guardar() {  
-        if (isset($this->id) && !empty($this->id)) {
-            // Actualización
-            return $this->actualizar();
-        } else {
-            // Creación
-            return $this->crear();
-        }
-    }
     
     public function crear() {
        // Sanitizar los datos
@@ -210,6 +193,10 @@ class Usuario extends ActiveRecord {
         return self::$db->query($query);
     }
     public function actualizarCartera($id, $tipo, $cartera){
+        if (!$id) {
+            self::$errores[] = "Error: Usuario no identificado.";
+            return false;
+        }
         if($tipo===1){
             $tabla="Comprador";
             $hash="hash_comprador";
@@ -232,58 +219,6 @@ class Usuario extends ActiveRecord {
         return $resultado;
 
     }
-
-    public function registrarCartera($cartera, $tipo) {
-        if (!$this->id) {
-            self::$errores[] = "Error: Usuario no identificado.";
-            return false;
-        }
-    
-        $tabla = $this->determinarTablaTipo($tipo);
-        if (!$tabla) {
-            self::$errores[] = "Error: Tipo de usuario no existente.";
-            return false;
-        }
-    
-        $cartHash = password_hash($cartera, PASSWORD_DEFAULT);
-        $query = "INSERT INTO $tabla (usuario_id, hash_cartera) VALUES ('{$this->id}', '$cartHash');";
-    
-        $resultado = self::$db->query($query);
-        return $resultado;
-    }
-
-
-    //Por qué así se supone que me reconoce regCartera en el Controller,wtf?
-    protected static function crearObjeto($registro) {
-       
-        $objeto = new static($registro); 
-        return $objeto;
-    }
-    
-
-    
-    public function determinarTablaTipo($tipo) {
-        $tipos = ['1' => 'Comprador', '2' => 'Vendedor', '3' => 'Distribuidor'];
-        return $tipos[$tipo] ?? null;
-    }
-    
-
-    //Para el bloquearUsuario
-    public static function verificarPermisos() {
-        $auth = $_SESSION['login'] ?? false;
-        if (!$auth) {
-            header('Location: /');
-            exit;
-        }
-    }
-    public static function verificarPermisosAdmin() {
-        $auth = $_SESSION['login'] ?? false;
-        if (!$auth || $_SESSION['tipo'] != 'Administrador') {
-            header('Location: /');
-            exit;
-        }
-    }
-
     public static function bloquear($idUsuario, $username, $email) {
         $query = "INSERT INTO bloqueado (id, username, email) VALUES ('$idUsuario', '$username', '$email')";
         return self::$db->query($query);
@@ -327,6 +262,5 @@ class Usuario extends ActiveRecord {
         
         return $resultado;
     }
-
 }
 

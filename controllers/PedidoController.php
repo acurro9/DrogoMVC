@@ -27,7 +27,6 @@ use Model\Pedido;
         }
 
         public static function actualizarPedido(Router $router){
-            session_start();
             $errores = [];
             $id = $_GET['pedido'] ?? null;
 

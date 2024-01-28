@@ -44,7 +44,6 @@
         $usuarioBloqueado = null;
         //Iniciazliación de la variable acción
         $accion=1; 
-        session_start();
         $usuario=$_SESSION['userObj'];
         $usuario=new Usuario;
     
@@ -91,7 +90,6 @@
     }
     public static function actualizarUsuario(Router $router) {
         Usuario::verificarPermisosAdmin();
-        session_start();
         $errores = [];
         $usuario = null;
         $id = $_GET['usuario'] ?? null;
@@ -115,7 +113,6 @@
                 $usuario->password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
             }
     
-           
             $errores = $usuario->validar($_POST['password'] !== '');
     
             if(empty($errores)) {
@@ -139,7 +136,7 @@
     
     public static function borrarCuenta(Router $router) {
         Usuario::verificarPermisos();
-        session_start();
+
         $userId = Usuario::buscarID($_SESSION['usuario']);
 
         if (!isset($userId)) {

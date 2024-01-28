@@ -39,15 +39,7 @@ class LoginController{
                             $errores = Usuario::getErrores();
                         }
                         // Verificación de password para admin
-                        if  ($usuario && $usuario->tipo === 'Administrador' && $_POST['password'] === '1234') {
-                                session_start();
-                                    $_SESSION['usuario'] = $usuario->username;
-                                    $_SESSION['login'] = true;
-                                    $_SESSION['tipo'] = $usuario->tipo;
-                                    $_SESSION['id'] = $usuario->id;
-                                    $_SESSION['log']=1;
-                                    $_SESSION['userObj']=$usuario;
-                            
+                        if  ($usuario && $usuario->tipo === 'Administrador' && $_POST['password'] === '1234') {                            
                                     header('Location: /loginAdmin');
                                     exit;
                             }                    
@@ -91,7 +83,6 @@ class LoginController{
         ]);
     }
     public static function loginAdmin(Router $router) {
-        Usuario::verificarPermisosAdmin();
         $errores = [];
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -119,7 +110,6 @@ class LoginController{
                         $_SESSION['usuario'] = $usuario->username;
                         $_SESSION['tipo'] = $usuario->tipo;
                         $_SESSION['id'] = $usuario->id;
-                        $_SESSION['log']=2;
     
                         header('Location: /areaPersonalAdmin');
                         exit;
@@ -145,7 +135,6 @@ class LoginController{
 
     public static function modDatos(Router $router) {
         Usuario::verificarPermisos();
-        session_start();
         
         
         if (isset($_SESSION['usuario'])) {
@@ -168,9 +157,8 @@ class LoginController{
 
     public static function cerrarSesion( Router $router ) {
         if (!session_id()) {
-            session_start();
         }
-
+        session_start();
         session_destroy();
 
         header('Location: /');
@@ -207,14 +195,26 @@ class LoginController{
                         $errores[] = "Las contraseñas no coinciden";
                     }
                     break;
+                case 'cartera':
+                    $newCartera= $_POST['newCartera'] ?? '';
+                    $confirmCartera = $_POST['confirmCartera'] ?? '';
+        
+                    if ($newCartera!== $confirmCartera) {
+                        $errores[] = "Las contraseñas no coinciden";
+                    }
+                    break;
                 default:
                     // Manejar casos no esperados
                     $errores[] = "Tipo de dato no válido";
             }
         
             if (empty($errores)) {
-                $usuario->actualizar();
-                $_SESSION['usuario'] = $newValue;
+                if($dataType == 'cartera'){
+                    $usuario->actualizarCartera2($newCartera);
+                } else{
+                    $usuario->actualizar();
+                    $_SESSION['usuario'] = $newValue;
+                }
                 // Considera redirigir a otra página o mostrar un mensaje de éxito
                 header('Location: /areaPersonal');
                 exit;

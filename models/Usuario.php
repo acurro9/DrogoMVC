@@ -237,8 +237,40 @@ class Usuario extends ActiveRecord {
 
         $resultado = self::$db->query($query);
         return $resultado;
+    }
+
+    public function actualizarCartera2($cartera){
+        if (!$this->id) {
+            self::$errores[] = "Error: Usuario no identificado.";
+            return false;
+        }
+        $id=$this->id;
+        $tipo=$this->tipo;
+
+        if($tipo==='Comprador'){
+            $tabla="comprador";
+            $hash="hash_comprador";
+            $hashCartera="hash_carteraComprador";
+        } else if($tipo==='Vendedor'){
+            $tabla="vendedor";
+            $hash="hash_vendedor";
+            $hashCartera="hash_carteraVendedor";
+        } else if($tipo==='Distribuidor'){
+            $tabla="distribuidor";
+            $hash="hash_distribuidor";
+            $hashCartera="hash_carteraDistribuidor";
+        }
+        // Se hashea la cartera
+        $cart=password_hash($cartera, PASSWORD_DEFAULT);
+        // Se inserta la cartera en la tabla del usuario
+        $query = "UPDATE $tabla SET $hashCartera = '$cart' where $hash = '$id'";
+
+        $resultado = self::$db->query($query);
+        return $resultado;
 
     }
+
+
     public static function bloquear($idUsuario, $username, $email) {
         $query = "INSERT INTO bloqueado (id, username, email) VALUES ('$idUsuario', '$username', '$email')";
         return self::$db->query($query);

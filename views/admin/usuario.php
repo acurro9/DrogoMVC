@@ -1,7 +1,6 @@
 
 <link rel="stylesheet" href="../build/css/usuarios.css">
 <?php 
-    session_start(); 
     if(isset($_SESSION['mensaje_exito'])): ?>
         <p class='success'><?php echo htmlspecialchars($_SESSION['mensaje_exito']); ?></p>
         <?php unset($_SESSION['mensaje_exito']); // Elimina el mensaje de la sesión después de mostrarlo

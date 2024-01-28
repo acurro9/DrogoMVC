@@ -28,7 +28,6 @@
             }
     
             public static function actualizarEnvio(Router $router){
-                session_start();
                 $errores = [];
                 $id = $_GET['envio'] ?? null;
     

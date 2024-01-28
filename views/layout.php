@@ -40,7 +40,7 @@
             <nav class="desplegable">
                 <?php 
                 if($auth){
-                    if ($_SESSION['tipo']=='Administrador' && $_SESSION['log']==2){?>
+                    if ($_SESSION['tipo']=='Administrador'){?>
                     <!--Opciones del admin-->
                     <div class="desplegable">
                         <button class="boton" id="btn"><img src="../build/img/images/imagenPerfil.jpg" alt=""></button>

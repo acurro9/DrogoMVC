@@ -117,6 +117,7 @@
     
             if(empty($errores)) {
                 if ($usuario->actualizar()) {
+                    $usuario->validacionExito(3);
                     header("Location: /usuario");
                     exit;
                 } else {

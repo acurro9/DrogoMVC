@@ -135,8 +135,9 @@ class LoginController{
 
     public static function modDatos(Router $router) {
         Usuario::verificarPermisos();
-        
-        
+        $id = Usuario::buscarID($_SESSION['usuario']);
+        $usuario = Usuario::find($id);
+    
         if (isset($_SESSION['usuario'])) {
             $id = Usuario::buscarID($_SESSION['usuario']);
             $usuario=Usuario::find($id);
@@ -173,32 +174,39 @@ class LoginController{
         $errores = [];
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newValue = $_POST['new_value'] ?? '';
-
           
                 switch ($dataType) {
                     case 'username':
-                        $usuario->username = $newValue;
-                        if (empty($errores)) {
-                            $usuario->actualizar();
-                            $_SESSION['usuario'] = $newValue;
-                            $usuario->validacionExito(4);
-                            
-
-                            header('Location: /areaPersonal');
-                            exit;
-                        }else{
-                            $errores[]="Debe introducir un nombre de usuario válido";
+                        if (!empty($newValue)) {
+                            $usuario->username = $newValue;
+                            if ($usuario->noExisteUsuarioDatos($usuario->id)) {
+                                $usuario->actualizar();
+                                $_SESSION['usuario'] = $newValue;
+                                $usuario->validacionExito(4);
+                                header('Location: /areaPersonal');
+                                exit;
+                            } else {
+                                $errores[] = "El nombre de usuario ya está en uso";
+                            }
+                        } else {
+                            $errores[] = "Debe introducir un nombre de usuario válido";
                         }
+                        break;
                     case 'email':
-                        $usuario->email = $newValue;
-                        if (empty($errores)) {
-                            $usuario->actualizar();
-                            $usuario->validacionExito(5);
-                            header('Location: /areaPersonal');
-                            exit;
-                        }else{
-                            $errores[]="Debe introducir un email válido";
+                        if (!empty($newValue)&&filter_var($newValue, FILTER_VALIDATE_EMAIL)) {
+                            $usuario->email = $newValue;
+                            if ($usuario->noExisteUsuarioDatos($usuario->id)) {
+                                $usuario->actualizar();
+                                $usuario->validacionExito(5);
+                                header('Location: /areaPersonal');
+                                exit;
+                            } else {
+                                $errores[] = "El email ya está en uso por otro usuario";
+                            }
+                        } else {
+                            $errores[] = "Debe introducir un email válido";
                         }
+                        break;
                     case 'password':
                         $newPassword = $_POST['newPassword'] ?? '';
                         $confirmPassword = $_POST['confirmPassword'] ?? '';
@@ -234,16 +242,9 @@ class LoginController{
                     $usuario->validacionError($errores);
                     exit;
                 }
-            
-                // if (empty($errores)) {
-                //     $usuario->guardar();
-                //     $usuario->validacionExito(3);
-                //     header('Location: /areaPersonal');
-                //     exit;
-            
+        
             }
             
-        // }
         
         $router->render('usuarios/datos', [
             'datosUsuario' => $usuario,

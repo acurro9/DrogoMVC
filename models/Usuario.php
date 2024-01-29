@@ -135,6 +135,7 @@ class Usuario extends ActiveRecord {
     }
     public function noExisteUsuario() {
         $query = "SELECT * FROM " . self::$tabla . " WHERE username = '{$this->username}' OR email = '{$this->email}';";
+        
         $resultado = self::$db->query($query);
         if($resultado->num_rows) {
             self::$errores[] = 'El Usuario Ya Existe';
@@ -142,6 +143,35 @@ class Usuario extends ActiveRecord {
         }
         return true;
     }
+
+    //Para evitar que, al modificar los datos, el usuario introduzca el nombre o email de otro usuario, así se evitan duplicidades
+
+    public function noExisteUsuarioDatos($idActual = null){
+        $condiciones = [];
+        if (!empty($this->username)) {
+            $condiciones[] = "username = '{$this->username}'";
+        }
+        if (!empty($this->email)) {
+            $condiciones[] = "email = '{$this->email}'";
+        }
+        if (empty($condiciones)) {
+            // No hay suficiente información para hacer una consulta
+            return true;
+        }
+        //Para no contar al usuario actual como duplicado, que es lo que lleva dando problemas todo el tiempo
+        $query = "SELECT * FROM " . self::$tabla . " WHERE (" . implode(' OR ', $condiciones) . ")";
+        if ($idActual !== null) {
+            $query .= " AND id != '{$idActual}'";
+        }
+    
+        $resultado = self::$db->query($query);
+        if ($resultado->num_rows) {
+            self::$errores[] = 'El nombre de usuario o email ya está en uso';
+            return false;
+        }
+        return true;
+        }
+    
 
 
     public function comprobarPassword($usuario) {

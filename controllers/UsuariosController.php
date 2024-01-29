@@ -38,13 +38,13 @@
 
     public static function bloquearUsuario(Router $router) {
         Usuario::verificarPermisosAdmin();
-        // Usuario::verificarPermisos(); no va esto
+        Usuario::verificarPermisos(); 
 
         $errores = [];
         $usuarioBloqueado = null;
         //Iniciazliación de la variable acción
         $accion=1; 
-        $usuario=$_SESSION['userObj'];
+        // $usuario=$_SESSION['userObj'];
         $usuario=new Usuario;
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -117,6 +117,7 @@
     
             if(empty($errores)) {
                 if ($usuario->actualizar()) {
+                    $usuario->validacionExito(3);
                     header("Location: /usuario");
                     exit;
                 } else {

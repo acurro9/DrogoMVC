@@ -27,7 +27,10 @@ class Usuario extends ActiveRecord {
     }
     //Para el bloquearUsuario
     public static function verificarPermisos() {
-        session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+    
         $auth = $_SESSION['login'] ?? false;
         if (!$auth) {
             header('Location: /');

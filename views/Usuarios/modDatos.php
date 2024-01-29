@@ -2,6 +2,17 @@
 <!--Se importan los css necesarios-->
 <link rel="stylesheet" href="../build/css/styles.css">
 <link rel="stylesheet" href="../build/css/modificar.css">
+<?php 
+session_start(); 
+if(isset($_SESSION['errores']) && count($_SESSION['errores']) > 0): ?>
+    <div class='errors'>
+        <?php foreach($_SESSION['errores'] as $error): ?>
+            <p class='error'><?php echo htmlspecialchars($error); ?></p>
+        <?php endforeach; ?>
+    </div>
+    <?php unset($_SESSION['errores']); // Elimina los mensajes de error de la sesión después de mostrarlos
+endif; ?>
+
 <main>
     <div class="general">
         <!-- Botones para seleccionar el dato a cambiar -->

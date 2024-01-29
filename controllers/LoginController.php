@@ -174,7 +174,6 @@ class LoginController{
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newValue = $_POST['new_value'] ?? '';
 
-
           
                 switch ($dataType) {
                     case 'username':
@@ -187,8 +186,9 @@ class LoginController{
 
                             header('Location: /areaPersonal');
                             exit;
+                        }else{
+                            $errores[]="Debe introducir un nombre de usuario válido";
                         }
-                        break;
                     case 'email':
                         $usuario->email = $newValue;
                         if (empty($errores)) {
@@ -196,8 +196,9 @@ class LoginController{
                             $usuario->validacionExito(5);
                             header('Location: /areaPersonal');
                             exit;
+                        }else{
+                            $errores[]="Debe introducir un email válido";
                         }
-                        break;
                     case 'password':
                         $newPassword = $_POST['newPassword'] ?? '';
                         $confirmPassword = $_POST['confirmPassword'] ?? '';
@@ -228,6 +229,10 @@ class LoginController{
                     default:
                         // Manejar casos no esperados
                         $errores[] = "Tipo de dato no válido";
+                }
+                if(!empty($errores)){
+                    $usuario->validacionError($errores);
+                    exit;
                 }
             
                 // if (empty($errores)) {

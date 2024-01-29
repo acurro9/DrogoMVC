@@ -96,6 +96,12 @@ class Usuario extends ActiveRecord {
         }
     }
 
+    public function validacionError($errores){
+        $_SESSION['errores']=$errores;
+        header("Location: /modDatos");
+        exit;
+    }
+
     public function validacionExito($codigo){
         $mensaje=$this->mssgExito($codigo);
         $_SESSION['mensaje_exito']=$mensaje;

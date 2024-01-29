@@ -63,8 +63,13 @@
             <td><?= $pedido->fechaDeposito?></td>
             <td><?= $pedido->cargoTransporte?></td>
             <td><?= $pedido->cargosAdicionales?></td>
-            <td><?= $pedido->hash_comprador?></td>
-            <td><?= $pedido->hash_vendedor?></td>
+            <?php foreach ($users as $user) :?>
+                    <?php if($user->id==$pedido->hash_comprador){ echo "<td>".$user->username."</td>";}?>
+            <?php endforeach; ?>   
+            <?php foreach ($users as $user) :?>
+                <?php if($user->id==$pedido->hash_vendedor){ echo "<td>".$user->username."</td>";}?>
+            <?php endforeach; ?> 
+
             <!-- Dependiendo de si hay distribución o no aparece una cosa u otra -->
             <td>
                 <div class="row">

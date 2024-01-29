@@ -3,7 +3,6 @@
 <link rel="stylesheet" href="../build/css/styles.css">
 <link rel="stylesheet" href="../build/css/modificar.css">
 <?php 
-session_start(); 
 if(isset($_SESSION['errores']) && count($_SESSION['errores']) > 0): ?>
     <div class='errors'>
         <?php foreach($_SESSION['errores'] as $error): ?>

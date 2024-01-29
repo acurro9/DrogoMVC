@@ -1,7 +1,3 @@
-<?php
-session_start();
-    $tipo = $_SESSION['tipo'];
-?>
 <!--Se importan los css necesarios-->
 <link rel="stylesheet" href="../build/css/pedidos.css">
 <link rel="stylesheet" href="../build/css/styles.css">
@@ -26,7 +22,7 @@ session_start();
             <?php } ?>
         </div>
         <?php
-            if($_SESSION['tipo']=='Administrador'){
+            if($tipo=='Administrador'){
         ?>
             <div class="centro">
                 <a href="/crearPedido" class="buton grande">Crear Pedido</a>

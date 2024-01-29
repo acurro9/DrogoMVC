@@ -93,15 +93,22 @@ $router->post('/contacto', [ContactoController::class, 'crearContacto']);
 $router->get('/verContacto', [ContactoController::class, 'verContacto']);
 $router->post('/borrarContacto', [ContactoController::class, 'borrarContacto']);
 
-//EnvioController
-$router->get('/envios', [EnvioController::class, 'verEnvios']);
-$router->get('/crearEnvio', [PedidoController::class, 'crearEnvio']);
-
 //PedidoController
 $router->get('/pedidos', [PedidoController::class, 'verPedidos']);
 $router->get('/crearPedido', [PedidoController::class, 'crearPedido']);
 $router->post('/crearPedido', [PedidoController::class, 'crearPedido']);
+$router->get('/actualizarPedido', [PedidoController::class, 'actualizarPedido']);
+$router->post('/actualizarPedido', [PedidoController::class, 'actualizarPedido']);
 $router->post('/borrarPedido', [PedidoController::class, 'borrarPedido']);
+
+//EnvioController
+$router->get('/envios', [EnvioController::class, 'verEnvios']);
+$router->get('/crearEnvio', [EnvioController::class, 'crearEnvio']);
+$router->post('/crearEnvio', [EnvioController::class, 'crearEnvio']);
+$router->get('/actualizarEnvio', [EnvioController::class, 'actualizarEnvio']);
+$router->post('/actualizarEnvio', [EnvioController::class, 'actualizarEnvio']);
+$router->post('/borrarEnvio', [EnvioController::class, 'borrarEnvio']);
+
 
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
 $router->comprobarRutas();

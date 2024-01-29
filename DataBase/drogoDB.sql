@@ -266,6 +266,8 @@ INSERT INTO `vendedor` (`hash_vendedor`, `hash_carteraVendedor`) VALUES
 ALTER TABLE `bloqueado`
   ADD PRIMARY KEY (`username`);
 
+ALTER TABLE `envio` 
+  ADD UNIQUE(`refCompra`);
 --
 -- Indices de la tabla `pedido`
 --

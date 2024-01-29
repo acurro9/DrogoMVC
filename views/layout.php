@@ -64,7 +64,7 @@
                                 <a href="/modDatos">Modificar Datos</a>
                                 <!--Si es distribuidor no tiene pedidos por lo que no se muestran estas opción-->
                                 <?php if($_SESSION['tipo']!='Distribuidor'){ ?>
-                                    <a href="/verPedidos">Ver Pedidos</a>
+                                    <a href="/pedidos">Ver Pedidos</a>
                                 <?php }?>
                                 <a href="/borrarCuenta" id="borrar">Borrar Cuenta</a>
                                 <a href="/logout">Cerrar Sesión</a>

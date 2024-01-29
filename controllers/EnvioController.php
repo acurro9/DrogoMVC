@@ -1,7 +1,10 @@
 <?php
     namespace Controllers;
-    use Model\Envio;
     use MVC\Router;
+    use Model\Envio;
+    use Model\Locker;
+    use Model\Usuario;
+    use Model\Pedido;
     
         class EnvioController{
             public static function verEnvios(Router $router){
@@ -13,34 +16,49 @@
     
                 $limit = $ppp;
                 $offset = ($pagina - 1) * $ppp;
-                $envio = Envio::obtenerEnvioPorPagina($limit, $offset);
+                $envios = Envio::obtenerEnvioPorPagina($limit, $offset);
                 $totalPaginas = ceil($totalEnvio/ $ppp);
+
+                $lockers = Locker::obtenerLockersPorPagina($limit, $offset);
+                $direccion = Locker::obtenerDireccion();
+                $user = Usuario::obtenerNombres();
     
+                session_start();
+                $id = Usuario::buscarID($_SESSION['usuario']);
+                $usuario = Usuario::find($id);
+                $tipo=$usuario->tipo;
                 // Renderizardo de la vista con los datos necesarios
                 $router->render('Pedidos/envio', [
-                    'envio' => $envio,
+                    'tipo' => $tipo,
+                    'envios' => $envios,
                     'totalPaginas' => $totalPaginas,
                     'paginaActual' => $pagina,
                     'ppp' => $ppp,
-                    'totalEnvio' => $totalEnvio
+                    'totalEnvio' => $totalEnvio,
+                    'direccion' => $direccion,
+                    'lockers' => $lockers,
+                    'user'=> $user
                 
                 ]);
             }
     
             public static function actualizarEnvio(Router $router){
                 $errores = [];
-                $id = $_GET['envio'] ?? null;
+                $refCompra = $_GET['id'] ?? null;
     
-                if (!$id) {
+                if (!$refCompra) {
                     header('Location: /');
                     exit;
                 }
     
-                $envio = Envio::find($id);
+                $envio = Envio::findID($refCompra);
                 if (!$envio) {
                     header('Location: /');
                     exit;
                 }
+                $lockers = Locker::obtenerLockersPorPagina(200, 0);
+                $usuarios = Usuario::obtenerUsuariosPorPagina(200, 0);
+                $pedidos = Pedido::obtenerPedidoPorPagina(200, 0);
     
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $envio->sincronizar($_POST);
@@ -50,7 +68,7 @@
             
                     if(empty($errores)) {
                         if ($envio->actualizar()) {
-                            header("Location: /envio");
+                            header("Location: /envios");
                             exit;
                         } else {
                             
@@ -58,6 +76,13 @@
                         }
                     }
                 }
+                $router->render('pedidos/actualizarEnvio', [
+                    'envio' => $envio,
+                    'errores' => $errores,
+                    'lockers' => $lockers,
+                    'usuarios' => $usuarios,
+                    'pedidos' => $pedidos
+                ]);
             }
     
             public static function borrarEnvio(Router $router){
@@ -66,52 +91,16 @@
                 // Encontrar el locker
                 $envio = Envio::find($envioID);
                 if (!$envio) {
-                    header('Location: /envio');
+                    header('Location: /envios');
                     exit;
                 }
         
                 // Eliminar el usuario actual
                 if ($envio->eliminar()) {
+                    Pedido::actualizarDistribucion(0, $envio->refCompra);
                     // Se destruye la sesión y se redirecciona al usuario al directorio raíz
-                    header('Location: /envio');
+                    header('Location: /envios');
                     exit;
                 } 
             }
-    
-            public static function crearEnvio(Router $router){
-                $errores = [];
-        
-                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $envio = new Envio([
-                        'id' => $_POST['id'] ?? null,
-                        'hash_distribuidor' => $_POST['hash_distribuidor'] ?? null,
-                        'refCompra' => $_POST['refCompra'] ?? null,
-                        'fechaRecogida' => $_POST['fechaRecogida'] ?? null,
-                        'fechaDeposito' => $_POST['fechaDeposito'] ?? null,
-                        'lockerOrigen' => $_POST['lockerOrigen'] ?? null,
-                        'lockerDeposito' => $_POST['lockerDeposito'] ?? null,
-                    ]);
-            
-                    $errores = $envio->validar();
-            
-                    if (empty($errores)) {
-            
-                        $resultado = $envio->noExisteEnvio();
-                        if (!$resultado) {
-                            $errores = Envio::getErrores();
-                        } else {
-                            $resultado = $envio->crear();
-                            if($resultado){
-                                header("Location: /envio");
-                            }
-                        }
-                    }
-                }
-    
-    
-                $router->render('envio/crearEnvio', [
-                    'errores' => $errores
-                ]);
-            }
         }
-?>

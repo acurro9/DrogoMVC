@@ -110,6 +110,27 @@
                 return null;
             }
         }   
+        public static function findID($id) {
+            if (!$id) {
+                return null; 
+            }
+        
+            try {
+                $query = "SELECT * FROM " . static::$tabla . " WHERE refCompra = '{$id}'"; 
+                $resultado = self::consultarSQL($query);
+        
+                if ($resultado === false) {
+                    // Log del error, p.ej. error_log('Error en la consulta SQL: ' . self::$db->error);
+                    return null;
+                }
+        
+                return array_shift($resultado);
+            } catch (\Exception $e) {
+                // Aquí puedes manejar la excepción y, opcionalmente, registrarla
+                error_log('Excepción capturada en find: ' . $e->getMessage());
+                return null;
+            }
+        }   
 
         public static function contarEnvio() {
             $query = "SELECT COUNT(*) as total FROM envio";
@@ -132,5 +153,14 @@
             }
             return true;
         }
+
+        public static function crearDistribucion($refCompra){
+            $query = "INSERT into envio (refCompra) values ('$refCompra')";
+            return self::$db->query($query);
+        }
+        public static function borrarDistribucion($refCompra){
+            $query = "DELETE FROM envio where refCompra = '$refCompra';";
+            return self::$db->query($query);
+
+        }
     }
-?>

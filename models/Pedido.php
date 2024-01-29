@@ -104,7 +104,7 @@
             $query .= join(', ', $valores);
             $query .= " WHERE refCompra = '" . self::$db->escape_string($this->refCompra) . "'";
             $query .= " LIMIT 1";
-    
+
             return self::$db->query($query);
         }
 
@@ -142,6 +142,11 @@
             return self::consultarSQL($query);
         }
 
+        public static function obtenerPedidoPorPaginaUsuario($limit, $offset, $id) {
+            $query = "SELECT * FROM pedido where hash_comprador = '$id' or hash_vendedor = '$id' LIMIT {$limit} OFFSET {$offset};";
+            return self::consultarSQL($query);
+        }
+
         public function noExistePedido() {
             $query = "SELECT * FROM " . self::$tabla . " WHERE refCompra = '{$this->refCompra}';";
             $resultado = self::$db->query($query);
@@ -151,5 +156,8 @@
             }
             return true;
         }
+        public static function actualizarDistribucion($valor, $refCompra){
+            $query = "UPDATE pedido SET distribuidor = $valor where refCompra = '$refCompra'";
+            return self::$db->query($query);
+        }
     }
-?>

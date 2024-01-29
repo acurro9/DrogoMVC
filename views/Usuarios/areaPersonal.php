@@ -31,7 +31,7 @@
                     <?php if($_SESSION['tipo']!='Distribuidor'){ ?>    
                         <div class="userOpt">
                             <img src="../build/img/icons/lock.svg" alt="">
-                            <a href="/Pedidos/pedidos.php"  class="a_title">Mis Pedidos</a>
+                            <a href="/pedidos"  class="a_title">Mis Pedidos</a>
                         </div>
                     <?php } else{?>
                         <div class="userOpt">

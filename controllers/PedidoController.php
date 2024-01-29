@@ -4,6 +4,7 @@ use MVC\Router;
 use Model\Pedido;
 use Model\Locker;
 use Model\Usuario;
+use Model\Envio;
 
     class PedidoController{
         public static function verPedidos(Router $router){
@@ -20,8 +21,22 @@ use Model\Usuario;
 
             $lockers = Locker::obtenerLockersPorPagina($limit, $offset);
             $direccion = Locker::obtenerDireccion();
+
+            session_start();
+            $id = Usuario::buscarID($_SESSION['usuario']);
+            $usuario = Usuario::find($id);
+            $tipo=$usuario->tipo;
+            $users=Usuario::obtenerUsuariosPorPagina(300, 0);
+
+            if($tipo!='Administrador'){
+                $pedidos = Pedido::obtenerPedidoPorPaginaUsuario($limit, $offset, $id);
+            } else {
+                $pedidos = Pedido::obtenerPedidoPorPagina($limit, $offset);
+            }
             // Renderizardo de la vista con los datos necesarios
             $router->render('Pedidos/pedidos', [
+                'users' => $users,
+                'tipo'=> $tipo,
                 'lockers' => $lockers,
                 'pedidos' => $pedidos,
                 'totalPaginas' => $totalPaginas,
@@ -34,7 +49,7 @@ use Model\Usuario;
 
         public static function actualizarPedido(Router $router){
             $errores = [];
-            $id = $_GET['pedido'] ?? null;
+            $id = $_GET['id'] ?? null;
 
             if (!$id) {
                 header('Location: /');
@@ -46,6 +61,8 @@ use Model\Usuario;
                 header('Location: /');
                 exit;
             }
+            $lockers = Locker::obtenerLockersPorPagina(200, 0);
+            $usuarios = Usuario::obtenerUsuariosPorPagina(200, 0);
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $pedido->sincronizar($_POST);
@@ -55,14 +72,32 @@ use Model\Usuario;
         
                 if(empty($errores)) {
                     if ($pedido->actualizar()) {
-                        header("Location: /pedido");
-                        exit;
-                    } else {
+
+                        if($pedido->distribuidor==1){
+                            $resultado = Envio::crearDistribucion($pedido->refCompra);
+                            if($resultado){
+                                    header("Location: /pedidos");
+                                    exit;
+                                }
+                        } else {
+                            $resultado = Envio::borrarDistribucion($pedido->refCompra);
+                            if($resultado){
+                                header("Location: /pedidos");
+                                exit;
+                            }
+                        }
+                    } 
+                } else {
                         
-                        $errores[] = 'Error updating pedido.';
-                    }
+                    $errores[] = 'Error updating pedido.';
                 }
-            }
+                }
+            $router->render('pedidos/actualizarPedido', [
+                'pedido' => $pedido,
+                'errores' => $errores,
+                'lockers' => $lockers,
+                'usuarios' => $usuarios
+            ]);
         }
 
         public static function borrarPedido(Router $router){
@@ -77,6 +112,7 @@ use Model\Usuario;
     
             // Eliminar el usuario actual
             if ($pedido->eliminar()) {
+                Envio::borrarDistribucion($pedido->refCompra);
                 // Se destruye la sesión y se redirecciona al usuario al directorio raíz
                 header('Location: /pedidos');
                 exit;
@@ -100,7 +136,6 @@ use Model\Usuario;
                     'refLocker' => $_POST['locker'] ?? null,
                     'distribuidor' => isset($_POST['dist']) ? 1 : 0
                 ]);
-        
                 $errores = $pedido->validar();
         
                 if (empty($errores)) {
@@ -110,7 +145,9 @@ use Model\Usuario;
                         $errores = Pedido::getErrores();
                     } else {
                         $resultado = $pedido->crear();
-
+                        if($pedido->distribuidor==1){
+                            Envio::crearDistribucion($pedido->refCompra);
+                        }
                         if($resultado){
                             header("Location: /pedidos");
                         }

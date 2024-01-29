@@ -24,8 +24,13 @@
                 <td><?= $envio->lockerDeposito; ?></td>
 
                 <!-- Esto solo aparece si se es administrador -->
-                <?php if($tipo=='Administrador'){ ?>
-                    <td><?= $envio->hash_distribuidor; ?></td>
+                <?php if($tipo=='Administrador'){ $cont=0;?>
+                    <?php for($x=0; $x<count($user); $x++){ 
+                        if($user[$x][0]==$envio->hash_distribuidor){?>
+                        <td><?php echo $user[$x][1]; $cont++; ?></td>
+                    <?php } } if($cont == 0){ ?> 
+                        <td> </td>    
+                    <?php } ?>
                     <td>
                         <div class="bloque">
                             <!-- Formulario para eliminar el pedido seleccionado -->
@@ -33,7 +38,7 @@
                                 <input class="bTabla" type="submit" value=" ">
                                 <input class="oculto" type="hidden" name="refCompra" value=<?= $envio->id;?>>
                             </form>
-                            <a href="/actualizarEnvio<?= $envio->id; ?>" class="bTabla act"><img src="../build/img/icons/writer.svg" alt=""></a>
+                            <a href="/actualizarEnvio?id=<?= $envio->id; ?>" class="bTabla act"><img src="../build/img/icons/writer.svg" alt=""></a>
                 </div>
                 <?php } ?>
                 </td>

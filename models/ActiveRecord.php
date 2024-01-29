@@ -186,7 +186,14 @@ class ActiveRecord {
         return $sanitizado;
     }
 
-    public function sincronizar($args=[]) { 
+    public function sincronizar($args=[]) {
+        if(isset($args['distribuidor'])){
+            if($args['distribuidor']=="on"){
+                $args['distribuidor']=1;
+            } else {
+                $args['distribuidor']=0;
+            } 
+        }
         foreach($args as $key => $value) {
           if(property_exists($this, $key) && !is_null($value)) {
             $this->$key = $value;

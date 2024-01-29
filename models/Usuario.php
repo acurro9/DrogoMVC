@@ -144,6 +144,8 @@ class Usuario extends ActiveRecord {
         return true;
     }
 
+    //Para evitar que, al modificar los datos, el usuario introduzca el nombre o email de otro usuario, así se evitan duplicidades
+
     public function noExisteUsuarioDatos($idActual = null){
         $condiciones = [];
         if (!empty($this->username)) {
@@ -156,7 +158,7 @@ class Usuario extends ActiveRecord {
             // No hay suficiente información para hacer una consulta
             return true;
         }
-    
+        //Para no contar al usuario actual como duplicado, que es lo que lleva dando problemas todo el tiempo
         $query = "SELECT * FROM " . self::$tabla . " WHERE (" . implode(' OR ', $condiciones) . ")";
         if ($idActual !== null) {
             $query .= " AND id != '{$idActual}'";

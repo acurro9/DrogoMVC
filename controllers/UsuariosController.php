@@ -56,11 +56,11 @@
             if ($accion == 1) {
                 Usuario::bloquear($usuarioId, $username, $email);
                 $usuario->validacionExito(1);
-                exit;
+        
             } elseif ($accion == 2) {
                 Usuario::desbloquear($username);
                 $usuario->validacionExito(2);
-                exit;
+        
             }
     
             header("Location: usuario?res=$accion");

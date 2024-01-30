@@ -1,4 +1,3 @@
-
     <!--Se importan los css necesarios-->
     <link rel="stylesheet" href="../build/css/areaPersonal.css">
 
@@ -25,18 +24,18 @@
                 <div class="user_inner_left">
                     <div class="userOpt account">
                         <img src="../build/img/icons/lock.svg" alt="" class="lock_icon">
-                        <a href="#" class="a_title">Mi cuenta</a>
+                        <a class="a_title">Mi cuenta</a>
                     </div>
                     <!--Si es distribuidor no tiene pedidos por lo que no se muestra la opción de mis pedidos pero se muestran las distribuciones que tiene-->
-                    <?php if($_SESSION['tipo']!='Distribuidor'){ ?>    
+                    <?php if($datosUsuario->tipo!='Distribuidor'){ ?>    
                         <div class="userOpt">
                             <img src="../build/img/icons/lock.svg" alt="">
                             <a href="/pedidos"  class="a_title">Mis Pedidos</a>
                         </div>
                     <?php } else{?>
-                        <div class="userOpt">
+                        <div class="userOpt pedido">
                             <img src="../build/img//icons/lock.svg" alt="">
-                            <a href="/Pedidos/entregas.php?id=<?php echo $_SESSION['usuario'];?>"  class="a_title">Distribuciones</a>
+                            <a href="/envios" class="a_title">Mis Envios</a>
                         </div>
                     <?php } ?>
                     <div class="userOpt">
@@ -73,7 +72,6 @@
                         </div>
                         <div class="userOptRight miCuentaOpciones">
                             <img src="../build/img/icons/trash.svg" alt="basura">
-                            <!-- <a href="./borrar-cuenta.php" class="miCuentaOpcion a_title" id="deleteAccount">Borrar Cuenta</a> -->
                             <form action="/borrarCuenta" method="POST">
                                 <button type="submit">Borrar Cuenta</button>
                             </form>
@@ -81,6 +79,21 @@
                     </div>
                 </div>
             </section>     
+
+            <section class="miPedido hidden">
+                <div class="userOptRight rightPannel">
+                    <div class="user_inner_right">
+                    <div class="userOptRight miCuentaOpciones">
+                            <img src="../build/img/icons/detective.svg" alt="detective">
+                            <a href="/pedidos" class="miCuentaOpcion p_title">Ver Pedidos</a>
+                        </div>
+                        <div class="userOptRight miCuentaOpciones">
+                            <img src="../build/img/icons/send.svg" alt="punta de boli">
+                            <a href="/envios" class="miCuentaOpcion" class="a_title">Ver distribuciones</a>
+                        </div>
+                    </div>
+                </div>
+            </section> 
     </main>
 
     <section class="tabla_datos hid">

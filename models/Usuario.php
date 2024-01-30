@@ -38,7 +38,9 @@ class Usuario extends ActiveRecord {
         }
     }
     public static function verificarPermisosAdmin() {
-        session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
         $auth = $_SESSION['login'] ?? false;
         if (!$auth || $_SESSION['tipo'] != 'Administrador') {
             header('Location: /');
@@ -108,7 +110,7 @@ class Usuario extends ActiveRecord {
     public function validacionExito($codigo){
         $mensaje=$this->mssgExito($codigo);
         $_SESSION['mensaje_exito']=$mensaje;
-        if ($this->tipo === 'Administrador') {
+        if ($_SESSION['tipo'] === 'Administrador') {
             header("Location: /usuario");
         } else {
             header("Location: /areaPersonal");

@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", function () {
     lockIcon.src = isImage1
       ? "../build/img/icons/lock.svg"
       : "../build/img/icons/lock-open.svg";
-
     miCuentaSection.classList.toggle("hidden");
   });
 

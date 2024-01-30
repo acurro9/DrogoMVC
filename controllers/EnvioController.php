@@ -8,6 +8,10 @@
     
         class EnvioController{
             public static function verEnvios(Router $router){
+                Usuario::verificarPermisos();
+                // if($_SESSION['tipo'] !== 'Administrador' || $_SESSION['tipo'] !== 'Distribuidor'){
+                //     header("Location: /areaPersonal");
+                // }
                 $errores = [];
     
                 $ppp = $_GET["producto"] ?? 5; // Productos por página
@@ -16,17 +20,21 @@
     
                 $limit = $ppp;
                 $offset = ($pagina - 1) * $ppp;
-                $envios = Envio::obtenerEnvioPorPagina($limit, $offset);
                 $totalPaginas = ceil($totalEnvio/ $ppp);
 
                 $lockers = Locker::obtenerLockersPorPagina($limit, $offset);
                 $direccion = Locker::obtenerDireccion();
                 $user = Usuario::obtenerNombres();
     
-                session_start();
                 $id = Usuario::buscarID($_SESSION['usuario']);
                 $usuario = Usuario::find($id);
                 $tipo=$usuario->tipo;
+
+                if($tipo!='Administrador'){
+                    $envios = Envio::obtenerEnvioPorPaginaUsuario($limit, $offset, $id);
+                } else {
+                    $envios = Envio::obtenerEnvioPorPagina($limit, $offset);
+                }
                 // Renderizardo de la vista con los datos necesarios
                 $router->render('Pedidos/envio', [
                     'tipo' => $tipo,
@@ -43,6 +51,7 @@
             }
     
             public static function actualizarEnvio(Router $router){
+                Usuario::verificarPermisosAdmin();
                 $errores = [];
                 $refCompra = $_GET['id'] ?? null;
     
@@ -86,6 +95,7 @@
             }
     
             public static function borrarEnvio(Router $router){
+                Usuario::verificarPermisosAdmin();
                 $envioID = $_GET["id"];
     
                 // Encontrar el locker

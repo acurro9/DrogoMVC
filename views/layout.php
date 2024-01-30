@@ -65,7 +65,9 @@
                                 <!--Si es distribuidor no tiene pedidos por lo que no se muestran estas opción-->
                                 <?php if($_SESSION['tipo']!='Distribuidor'){ ?>
                                     <a href="/pedidos">Ver Pedidos</a>
-                                <?php }?>
+                                <?php } else { ?>
+                                    <a href="/envios">Ver Envios</a>
+                                <?php } ?>
                                 <a href="/borrarCuenta" id="borrar">Borrar Cuenta</a>
                                 <a href="/logout">Cerrar Sesión</a>
                             </div>

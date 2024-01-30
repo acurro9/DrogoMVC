@@ -8,6 +8,7 @@ use Model\Envio;
 
     class PedidoController{
         public static function verPedidos(Router $router){
+            Usuario::verificarPermisos();
             $errores = [];
 
             $ppp = $_GET["producto"] ?? 5; // Productos por página
@@ -22,7 +23,6 @@ use Model\Envio;
             $lockers = Locker::obtenerLockersPorPagina($limit, $offset);
             $direccion = Locker::obtenerDireccion();
 
-            session_start();
             $id = Usuario::buscarID($_SESSION['usuario']);
             $usuario = Usuario::find($id);
             $tipo=$usuario->tipo;
@@ -48,6 +48,7 @@ use Model\Envio;
         }
 
         public static function actualizarPedido(Router $router){
+            Usuario::verificarPermisosAdmin();
             $errores = [];
             $id = $_GET['id'] ?? null;
 
@@ -101,6 +102,7 @@ use Model\Envio;
         }
 
         public static function borrarPedido(Router $router){
+            Usuario::verificarPermisosAdmin();
             $pedidoID = $_GET["id"];
 
             // Encontrar el locker
@@ -120,6 +122,7 @@ use Model\Envio;
         }
 
         public static function crearPedido(Router $router){
+            Usuario::verificarPermisosAdmin();
             $errores = [];
     
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {

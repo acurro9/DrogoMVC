@@ -30,8 +30,10 @@ class LoginController{
                         if ($usuario->tipo !== 'Administrador') {
                             $autenticado = $auth->comprobarPassword($usuario);
                             if($autenticado){
-                                $_SESSION['id'] = $auth->id; 
-                                $auth->autenticar();
+                                $user = Usuario::find($usuario->id);
+
+                                $user->autenticar();
+                                debuguear($user);
                             } else{ 
                                 $errores = Usuario::getErrores();
                             }

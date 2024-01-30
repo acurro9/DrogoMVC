@@ -144,6 +144,11 @@
             return self::consultarSQL($query);
         }
 
+        public static function obtenerEnvioPorPaginaUsuario($limit, $offset, $id) {
+            $query = "SELECT * FROM envio where hash_distribuidor = '$id' LIMIT {$limit} OFFSET {$offset};";
+            return self::consultarSQL($query);
+        }
+
         public function noExisteEnvio() {
             $query = "SELECT * FROM " . self::$tabla . " WHERE id = '{$this->id}';";
             $resultado = self::$db->query($query);

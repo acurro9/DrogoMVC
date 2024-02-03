@@ -1,7 +1,13 @@
 <!--Se importan los css necesarios-->
 <link rel="stylesheet" href="../build/css/pedidos.css">
-<link rel="stylesheet" href="../build/css/styles.css">
-<main>
+<link rel="stylesheet" href="../build/css/styles.css"> 
+
+<?php 
+    if(isset($_SESSION['mensaje_exito'])): ?>
+        <p class='success'><?php echo htmlspecialchars($_SESSION['mensaje_exito']); ?></p>
+        <?php unset($_SESSION['mensaje_exito']); // Elimina el mensaje de la sesión después de mostrarlo
+    endif; ?>
+<main> 
     <h1 class="abajo">Pedidos</h1>
     <div class="centrado">
         <!--Se le pide al usuario el número de pedidos por página-->

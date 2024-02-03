@@ -83,14 +83,14 @@ use Model\Envio;
                         } else {
                             $resultado = Envio::borrarDistribucion($pedido->refCompra);
                             if($resultado){
-                                header("Location: /pedidos");
+                                $pedido->validacionExito(2);
                                 exit;
                             }
                         }
                     } 
                 } else {
                         
-                    $errores[] = 'Error updating pedido.';
+                    $errores[] = 'Error actualizando pedido.';
                 }
                 }
             $router->render('pedidos/actualizarPedido', [
@@ -116,7 +116,7 @@ use Model\Envio;
             if ($pedido->eliminar()) {
                 Envio::borrarDistribucion($pedido->refCompra);
                 // Se destruye la sesión y se redirecciona al usuario al directorio raíz
-                header('Location: /pedidos');
+                $pedido->validacionExito(3);
                 exit;
             } 
         }
@@ -153,6 +153,7 @@ use Model\Envio;
                         }
                         if($resultado){
                             header("Location: /pedidos");
+                            $pedido->validacionExito(1);
                         }
                     }
                 }
@@ -166,5 +167,5 @@ use Model\Envio;
                 'usuarios' => $usuarios
             ]);
         }
+
     }
-?>

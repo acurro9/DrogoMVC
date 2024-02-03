@@ -123,4 +123,20 @@ class Locker extends ActiveRecord {
         return $direccion;
 
     }
+
+    public static function mssgExito($codigo){
+        $mensajes=[
+            1 => "Locker creado con éxito",
+            2 => "Locker actualizado con éxito",
+            3 => "Locker eliminado con exito"
+        ];
+
+        return $mensajes[$codigo]??"Operación realizada con éxito";
+    }
+
+    public function validacionExito($codigo){
+        $mensaje=$this->mssgExito($codigo);
+        $_SESSION['mensaje_exito']=$mensaje;
+        header("Location: /lockers");
+    }
 }

@@ -1,5 +1,10 @@
 <!--Se importan los css necesarios-->
 <link rel="stylesheet" href="../build/css/lockers.css">
+<?php 
+    if(isset($_SESSION['mensaje_exito'])): ?>
+        <p class='success'><?php echo htmlspecialchars($_SESSION['mensaje_exito']); ?></p>
+        <?php unset($_SESSION['mensaje_exito']); // Elimina el mensaje de la sesión después de mostrarlo
+    endif; ?>
 <main>
     <h1 class="abajo">Lockers: </h1>
     <div class="centrado">

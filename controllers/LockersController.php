@@ -27,7 +27,7 @@ class LockersController{
                 } else {
                     $resultado = $locker->crear();
                     if($resultado){
-                        header("Location: /lockers");
+                        $locker->validacionExito(1);
                     }
                 }
             }
@@ -90,7 +90,7 @@ class LockersController{
     
             if(empty($errores)) {
                 if ($locker->actualizar()) {
-                    header("Location: /lockers");
+                    $locker->validacionExito(2);
                     exit;
                 } else {
                     
@@ -119,7 +119,7 @@ class LockersController{
         // Eliminar el usuario actual
         if ($locker->eliminar()) {
             // Se destruye la sesión y se redirecciona al usuario al directorio raíz
-            header('Location: /lockers');
+            $locker->validacionExito(3);
             exit;
         } 
     }

@@ -185,4 +185,61 @@
             $_SESSION['mensaje_exito']=$mensaje;
             header("Location: /pedidos");
         }
+
+        public function erroresActualizacionPedido($data){
+            //Reinicio del arreglo de errores, just in case
+            self::$errores=[];
+    
+            //Validar que se haya seleccionado un comprador (por ID, aunque el usuario vea el nombre de usuario
+            if(empty($data['hash_comprador'])){
+                self::$errores[]="Debe seleccionar un comprador";
+            }
+
+            //Validar que se haya seleccionado un vendedor (por ID, aunque el usuario vea el nombre de usuario
+            if(empty($data['hash_vendedor'])){
+                self::$errores[]="Debe seleccionar un vendedor";
+            }
+    
+            //Validacion de locker
+            if(empty($data['refLocker'])){
+                self::$errores[]="Debe seleccionar un locker";
+            }
+    
+            //Validación del importe
+            if(empty($data['importe'])){
+                self::$errores[]="El importe es obligatorio";
+            }elseif(!is_numeric($data['importe'])){
+                self::$errores[]="El importe debe ser una cantidad numérica válida";
+            }
+
+            
+            //Validación del cargo de transporte
+            if(empty($data['cargoTransporte'])){
+                self::$errores[]="El cargo de transporte es obligatorio";
+            }elseif(!is_numeric($data['cargoTransporte'])){
+                self::$errores[]="El cargo de transporte debe ser una cantidad numérica válida";
+            }
+
+            //Validación de los cargos adicionales
+            if(empty($data['cargosAdicionales'])){
+                self::$errores[]="Los cargos adicionales son obligatorios";
+            }elseif(!is_numeric($data['cargosAdicionales'])){
+                self::$errores[]="Los cargos adicionales deben ser una cantidad numérica válida";
+            }
+
+            //Validación de la fecha de depósito
+            if(empty($data['fechaDeposito'])){
+                self::$errores[]="La fecha de depósito es obligatoria";
+            }
+
+            //Validación de la fecha de recogida
+            if(empty($data['fechaRecogida'])){
+                self::$errores[]="La fecha de recogida es obligatoria";
+            }
+    
+            //Devuelve el arreglo de errores
+            return self::$errores;    
+        }
     }
+
+    

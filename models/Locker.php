@@ -1,6 +1,7 @@
 <?php
 
 namespace Model;
+use Exception;
 
 class Locker extends ActiveRecord {
 
@@ -17,37 +18,47 @@ class Locker extends ActiveRecord {
         $this->passwordLocker = $args['passwordLocker'] ?? '';
     }
     public function crear(){
-        // Sanitizar los datos
-      $atributos = $this->sanitizarAtributos();
-      $refLocker = md5(uniqid(rand(), true));
+        try{
+            // Sanitizar los datos
+            $atributos = $this->sanitizarAtributos();
+            $refLocker = md5(uniqid(rand(), true));
 
-      // Para meterle la id
-      $query = "INSERT INTO " . static::$tabla . " (";
-      $query .= join(', ', array_keys($atributos));
-      $query .= ") VALUES ('{$refLocker}";
-      $query .= join("', '", array_values($atributos));
-      $query .= "')";
+            // Para meterle la id
+            $query = "INSERT INTO " . static::$tabla . " (";
+            $query .= join(', ', array_keys($atributos));
+            $query .= ") VALUES ('{$refLocker}";
+            $query .= join("', '", array_values($atributos));
+            $query .= "')";
 
-      // Resultado de la consulta
-      $resultado = self::$db->query($query);
+            // Resultado de la consulta
+            $resultado = self::$db->query($query);
 
-      return $resultado;
+            return $resultado;
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        }
+      
     }
     public function actualizar(){
-        // Sanitización de datos
-        $atributos = $this->sanitizarAtributos();
+        try{
+           // Sanitización de datos
+            $atributos = $this->sanitizarAtributos();
 
-        $valores = [];
-        foreach ($atributos as $key => $value) {
-            $valores[] = "{$key}='{$value}'";
+            $valores = [];
+            foreach ($atributos as $key => $value) {
+                $valores[] = "{$key}='{$value}'";
+            }
+
+            $query = "UPDATE " . static::$tabla . " SET ";
+            $query .= join(', ', $valores);
+            $query .= " WHERE refLocker = '" . self::$db->escape_string($this->refLocker) . "'";
+            $query .= " LIMIT 1";
+
+            return self::$db->query($query); 
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
         }
-
-        $query = "UPDATE " . static::$tabla . " SET ";
-        $query .= join(', ', $valores);
-        $query .= " WHERE refLocker = '" . self::$db->escape_string($this->refLocker) . "'";
-        $query .= " LIMIT 1";
-
-        return self::$db->query($query);
+        
    }
     public function validar(){
         if(!$this->direccion) {
@@ -60,33 +71,51 @@ class Locker extends ActiveRecord {
     }
 
     public static function contarLockers() {
-        $query = "SELECT COUNT(*) as total FROM locker";
-        $resultado = self::$db->query($query);
-        $fila = $resultado->fetch_assoc();
-        return $fila['total'];
+        try{
+            $query = "SELECT COUNT(*) as total FROM locker";
+            $resultado = self::$db->query($query);
+            $fila = $resultado->fetch_assoc();
+            return $fila['total'];
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        }
+       
     }
 
     // Método para obtener usuarios con paginación
     public static function obtenerLockersPorPagina($limit, $offset) {
-        $query = "SELECT * FROM locker LIMIT {$limit} OFFSET {$offset}";
-        return self::consultarSQL($query);
+        try{
+            $query = "SELECT * FROM locker LIMIT {$limit} OFFSET {$offset}";
+            return self::consultarSQL($query);
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        }
+       
     }
 
     public function eliminar(){
-        $idValue = self::$db->escape_string($this->refLocker);
-        $query = "DELETE FROM " . static::$tabla . " WHERE refLocker = '{$this->refLocker}';";
-        $resultado = self::$db->query($query);
-
-        return $resultado;
+        try{
+            $idValue = self::$db->escape_string($this->refLocker);
+            $query = "DELETE FROM " . static::$tabla . " WHERE refLocker = '{$this->refLocker}';";
+            $resultado = self::$db->query($query);
+    
+            return $resultado;
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        }
     }
     public function noExisteLocker() {
-        $query = "SELECT * FROM " . self::$tabla . " WHERE refLocker = '{$this->refLocker}';";
-        $resultado = self::$db->query($query);
-        if($resultado->num_rows) {
-            self::$errores[] = 'El Locker Ya Existe';
-            return false;
+        try{
+            $query = "SELECT * FROM " . self::$tabla . " WHERE refLocker = '{$this->refLocker}';";
+            $resultado = self::$db->query($query);
+            if($resultado->num_rows) {
+                self::$errores[] = 'El Locker Ya Existe';
+                return false;
+            }
+            return true; 
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
         }
-        return true;
     }
     // Busca un registro por su id
     public static function find($id) {
@@ -111,17 +140,20 @@ class Locker extends ActiveRecord {
         }
     }   
     public static function obtenerDireccion(){
-        self::contarLockers();
-        $query = "SELECT refLocker, direccion FROM locker";
-        $lockers = self::$db->query($query);
-        $cont=0;
-        foreach ($lockers as $locker) {
-            $direccion[$cont][0]=$locker['refLocker'];
-            $direccion[$cont][1]=$locker['direccion'];
-            $cont++;
+        try{
+            self::contarLockers();
+            $query = "SELECT refLocker, direccion FROM locker";
+            $lockers = self::$db->query($query);
+            $cont=0;
+            foreach ($lockers as $locker) {
+                $direccion[$cont][0]=$locker['refLocker'];
+                $direccion[$cont][1]=$locker['direccion'];
+                $cont++;
+            }
+            return $direccion;
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
         }
-        return $direccion;
-
     }
 
     

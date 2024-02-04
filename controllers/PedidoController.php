@@ -77,13 +77,13 @@ use Model\Envio;
                         if($pedido->distribuidor==1){
                             $resultado = Envio::crearDistribucion($pedido->refCompra);
                             if($resultado){
-                                    header("Location: /pedidos");
+                                $pedido->validacionExito(2);
                                     exit;
                                 }
                         } else {
                             $resultado = Envio::borrarDistribucion($pedido->refCompra);
                             if($resultado){
-                                $pedido->validacionExito(2);
+                                $pedido->validacionExito(3);
                                 exit;
                             }
                         }
@@ -152,7 +152,6 @@ use Model\Envio;
                             Envio::crearDistribucion($pedido->refCompra);
                         }
                         if($resultado){
-                            header("Location: /pedidos");
                             $pedido->validacionExito(1);
                         }
                     }

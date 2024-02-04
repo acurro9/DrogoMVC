@@ -160,7 +160,7 @@
         }
 
         public static function crearDistribucion($refCompra){
-            $query = "INSERT into envio (refCompra) values ('$refCompra')";
+            $query = "INSERT into envio (refCompra) values ('$refCompra') ON DUPLICATE KEY UPDATE refCompra = VALUES(refCompra)";
             return self::$db->query($query);
         }
         public static function borrarDistribucion($refCompra){

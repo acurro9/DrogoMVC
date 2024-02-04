@@ -1,6 +1,15 @@
 <!--Se importan los css necesarios-->
 <link rel="stylesheet" href="../build/css/styles.css">
 <link rel="stylesheet" href="../build/css/bloqUsuario.css">
+<?php 
+if(isset($_SESSION['errores']) && count($_SESSION['errores']) > 0): ?>
+    <div class='errors'>
+        <?php foreach($_SESSION['errores'] as $error): ?>
+            <p class='error'><?php echo htmlspecialchars($error); ?></p>
+        <?php endforeach; ?>
+    </div>
+    <?php unset($_SESSION['errores']); // Elimina los mensajes de error de la sesión después de mostrarlos
+endif; ?>
 
 
 <div class="bloq">

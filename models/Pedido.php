@@ -162,13 +162,22 @@
         }
 
         public static function mssgExito($codigo){
-            $mensajes=[
-                1 => "Pedido creado con éxito",
-                2 => "Pedido actualizado con éxito",
-                3 => "Pedido eliminado con exito"
-            ];
-    
-            return $mensajes[$codigo]??"Operación realizada con éxito";
+           switch($codigo){
+            case 1: 
+                $mensaje="Pedido creado con éxito";
+                break;
+            case 2:
+                $mensaje="Pedido actualizado con éxito";
+                break;
+            case 3:
+                $mensaje="Pedido eliminado con éxito";
+                break;
+            default:
+                $mensaje="Operación realizada con éxito";
+                break;
+           }
+               
+           return $mensaje;
         }
 
         public function validacionExito($codigo){

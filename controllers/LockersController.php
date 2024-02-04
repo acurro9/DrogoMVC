@@ -39,8 +39,6 @@ class LockersController{
         ]);
    }
 
-   
-
    public static function verLockers(Router $router){
     Usuario::verificarPermisosAdmin();
     $errores = [];
@@ -94,7 +92,7 @@ class LockersController{
                     exit;
                 } else {
                     
-                    $errores[] = 'Error updating locker.';
+                    $errores[] = 'Error actualizando locker.';
                 }
             }
         }

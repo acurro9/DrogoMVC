@@ -124,19 +124,29 @@ class Locker extends ActiveRecord {
 
     }
 
+    
     public static function mssgExito($codigo){
-        $mensajes=[
-            1 => "Locker creado con éxito",
-            2 => "Locker actualizado con éxito",
-            3 => "Locker eliminado con exito"
-        ];
+        switch($codigo){
+         case 1: 
+             $mensaje="Locker creado con éxito";
+             break;
+         case 2:
+             $mensaje="Locker actualizado con éxito";
+             break;
+         case 3:
+             $mensaje="Locker eliminado con éxito";
+             break;
+         default:
+             $mensaje="Operación realizada con éxito";
+             break;
+        }
+            
+        return $mensaje;
+     }
 
-        return $mensajes[$codigo]??"Operación realizada con éxito";
-    }
-
-    public function validacionExito($codigo){
-        $mensaje=$this->mssgExito($codigo);
-        $_SESSION['mensaje_exito']=$mensaje;
-        header("Location: /lockers");
-    }
+     public function validacionExito($codigo){
+         $mensaje=$this->mssgExito($codigo);
+         $_SESSION['mensaje_exito']=$mensaje;
+         header("Location: /lockers");
+     }
 }

@@ -1,5 +1,6 @@
 <?php
     namespace Model;
+    use Exception;
 
     class Envio extends ActiveRecord{
         protected static $tabla = 'envio';
@@ -45,48 +46,59 @@
         }
 
         public function crear(){
-
-            // Sanitizar los datos
-            $atributos = $this->sanitizarAtributos();
-
-
-            // Para meterle la id
-            $query = "INSERT INTO " . static::$tabla . " (";
-            $query .= join(', ', array_keys($atributos));
-            $query .= ") VALUES ('";
-            $query .= join("', '", array_values($atributos));
-            $query .= "')";
+            try{
+                // Sanitizar los datos
+                $atributos = $this->sanitizarAtributos();
 
 
-            // Resultado de la consulta
-            $resultado = self::$db->query($query);
+                // Para meterle la id
+                $query = "INSERT INTO " . static::$tabla . " (";
+                $query .= join(', ', array_keys($atributos));
+                $query .= ") VALUES ('";
+                $query .= join("', '", array_values($atributos));
+                $query .= "')";
 
-            return $resultado;
+
+                // Resultado de la consulta
+                $resultado = self::$db->query($query);
+
+                return $resultado;
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
+            }
         }
 
         public function eliminar(){
-            $idValue = self::$db->escape_string($this->id);
-            $query = "DELETE FROM " . static::$tabla . " WHERE id = '$this->id';";
-            $resultado = self::$db->query($query);
+            try{
+                $idValue = self::$db->escape_string($this->id);
+                $query = "DELETE FROM " . static::$tabla . " WHERE id = '$this->id';";
+                $resultado = self::$db->query($query);
 
-            return $resultado;
+                return $resultado;
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
+            }
         }
 
         public function actualizar(){
-            // Sanitización de datos
-            $atributos = $this->sanitizarAtributos();
-    
-            $valores = [];
-            foreach ($atributos as $key => $value) {
-                $valores[] = "{$key}='{$value}'";
+            try{
+                // Sanitización de datos
+                $atributos = $this->sanitizarAtributos();
+        
+                $valores = [];
+                foreach ($atributos as $key => $value) {
+                    $valores[] = "{$key}='{$value}'";
+                }
+        
+                $query = "UPDATE " . static::$tabla . " SET ";
+                $query .= join(', ', $valores);
+                $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "'";
+                $query .= " LIMIT 1";
+        
+                return self::$db->query($query);
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
             }
-    
-            $query = "UPDATE " . static::$tabla . " SET ";
-            $query .= join(', ', $valores);
-            $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "'";
-            $query .= " LIMIT 1";
-    
-            return self::$db->query($query);
         }
 
         public static function find($id) {
@@ -133,39 +145,62 @@
         }   
 
         public static function contarEnvio() {
-            $query = "SELECT COUNT(*) as total FROM envio";
-            $resultado = self::$db->query($query);
-            $fila = $resultado->fetch_assoc();
-            return $fila['total'];
+            try{
+                $query = "SELECT COUNT(*) as total FROM envio";
+                $resultado = self::$db->query($query);
+                $fila = $resultado->fetch_assoc();
+                return $fila['total'];
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
+            }
         }
 
         public static function obtenerEnvioPorPagina($limit, $offset) {
-            $query = "SELECT * FROM envio LIMIT {$limit} OFFSET {$offset}";
-            return self::consultarSQL($query);
+            try{
+                $query = "SELECT * FROM envio LIMIT {$limit} OFFSET {$offset}";
+                return self::consultarSQL($query);
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
+            }
         }
 
         public static function obtenerEnvioPorPaginaUsuario($limit, $offset, $id) {
-            $query = "SELECT * FROM envio where hash_distribuidor = '$id' LIMIT {$limit} OFFSET {$offset};";
+            try{
+                $query = "SELECT * FROM envio where hash_distribuidor = '$id' LIMIT {$limit} OFFSET {$offset};";
             return self::consultarSQL($query);
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
+            }
         }
 
         public function noExisteEnvio() {
-            $query = "SELECT * FROM " . self::$tabla . " WHERE id = '{$this->id}';";
-            $resultado = self::$db->query($query);
-            if($resultado->num_rows) {
-                self::$errores[] = 'El Envio Ya Existe';
-                return false;
+            try{
+                $query = "SELECT * FROM " . self::$tabla . " WHERE id = '{$this->id}';";
+                $resultado = self::$db->query($query);
+                if($resultado->num_rows) {
+                    self::$errores[] = 'El Envio Ya Existe';
+                    return false;
+                }
+                return true;
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
             }
-            return true;
         }
 
         public static function crearDistribucion($refCompra){
-            $query = "INSERT into envio (refCompra) values ('$refCompra') ON DUPLICATE KEY UPDATE refCompra = VALUES(refCompra)";
+            try{
+                $query = "INSERT into envio (refCompra) values ('$refCompra') ON DUPLICATE KEY UPDATE refCompra = VALUES(refCompra)";
             return self::$db->query($query);
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
+            }
         }
         public static function borrarDistribucion($refCompra){
-            $query = "DELETE FROM envio where refCompra = '$refCompra';";
-            return self::$db->query($query);
-
+            try{
+                $query = "DELETE FROM envio where refCompra = '$refCompra';";
+                return self::$db->query($query);
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
+            }
         }
     }

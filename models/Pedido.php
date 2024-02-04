@@ -1,5 +1,6 @@
 <?php
     namespace Model;
+    use Exception;
 
     class Pedido extends ActiveRecord{
         protected static $tabla = 'pedido';
@@ -65,7 +66,8 @@
         }
 
         public function crear(){
-
+            try{
+                
             // Sanitizar los datos
             $atributos = $this->sanitizarAtributos();
 
@@ -81,31 +83,43 @@
             $resultado = self::$db->query($query);
 
             return $resultado;
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
+            }
+
         }
 
         public function eliminar(){
-            $idValue = self::$db->escape_string($this->refCompra);
-            $query = "DELETE FROM " . static::$tabla . " WHERE refCompra = '$this->refCompra';";
-            $resultado = self::$db->query($query);
+            try{
+                $idValue = self::$db->escape_string($this->refCompra);
+                $query = "DELETE FROM " . static::$tabla . " WHERE refCompra = '$this->refCompra';";
+                $resultado = self::$db->query($query);
 
-            return $resultado;
+                return $resultado;
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
+            }
         }
 
         public function actualizar(){
-            // Sanitización de datos
-            $atributos = $this->sanitizarAtributos();
-    
-            $valores = [];
-            foreach ($atributos as $key => $value) {
-                $valores[] = "{$key}='{$value}'";
-            }
-    
-            $query = "UPDATE " . static::$tabla . " SET ";
-            $query .= join(', ', $valores);
-            $query .= " WHERE refCompra = '" . self::$db->escape_string($this->refCompra) . "'";
-            $query .= " LIMIT 1";
+            try{
+                // Sanitización de datos
+                $atributos = $this->sanitizarAtributos();
+        
+                $valores = [];
+                foreach ($atributos as $key => $value) {
+                    $valores[] = "{$key}='{$value}'";
+                }
+        
+                $query = "UPDATE " . static::$tabla . " SET ";
+                $query .= join(', ', $valores);
+                $query .= " WHERE refCompra = '" . self::$db->escape_string($this->refCompra) . "'";
+                $query .= " LIMIT 1";
 
-            return self::$db->query($query);
+                return self::$db->query($query);
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
+            }
         }
 
         public static function find($id) {
@@ -131,34 +145,54 @@
         }
         
         public static function contarPedido() {
-            $query = "SELECT COUNT(*) as total FROM pedido";
-            $resultado = self::$db->query($query);
-            $fila = $resultado->fetch_assoc();
-            return $fila['total'];
+            try{
+                $query = "SELECT COUNT(*) as total FROM pedido";
+                $resultado = self::$db->query($query);
+                $fila = $resultado->fetch_assoc();
+                return $fila['total'];
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
+            }
         }
 
         public static function obtenerPedidoPorPagina($limit, $offset) {
-            $query = "SELECT * FROM pedido LIMIT {$limit} OFFSET {$offset}";
+            try{
+                $query = "SELECT * FROM pedido LIMIT {$limit} OFFSET {$offset}";
             return self::consultarSQL($query);
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
+            }
         }
 
         public static function obtenerPedidoPorPaginaUsuario($limit, $offset, $id) {
-            $query = "SELECT * FROM pedido where hash_comprador = '$id' or hash_vendedor = '$id' LIMIT {$limit} OFFSET {$offset};";
-            return self::consultarSQL($query);
+            try{
+                $query = "SELECT * FROM pedido where hash_comprador = '$id' or hash_vendedor = '$id' LIMIT {$limit} OFFSET {$offset};";
+                return self::consultarSQL($query);
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
+            }
         }
 
         public function noExistePedido() {
-            $query = "SELECT * FROM " . self::$tabla . " WHERE refCompra = '{$this->refCompra}';";
-            $resultado = self::$db->query($query);
-            if($resultado->num_rows) {
-                self::$errores[] = 'El Pedido Ya Existe';
-                return false;
+            try{
+                $query = "SELECT * FROM " . self::$tabla . " WHERE refCompra = '{$this->refCompra}';";
+                $resultado = self::$db->query($query);
+                if($resultado->num_rows) {
+                    self::$errores[] = 'El Pedido Ya Existe';
+                    return false;
+                }
+                return true;
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
             }
-            return true;
         }
         public static function actualizarDistribucion($valor, $refCompra){
-            $query = "UPDATE pedido SET distribuidor = $valor where refCompra = '$refCompra'";
-            return self::$db->query($query);
+            try{
+                $query = "UPDATE pedido SET distribuidor = $valor where refCompra = '$refCompra'";
+                return self::$db->query($query);
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
+            }
         }
 
         public static function mssgExito($codigo){

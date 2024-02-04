@@ -1,5 +1,6 @@
 <?php
     namespace Model;
+    use Exception;
 
     class Contacto extends ActiveRecord{
 
@@ -36,44 +37,59 @@
         }
 
         public function crear(){
-
-            // Sanitizar los datos
-            $atributos = $this->sanitizarAtributos();
-
-
-            // Para meterle la id
-            $query = "INSERT INTO " . static::$tabla . " (";
-            $query .= join(', ', array_keys($atributos));
-            $query .= ") VALUES ('";
-            $query .= join("', '", array_values($atributos));
-            $query .= "')";
+            try{
+                // Sanitizar los datos
+                $atributos = $this->sanitizarAtributos();
 
 
-            // Resultado de la consulta
-            $resultado = self::$db->query($query);
+                // Para meterle la id
+                $query = "INSERT INTO " . static::$tabla . " (";
+                $query .= join(', ', array_keys($atributos));
+                $query .= ") VALUES ('";
+                $query .= join("', '", array_values($atributos));
+                $query .= "')";
 
-            return $resultado;
+
+                // Resultado de la consulta
+                $resultado = self::$db->query($query);
+
+                return $resultado;
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
+            }
         }
 
         public function eliminar(){
-            $idValue = self::$db->escape_string($this->id);
-            $query = "DELETE FROM " . static::$tabla . " WHERE id = '$this->id';";
-            $resultado = self::$db->query($query);
+            try{
+                $idValue = self::$db->escape_string($this->id);
+                $query = "DELETE FROM " . static::$tabla . " WHERE id = '$this->id';";
+                $resultado = self::$db->query($query);
 
-            return $resultado;
+                return $resultado;
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
+            }
         }
         // Método para contar el total de contactos
             public static function contarContactos() {
-                $query = "SELECT COUNT(*) as total FROM contacto";
-                $resultado = self::$db->query($query);
-                $fila = $resultado->fetch_assoc();
-                return $fila['total'];
+                try{
+                    $query = "SELECT COUNT(*) as total FROM contacto";
+                    $resultado = self::$db->query($query);
+                    $fila = $resultado->fetch_assoc();
+                    return $fila['total'];
+                }catch(Exception $e){
+                    echo 'Error: ', $e->getMessage(), "\n";
+                }
             }
 
             // Método para obtener contactos con paginación
             public static function obtenerContactosPorPagina($limit, $offset) {
-                $query = "SELECT * FROM contacto LIMIT {$limit} OFFSET {$offset}";
-                return self::consultarSQL($query);
+                try{
+                    $query = "SELECT * FROM contacto LIMIT {$limit} OFFSET {$offset}";
+                    return self::consultarSQL($query);
+                }catch(Exception $e){
+                    echo 'Error: ', $e->getMessage(), "\n";
+                }
             }
 
             public static function find($id) {

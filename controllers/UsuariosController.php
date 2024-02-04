@@ -111,7 +111,8 @@
                 $usuario->password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
             }
     
-            $errores = $usuario->validar($_POST['password'] !== '');
+            // $errores = $usuario->validar($_POST['password'] !== '');
+            $errores=$usuario->erroresActualizacion($_POST);
     
             if(empty($errores)) {
                 if ($usuario->actualizar()) {
@@ -119,8 +120,8 @@
                     header("Location: /usuario");
                     exit;
                 } else {
-                    
-                    $errores[] = 'Error updating user.';
+                    $_SESSION['errores'];
+                    // $errores[] = 'Error updating user.';
                 }
             }
         

@@ -399,4 +399,34 @@ class Usuario extends ActiveRecord {
         }
         return $nombre;
     }
+
+    public function erroresActualizacion($data){
+        //Reinicio del arreglo de errores, just in case
+        self::$errores=[];
+
+        //Validar que el nombre de usuario no esté empty
+        if(empty($data['username'])){
+            self::$errores[]="El nombre de usuario es obligatorio";
+        }
+
+        //Validar que el email no esté vacío y sea válido
+        if(empty($data['email'])){
+            self::$errores[]="El email del usuario no es obligatorio";
+        }elseif(!filter_var($data['email'], FILTER_VALIDATE_EMAIL)){
+            self::$errores[]="El email no es válido";
+        }
+
+        //Solo se vlaida la contraseña en caso de que se haya proporcionado una nueva
+        if(empty($data['password'])){
+            self::$errores[]="El password no debe quedar vacío";
+        }
+
+        //Se valida la contraseña si se proporciona una nueva
+        if(empty($data['tipo'])){
+            self::$errores[]="Elija un tipo de usuario";
+        }
+
+        //Retorna el arreglo de errores
+        return self::$errores;    
+    }
 }

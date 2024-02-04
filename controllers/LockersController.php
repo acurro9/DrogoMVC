@@ -84,15 +84,14 @@ class LockersController{
             $locker->sincronizar($_POST);
     
         
-            $errores = $locker->validar();
+            $errores = $locker->erroresActualizacionLocker($_POST);
     
             if(empty($errores)) {
                 if ($locker->actualizar()) {
                     $locker->validacionExito(2);
                     exit;
                 } else {
-                    
-                    $errores[] = 'Error actualizando locker.';
+                    $_SESSION['errores'];
                 }
             }
         }

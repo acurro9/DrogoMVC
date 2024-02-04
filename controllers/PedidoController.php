@@ -69,7 +69,8 @@ use Model\Envio;
                 $pedido->sincronizar($_POST);
         
             
-                $errores = $pedido->validar();
+                // $errores = $pedido->validar();
+                $errores=$pedido->erroresActualizacionPedido($_POST);
         
                 if(empty($errores)) {
                     if ($pedido->actualizar()) {
@@ -90,7 +91,7 @@ use Model\Envio;
                     } 
                 } else {
                         
-                    $errores[] = 'Error actualizando pedido.';
+                    $_SESSION['errores'];
                 }
                 }
             $router->render('pedidos/actualizarPedido', [

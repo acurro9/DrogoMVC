@@ -149,4 +149,22 @@ class Locker extends ActiveRecord {
          $_SESSION['mensaje_exito']=$mensaje;
          header("Location: /lockers");
      }
+
+     public function erroresActualizacionLocker($data){
+        //Reinicio del arreglo de errores, just in case
+        self::$errores=[];
+
+        //Validación de la dirección del locker
+        if(empty(trim($data['direccion']))){
+            self::$errores[]="Se debe incluir la dirección del locker";
+        }
+
+        //Validación de la contraseña del locker
+        if(empty($data['passwordLocker'])){
+            self::$errores[]="Se debe incluir la contraseña del locker";
+        }
+
+        //Devuelve el arreglo de errores
+        return self::$errores;    
+    }
 }

@@ -70,7 +70,7 @@
 
         public function eliminar(){
             try{
-                $idValue = self::$db->escape_string($this->id);
+                $idValue = $this->id;
                 $query = "DELETE FROM " . static::$tabla . " WHERE id = '$this->id';";
                 $resultado = self::$db->query($query);
 
@@ -92,7 +92,7 @@
         
                 $query = "UPDATE " . static::$tabla . " SET ";
                 $query .= join(', ', $valores);
-                $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "'";
+                $query .= " WHERE id = '" . $this->id . "'";
                 $query .= " LIMIT 1";
         
                 return self::$db->query($query);
@@ -148,7 +148,7 @@
             try{
                 $query = "SELECT COUNT(*) as total FROM envio";
                 $resultado = self::$db->query($query);
-                $fila = $resultado->fetch_assoc();
+                $fila = $resultado->fetch();
                 return $fila['total'];
             }catch(Exception $e){
                 echo 'Error: ', $e->getMessage(), "\n";
@@ -177,7 +177,7 @@
             try{
                 $query = "SELECT * FROM " . self::$tabla . " WHERE id = '{$this->id}';";
                 $resultado = self::$db->query($query);
-                if($resultado->num_rows) {
+                if($resultado->rowCount()) {
                     self::$errores[] = 'El Envio Ya Existe';
                     return false;
                 }

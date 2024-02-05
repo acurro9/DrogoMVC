@@ -61,7 +61,7 @@
 
         public function eliminar(){
             try{
-                $idValue = self::$db->escape_string($this->id);
+                $idValue = $this->id;
                 $query = "DELETE FROM " . static::$tabla . " WHERE id = '$this->id';";
                 $resultado = self::$db->query($query);
 
@@ -75,7 +75,7 @@
                 try{
                     $query = "SELECT COUNT(*) as total FROM contacto";
                     $resultado = self::$db->query($query);
-                    $fila = $resultado->fetch_assoc();
+                    $fila = $resultado->fetch();
                     return $fila['total'];
                 }catch(Exception $e){
                     echo 'Error: ', $e->getMessage(), "\n";

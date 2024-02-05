@@ -91,7 +91,7 @@
 
         public function eliminar(){
             try{
-                $idValue = self::$db->escape_string($this->refCompra);
+                $idValue = $this->refCompra;
                 $query = "DELETE FROM " . static::$tabla . " WHERE refCompra = '$this->refCompra';";
                 $resultado = self::$db->query($query);
 
@@ -113,7 +113,7 @@
         
                 $query = "UPDATE " . static::$tabla . " SET ";
                 $query .= join(', ', $valores);
-                $query .= " WHERE refCompra = '" . self::$db->escape_string($this->refCompra) . "'";
+                $query .= " WHERE refCompra = '" . $this->refCompra . "'";
                 $query .= " LIMIT 1";
 
                 return self::$db->query($query);
@@ -148,7 +148,7 @@
             try{
                 $query = "SELECT COUNT(*) as total FROM pedido";
                 $resultado = self::$db->query($query);
-                $fila = $resultado->fetch_assoc();
+                $fila = $resultado->fetch();
                 return $fila['total'];
             }catch(Exception $e){
                 echo 'Error: ', $e->getMessage(), "\n";
@@ -177,7 +177,7 @@
             try{
                 $query = "SELECT * FROM " . self::$tabla . " WHERE refCompra = '{$this->refCompra}';";
                 $resultado = self::$db->query($query);
-                if($resultado->num_rows) {
+                if($resultado->rowCount()) {
                     self::$errores[] = 'El Pedido Ya Existe';
                     return false;
                 }

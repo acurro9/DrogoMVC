@@ -46,7 +46,7 @@ class Newsletter extends ActiveRecord {
         try{
             $query = "SELECT COUNT(*) as total FROM newsletter";
             $resultado = self::$db->query($query);
-            $fila = $resultado->fetch_assoc();
+            $fila = $resultado->fetch();
             return $fila['total'];
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
@@ -87,7 +87,7 @@ class Newsletter extends ActiveRecord {
     }   
 
     public function eliminar(){
-        $idValue = self::$db->escape_string($this->id);
+        $idValue = $this->id;
         $query = "DELETE FROM " . static::$tabla . " WHERE email = '$this->email';";
         $resultado = self::$db->query($query);
 

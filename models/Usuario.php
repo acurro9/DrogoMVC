@@ -38,6 +38,7 @@ class Usuario extends ActiveRecord {
             exit;
         }
     }
+    // Se verifica que el usuario sea Administrador
     public static function verificarPermisosAdmin() {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();

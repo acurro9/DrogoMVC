@@ -38,7 +38,7 @@
                                 <input class="bTabla" type="submit" value=" ">
                                 <input class="oculto" type="hidden" name="refCompra" value=<?= $envio->id;?>>
                             </form>
-                            <a href="/actualizarEnvio?id=<?= $envio->id; ?>" class="bTabla act"><img src="../build/img/icons/writer.svg" alt=""></a>
+                            <a href="/actualizarEnvio?id=<?= $envio->refCompra; ?>" class="bTabla act"><img src="../build/img/icons/writer.svg" alt=""></a>
                 </div>
                 <?php } ?>
                 </td>

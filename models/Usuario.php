@@ -126,7 +126,7 @@ class Usuario extends ActiveRecord {
             $query = "SELECT * FROM " . self::$tabla . " WHERE username = '$usuario';";
             $resultado = self::$db->query($query);
             if ($resultado){
-                $id=$resultado->fetch_assoc();
+                $id=$resultado->fetch();
                 $dev=$id['id'];
                 return $dev;
             }  
@@ -138,7 +138,7 @@ class Usuario extends ActiveRecord {
         try{
             $query = "SELECT * FROM " . self::$tabla . " WHERE username = '{$this->username}' OR email = '{$this->email}';";
             $resultado = self::$db->query($query);
-            if(!$resultado->num_rows) {
+            if(!$resultado->rowCount()) {
                 self::$errores[] = 'El Usuario No Existe';
                 return false;
             }
@@ -152,7 +152,7 @@ class Usuario extends ActiveRecord {
             $query = "SELECT * FROM " . self::$tabla . " WHERE username = '{$this->username}' OR email = '{$this->email}';";
         
             $resultado = self::$db->query($query);
-            if($resultado->num_rows) {
+            if($resultado->rowCount()) {
                 self::$errores[] = 'El Usuario Ya Existe';
                 return false;
             }
@@ -184,7 +184,7 @@ class Usuario extends ActiveRecord {
             }
         
             $resultado = self::$db->query($query);
-            if ($resultado->num_rows) {
+            if ($resultado->rowCount()) {
                 self::$errores[] = 'El nombre de usuario o email ya está en uso';
                 return false;
             }
@@ -238,7 +238,7 @@ class Usuario extends ActiveRecord {
         try{
             $query = "SELECT COUNT(*) as total FROM usuario";
             $resultado = self::$db->query($query);
-            $fila = $resultado->fetch_assoc();
+            $fila = $resultado->fetch();
             return $fila['total'];
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
@@ -294,7 +294,7 @@ class Usuario extends ActiveRecord {
         
             $query = "UPDATE " . static::$tabla . " SET ";
             $query .= join(', ', $valores);
-            $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "'";
+            $query .= " WHERE id = '" . $this->id . "'";
             $query .= " LIMIT 1";
         
             return self::$db->query($query);    
@@ -405,7 +405,7 @@ class Usuario extends ActiveRecord {
             $query = "SELECT id FROM bloqueado";
             $resultado = self::$db->query($query);
             $usuariosBloqueados = [];
-            while ($fila = $resultado->fetch_assoc()) {
+            while ($fila = $resultado->fetch()) {
                 $usuariosBloqueados[] = $fila['id'];
             }
             return $usuariosBloqueados;
@@ -419,7 +419,7 @@ class Usuario extends ActiveRecord {
         try{
             $query = "SELECT username FROM bloqueado WHERE username = '$username'";
             $resultado = self::$db->query($query);
-            if($resultado && $resultado->num_rows > 0){
+            if($resultado && $resultado->rowCount() > 0){
                 self::$errores[] = 'El Usuario está bloqueado';
                 return true;
             }
@@ -430,7 +430,7 @@ class Usuario extends ActiveRecord {
     }
     public function eliminar() {
         try{
-            $idValue = self::$db->escape_string($this->id);
+            $idValue = $this->id;
             $query = "DELETE FROM " . static::$tabla . " WHERE id = '{$idValue}';";
             $resultado = self::$db->query($query);
             

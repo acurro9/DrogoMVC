@@ -10,10 +10,10 @@
     // En caso de hacer el POST
     if($_SERVER['REQUEST_METHOD']==='POST'){
         // Se guardan los datos del formulario
-        $nombre=mysqli_real_escape_string($db, $_POST['nombre']);
-        $correo=mysqli_real_escape_string($db, $_POST['correo']);
-        $tlf=mysqli_real_escape_string($db, $_POST['telefono']);
-        $mensaje=mysqli_real_escape_string($db, $_POST['mensaje']);
+        $nombre=$_POST['nombre'];
+        $correo=$_POST['correo'];
+        $tlf=$_POST['telefono'];
+        $mensaje=$_POST['mensaje'];
         $terms=isset($_POST['terminos']) ? 1 : 0;
 
         // Si falta algún dato se crea un error
@@ -35,7 +35,7 @@
         // Si no hay errores se crea la consulta para añadir el mensaje a contacto
         if(empty($errores)){
             $query="INSERT into contacto (nombre, email, telefono, mensaje) values ('$nombre', '$correo', '$tlf', '$mensaje');";
-            $consulta=mysqli_query($db, $query);
+            $consulta=$db->query($query);
 
             if($consulta){
                 header("Location: /");

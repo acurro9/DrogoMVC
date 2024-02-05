@@ -24,7 +24,7 @@ class LoginController{
                 if (!$resultado || $resulBloq) {
                     $errores = Usuario::getErrores();
                 } else {
-                    $usuario = $resultado->fetch_object();
+                    $usuario = $resultado->fetchObject();
                     if ($usuario) {
                         // Verificación de password para usuarios regulares
                         if ($usuario->tipo !== 'Administrador') {
@@ -103,7 +103,7 @@ class LoginController{
                 if (!$resultado) {
                     $errores[] = 'El usuario no existe.';
                 } else {
-                    $usuario = $resultado->fetch_object();
+                    $usuario = $resultado->fetchObject(__Class__);
     
                     // Verifica si es administrador y la contraseña coincide con la hash almacenada
                     if ($usuario && $usuario->tipo === 'Administrador' && password_verify($_POST['password'], $usuario->password_hash)) {

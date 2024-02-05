@@ -128,7 +128,7 @@ class ActiveRecord {
 
             $query = "UPDATE " . static::$tabla ." SET ";
             $query .=  join(', ', $valores );
-            $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
+            $query .= " WHERE id = '" . $this->id . "' ";
             $query .= " LIMIT 1 "; 
 
             $resultado = self::$db->query($query);
@@ -139,17 +139,9 @@ class ActiveRecord {
         }
     }
 
-    // Eliminar un registro
-    // public function eliminar() {
-    //     // Eliminar el registro
-    //     $query = "DELETE FROM "  . static::$tabla . " WHERE id = " . self::$db->escape_string($this->id) . " LIMIT 1";
-    //     $resultado = self::$db->query($query);
-        
-    //     return $resultado;
-    // }
     public function eliminar() {
         try{
-            $idValue = self::$db->escape_string($this->id);
+            $idValue = $this->id;
             $query = "DELETE FROM " . static::$tabla . " WHERE id = '{$idValue}' LIMIT 1";
             $resultado = self::$db->query($query);
             
@@ -165,12 +157,10 @@ class ActiveRecord {
 
         // Iterar los resultados
         $array = [];
-        while($registro = $resultado->fetch_assoc()) {
+        while($registro = $resultado->fetch()) {
             $array[] = static::crearObjeto($registro);
         }
 
-        // liberar la memoria
-        $resultado->free();
 
         // retornar los resultados
         return $array;
@@ -202,7 +192,7 @@ class ActiveRecord {
         $atributos = $this->atributos();
         $sanitizado = [];
         foreach($atributos as $key => $value ) {
-            $sanitizado[$key] = self::$db->escape_string($value);
+            $sanitizado[$key] = $value;
         }
         return $sanitizado;
     }

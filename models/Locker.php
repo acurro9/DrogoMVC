@@ -51,7 +51,7 @@ class Locker extends ActiveRecord {
 
             $query = "UPDATE " . static::$tabla . " SET ";
             $query .= join(', ', $valores);
-            $query .= " WHERE refLocker = '" . self::$db->escape_string($this->refLocker) . "'";
+            $query .= " WHERE refLocker = '" . $this->refLocker . "'";
             $query .= " LIMIT 1";
 
             return self::$db->query($query); 
@@ -74,7 +74,7 @@ class Locker extends ActiveRecord {
         try{
             $query = "SELECT COUNT(*) as total FROM locker";
             $resultado = self::$db->query($query);
-            $fila = $resultado->fetch_assoc();
+            $fila = $resultado->fetch();
             return $fila['total'];
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
@@ -95,7 +95,7 @@ class Locker extends ActiveRecord {
 
     public function eliminar(){
         try{
-            $idValue = self::$db->escape_string($this->refLocker);
+            $idValue = $this->refLocker;
             $query = "DELETE FROM " . static::$tabla . " WHERE refLocker = '{$this->refLocker}';";
             $resultado = self::$db->query($query);
     
@@ -108,7 +108,7 @@ class Locker extends ActiveRecord {
         try{
             $query = "SELECT * FROM " . self::$tabla . " WHERE refLocker = '{$this->refLocker}';";
             $resultado = self::$db->query($query);
-            if($resultado->num_rows) {
+            if($resultado->rowCount()) {
                 self::$errores[] = 'El Locker Ya Existe';
                 return false;
             }

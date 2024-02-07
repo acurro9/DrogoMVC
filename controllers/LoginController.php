@@ -33,7 +33,6 @@ class LoginController{
                                 $user = Usuario::find($usuario->id);
 
                                 $user->autenticar();
-                                debuguear($user);
                             } else{ 
                                 $errores = Usuario::getErrores();
                             }

@@ -136,7 +136,7 @@ Todos los modelos (`Contacto`, `Envio`, `Locker`, `Newsletter`, `Pedido`, `Usuar
 
 Cada modelo está diseñado para satisfacer necesidades específicas dentro de la aplicación, manteniendo la lógica de negocio organizada y modular.
 
-#### Directorio public
+#### Public
 
 La carpeta `public` de nuestro proyecto actúa como el punto de entrada para los usuarios, conteniendo el archivo `index.php` que inicializa la aplicación y un directorio `build` para el front-end. Dentro de `build`, se organizan los archivos estáticos como CSS, JavaScript, e imágenes, esenciales para el diseño y funcionalidad de la interfaz de usuario; el `index.php`, por otro lado, configura las dependencias, inicia el enrutador (`Router`) y define las rutas hacia distintos controladores (`Controllers`), gestionando así las solicitudes y respuestas dentro del patrón MVC. Este diseño separa claramente la lógica de presentación del manejo de la lógica de negocio, promoviendo una estructura organizada y modular para el desarrollo web.
 

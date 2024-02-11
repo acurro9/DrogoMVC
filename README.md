@@ -56,7 +56,9 @@ El proyecto de PHP se ha desarrollado siguiendo los principios de la Programaci�
 
 ### Estructura general
 
-- **Controllers**: actúan como intermediarios entre los modelos y las vistas para recibir las solicitudes del usuario y procesarlos con el objetivo de enviar los datos a las vistas que mostrarán la información especificada por el usuario.
+#### Controllers
+
+Actúan como intermediarios entre los modelos y las vistas para recibir las solicitudes del usuario y procesarlos con el objetivo de enviar los datos a las vistas que mostrarán la información especificada por el usuario.
 
 Entre los mismos podemos encontrar aquellos de la clase Usuarios, englobando también los procesos de registro y login en la plataforma:
 
@@ -82,15 +84,19 @@ y aquellos pertenecientes a los modelos de envío y lockers:
 
 **LockersController.php**
 
-- **Includes**: el directorio includes incluye:
+#### Includes
 
-**/config/database.php**: directorio de configuración con la conexión a la base de datos en PDO.
-**funciones.php**: archivo que contiene funciones comunes utilizadas en varias partes del proyecto para mejorar la modularidad y el mantenimiento del código.
-**app.php**: inicializa la aplicación cargando dependencias con Composer, estableciendo la conexión a la base de datos mediante conectarDB(), y configurando el patrón Active Record para el manejo de modelos con la base de datos. Con ello, se facilita la integración de bibliotecas y la gestión de la base de datos, simplificando el desarrollo, conectando componentes clave y preparando el entorno de ejecución.
-**templates**: incluye todos los formularios y todas las tablas del proyecto que luego se referenciarán en las vistas mediante rutas donde corresponda, facilitando el mantenimiento y la reutilización del código empleado.
-**paginado.php**: permite al usuario seleccionar la cantidad de productos a mostrar por página a través de un menú desplegable, con opciones de 3, 5, 10 o 20 productos, y enviar la selección mediante un botón de envío.
+El directorio includes incluye:
 
--**Models**: equivalentes a las clases en la POO, los modelos en el patrón MVC gestionan la lógica de negocio y el acceso a datos, sirviendo como puente entre la base de datos y el controlador.
+1. **/config/database.php**: directorio de configuración con la conexión a la base de datos en PDO.
+2. **funciones.php**: archivo que contiene funciones comunes utilizadas en varias partes del proyecto para mejorar la modularidad y el mantenimiento del código.
+3. **app.php**: inicializa la aplicación cargando dependencias con Composer, estableciendo la conexión a la base de datos mediante conectarDB(), y configurando el patrón Active Record para el manejo de modelos con la base de datos. Con ello, se facilita la integración de bibliotecas y la gestión de la base de datos, simplificando el desarrollo, conectando componentes clave y preparando el entorno de ejecución.
+4. **templates**: incluye todos los formularios y todas las tablas del proyecto que luego se referenciarán en las vistas mediante rutas donde corresponda, facilitando el mantenimiento y la reutilización del código empleado.
+5. **paginado.php**: permite al usuario seleccionar la cantidad de productos a mostrar por página a través de un menú desplegable, con opciones de 3, 5, 10 o 20 productos, y enviar la selección mediante un botón de envío.
+
+#### Models
+
+Equivalentes a las clases en la POO, los modelos en el patrón MVC gestionan la lógica de negocio y el acceso a datos, sirviendo como puente entre la base de datos y el controlador.
 
 **Clase Router**: gestiona las rutas de la aplicación, diferenciando entre solicitudes GET y POST a través de los arrays `$getRoutes` y `$postRoutes`. Con `comprobarRutas`, se determina la ruta actual y el método de solicitud, ejecutando la función asociada en caso de coincidencia. Por otro lado, `render` se encarga de la presentación, extrayendo los datos enviados a la vista y los encapsula dentro del layout especificado. Con esta estructura de enrutamiento se facilita la organización del flujo de navegación y la separación clara entre la lógica de procesamiento y la presentación visual en la aplicación.
 

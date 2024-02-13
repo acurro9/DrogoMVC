@@ -1,13 +1,14 @@
 <?php 
     //Se realiza la conexión a la base de datos
-    // $db = new PDO('mysql:host=localhost;dbname=drogodb', 'root', '');
-function conectarDB() : mysqli {
-    $db = new mysqli('localhost', 'root', '', 'drogoDB');
+function conectarDB(){
+    $dns = 'mysql:dbname=drogoDB;host=localhost';
+    $user= 'root';
+    $password = '';
+    $db = new PDO($dns, $user, $password);
 
     if(!$db) {
         echo "Error: No se pudo conectar a MySQL.";
-            echo "errno de depuración: " . mysqli_connect_errno();
-            echo "error de depuración: " . mysqli_connect_error();
+            echo "Error: " . PDO::errorInfo();
             exit;
     } 
 

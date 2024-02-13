@@ -1,6 +1,7 @@
 <?php
 
 namespace Model;
+use Exception;
 
 class ActiveRecord {
 
@@ -44,11 +45,15 @@ class ActiveRecord {
     }
 
     public static function all() {
-        $query = "SELECT * FROM " . static::$tabla;
+        try{
+            $query = "SELECT * FROM " . static::$tabla;
 
-        $resultado = self::consultarSQL($query);
+            $resultado = self::consultarSQL($query);
 
-        return $resultado;
+            return $resultado;
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        }
     }
 
     // Busca un registro por su id
@@ -77,65 +82,73 @@ class ActiveRecord {
     
 
     public static function get($limite) {
-        $query = "SELECT * FROM " . static::$tabla . " LIMIT {$limite}";
+        try{
+            $query = "SELECT * FROM " . static::$tabla . " LIMIT {$limite}";
 
-        $resultado = self::consultarSQL($query);
-
-        return $resultado;
+            $resultado = self::consultarSQL($query);
+    
+            return $resultado; 
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        }
     }
 
     // crea un nuevo registro
     public function crear() {
-        // Sanitizar los datos
-        $atributos = $this->sanitizarAtributos();
+        try{
+            // Sanitizar los datos
+            $atributos = $this->sanitizarAtributos();
 
-        // Insertar en la base de datos
-        $query = " INSERT INTO " . static::$tabla . " ( ";
-        $query .= join(', ', array_keys($atributos));
-        $query .= " ) VALUES (' "; 
-        $query .= join("', '", array_values($atributos));
-        $query .= " ') ";
+            // Insertar en la base de datos
+            $query = " INSERT INTO " . static::$tabla . " ( ";
+            $query .= join(', ', array_keys($atributos));
+            $query .= " ) VALUES (' "; 
+            $query .= join("', '", array_values($atributos));
+            $query .= " ') ";
 
-        // Resultado de la consulta
-        $resultado = self::$db->query($query);
+            // Resultado de la consulta
+            $resultado = self::$db->query($query);
 
-        return $resultado;
+            return $resultado;
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        }
+        
     }
 
     public function actualizar() {
+        try{
+            // Sanitizar los datos
+            $atributos = $this->sanitizarAtributos();
 
-        // Sanitizar los datos
-        $atributos = $this->sanitizarAtributos();
+            $valores = [];
+            foreach($atributos as $key => $value) {
+                $valores[] = "{$key}='{$value}'";
+            }
 
-        $valores = [];
-        foreach($atributos as $key => $value) {
-            $valores[] = "{$key}='{$value}'";
+            $query = "UPDATE " . static::$tabla ." SET ";
+            $query .=  join(', ', $valores );
+            $query .= " WHERE id = '" . $this->id . "' ";
+            $query .= " LIMIT 1 "; 
+
+            $resultado = self::$db->query($query);
+
+            return $resultado;
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
         }
-
-        $query = "UPDATE " . static::$tabla ." SET ";
-        $query .=  join(', ', $valores );
-        $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
-        $query .= " LIMIT 1 "; 
-
-        $resultado = self::$db->query($query);
-
-        return $resultado;
     }
 
-    // Eliminar un registro
-    // public function eliminar() {
-    //     // Eliminar el registro
-    //     $query = "DELETE FROM "  . static::$tabla . " WHERE id = " . self::$db->escape_string($this->id) . " LIMIT 1";
-    //     $resultado = self::$db->query($query);
-        
-    //     return $resultado;
-    // }
     public function eliminar() {
-        $idValue = self::$db->escape_string($this->id);
-        $query = "DELETE FROM " . static::$tabla . " WHERE id = '{$idValue}' LIMIT 1";
-        $resultado = self::$db->query($query);
-        
-        return $resultado;
+        try{
+            $idValue = $this->id;
+            $query = "DELETE FROM " . static::$tabla . " WHERE id = '{$idValue}' LIMIT 1";
+            $resultado = self::$db->query($query);
+            
+            return $resultado;
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        }
     }
 
     public static function consultarSQL($query) {
@@ -144,12 +157,10 @@ class ActiveRecord {
 
         // Iterar los resultados
         $array = [];
-        while($registro = $resultado->fetch_assoc()) {
+        while($registro = $resultado->fetch()) {
             $array[] = static::crearObjeto($registro);
         }
 
-        // liberar la memoria
-        $resultado->free();
 
         // retornar los resultados
         return $array;
@@ -181,7 +192,7 @@ class ActiveRecord {
         $atributos = $this->atributos();
         $sanitizado = [];
         foreach($atributos as $key => $value ) {
-            $sanitizado[$key] = self::$db->escape_string($value);
+            $sanitizado[$key] = $value;
         }
         return $sanitizado;
     }

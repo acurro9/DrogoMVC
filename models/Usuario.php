@@ -1,6 +1,7 @@
 <?php
 
 namespace Model;
+use Exception;
 
 class Usuario extends ActiveRecord {
    
@@ -37,6 +38,7 @@ class Usuario extends ActiveRecord {
             exit;
         }
     }
+    // Se verifica que el usuario sea Administrador
     public static function verificarPermisosAdmin() {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
@@ -121,61 +123,77 @@ class Usuario extends ActiveRecord {
 
     
     public static function buscarID($usuario){
-        $query = "SELECT * FROM " . self::$tabla . " WHERE username = '$usuario';";
-        $resultado = self::$db->query($query);
-        if ($resultado){
-            $id=$resultado->fetch_assoc();
-            $dev=$id['id'];
-            return $dev;
+        try{
+            $query = "SELECT * FROM " . self::$tabla . " WHERE username = '$usuario';";
+            $resultado = self::$db->query($query);
+            if ($resultado){
+                $id=$resultado->fetch();
+                $dev=$id['id'];
+                return $dev;
+            }  
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
         }
     }
     public function existeUsuario() {
-        $query = "SELECT * FROM " . self::$tabla . " WHERE username = '{$this->username}' OR email = '{$this->email}';";
-        $resultado = self::$db->query($query);
-        if(!$resultado->num_rows) {
-            self::$errores[] = 'El Usuario No Existe';
-            return false;
+        try{
+            $query = "SELECT * FROM " . self::$tabla . " WHERE username = '{$this->username}' OR email = '{$this->email}';";
+            $resultado = self::$db->query($query);
+            if(!$resultado->rowCount()) {
+                self::$errores[] = 'El Usuario No Existe';
+                return false;
+            }
+            return $resultado;
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
         }
-        return $resultado;
     }
     public function noExisteUsuario() {
-        $query = "SELECT * FROM " . self::$tabla . " WHERE username = '{$this->username}' OR email = '{$this->email}';";
+        try{
+            $query = "SELECT * FROM " . self::$tabla . " WHERE username = '{$this->username}' OR email = '{$this->email}';";
         
-        $resultado = self::$db->query($query);
-        if($resultado->num_rows) {
-            self::$errores[] = 'El Usuario Ya Existe';
-            return false;
+            $resultado = self::$db->query($query);
+            if($resultado->rowCount()) {
+                self::$errores[] = 'El Usuario Ya Existe';
+                return false;
+            }
+            return true;
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
         }
-        return true;
     }
 
     //Para evitar que, al modificar los datos, el usuario introduzca el nombre o email de otro usuario, así se evitan duplicidades
 
     public function noExisteUsuarioDatos($idActual = null){
-        $condiciones = [];
-        if (!empty($this->username)) {
-            $condiciones[] = "username = '{$this->username}'";
-        }
-        if (!empty($this->email)) {
-            $condiciones[] = "email = '{$this->email}'";
-        }
-        if (empty($condiciones)) {
-            // No hay suficiente información para hacer una consulta
+        try{
+            $condiciones = [];
+            if (!empty($this->username)) {
+                $condiciones[] = "username = '{$this->username}'";
+            }
+            if (!empty($this->email)) {
+                $condiciones[] = "email = '{$this->email}'";
+            }
+            if (empty($condiciones)) {
+                // No hay suficiente información para hacer una consulta
+                return true;
+            }
+            //Para no contar al usuario actual como duplicado, que es lo que lleva dando problemas todo el tiempo
+            $query = "SELECT * FROM " . self::$tabla . " WHERE (" . implode(' OR ', $condiciones) . ")";
+            if ($idActual !== null) {
+                $query .= " AND id != '{$idActual}'";
+            }
+        
+            $resultado = self::$db->query($query);
+            if ($resultado->rowCount()) {
+                self::$errores[] = 'El nombre de usuario o email ya está en uso';
+                return false;
+            }
             return true;
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
         }
-        //Para no contar al usuario actual como duplicado, que es lo que lleva dando problemas todo el tiempo
-        $query = "SELECT * FROM " . self::$tabla . " WHERE (" . implode(' OR ', $condiciones) . ")";
-        if ($idActual !== null) {
-            $query .= " AND id != '{$idActual}'";
-        }
-    
-        $resultado = self::$db->query($query);
-        if ($resultado->num_rows) {
-            self::$errores[] = 'El nombre de usuario o email ya está en uso';
-            return false;
-        }
-        return true;
-        }
+    }
     
 
 
@@ -218,156 +236,210 @@ class Usuario extends ActiveRecord {
 
     // Método para contar el total de usuarios
     public static function contarUsuarios() {
-        $query = "SELECT COUNT(*) as total FROM usuario";
-        $resultado = self::$db->query($query);
-        $fila = $resultado->fetch_assoc();
-        return $fila['total'];
+        try{
+            $query = "SELECT COUNT(*) as total FROM usuario";
+            $resultado = self::$db->query($query);
+            $fila = $resultado->fetch();
+            return $fila['total'];
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        }
+        
     }
 
     // Método para obtener usuarios con paginación
     public static function obtenerUsuariosPorPagina($limit, $offset) {
-        $query = "SELECT * FROM usuario LIMIT {$limit} OFFSET {$offset}";
-        return self::consultarSQL($query);
+        try{
+            $query = "SELECT * FROM usuario LIMIT {$limit} OFFSET {$offset}";
+            return self::consultarSQL($query);
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        }
+        
     }
     
     public function crear() {
-       // Sanitizar los datos
-       $atributos = $this->sanitizarAtributos();
-   
-       $id =  md5(uniqid(rand(), true));
-   
-       // Para meterle la id
-       $query = "INSERT INTO " . static::$tabla . " (";
-       $query .= join(', ', array_keys($atributos));
-       $query .= ") VALUES ('$id";
-       $query .= join("', '", array_values($atributos));
-       $query .= "')";
+        try{
+           // Sanitizar los datos
+            $atributos = $this->sanitizarAtributos();
+        
+            $id =  md5(uniqid(rand(), true));
+        
+            // Para meterle la id
+            $query = "INSERT INTO " . static::$tabla . " (";
+            $query .= join(', ', array_keys($atributos));
+            $query .= ") VALUES ('$id";
+            $query .= join("', '", array_values($atributos));
+            $query .= "')";
 
 
-       // Resultado de la consulta
-       $resultado = self::$db->query($query);
-       
-       return $resultado;
+            // Resultado de la consulta
+            $resultado = self::$db->query($query);
+            
+            return $resultado; 
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        }
     }    
     
     
     public function actualizar() {
-        // Sanitización de datos
-        $atributos = $this->sanitizarAtributos();
-    
-        $valores = [];
-        foreach ($atributos as $key => $value) {
-            $valores[] = "{$key}='{$value}'";
+        try{
+            // Sanitización de datos
+            $atributos = $this->sanitizarAtributos();
+        
+            $valores = [];
+            foreach ($atributos as $key => $value) {
+                $valores[] = "{$key}='{$value}'";
+            }
+        
+            $query = "UPDATE " . static::$tabla . " SET ";
+            $query .= join(', ', $valores);
+            $query .= " WHERE id = '" . $this->id . "'";
+            $query .= " LIMIT 1";
+        
+            return self::$db->query($query);    
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
         }
-    
-        $query = "UPDATE " . static::$tabla . " SET ";
-        $query .= join(', ', $valores);
-        $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "'";
-        $query .= " LIMIT 1";
-    
-        return self::$db->query($query);
     }
     public function actualizarCartera($id, $tipo, $cartera){
-        if (!$id) {
-            self::$errores[] = "Error: Usuario no identificado.";
-            return false;
+        try{
+            if (!$id) {
+                self::$errores[] = "Error: Usuario no identificado.";
+                return false;
+            }
+            if($tipo===1){
+                $tabla="Comprador";
+                $hash="hash_comprador";
+                $hashCartera="hash_carteraComprador";
+            } else if($tipo===2){
+                $tabla="Vendedor";
+                $hash="hash_vendedor";
+                $hashCartera="hash_carteraVendedor";
+            } else if($tipo===3){
+                $tabla="Distribuidor";
+                $hash="hash_distribuidor";
+                $hashCartera="hash_carteraDistribuidor";
+            }
+            // Se hashea la cartera
+            $cart=password_hash($cartera, PASSWORD_DEFAULT);
+            // Se inserta la cartera en la tabla del usuario
+            $query = "INSERT INTO $tabla ($hash, $hashCartera) values ('$id', '$cart');";
+    
+            $resultado = self::$db->query($query);
+            return $resultado;
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
         }
-        if($tipo===1){
-            $tabla="Comprador";
-            $hash="hash_comprador";
-            $hashCartera="hash_carteraComprador";
-        } else if($tipo===2){
-            $tabla="Vendedor";
-            $hash="hash_vendedor";
-            $hashCartera="hash_carteraVendedor";
-        } else if($tipo===3){
-            $tabla="Distribuidor";
-            $hash="hash_distribuidor";
-            $hashCartera="hash_carteraDistribuidor";
-        }
-        // Se hashea la cartera
-        $cart=password_hash($cartera, PASSWORD_DEFAULT);
-        // Se inserta la cartera en la tabla del usuario
-        $query = "INSERT INTO $tabla ($hash, $hashCartera) values ('$id', '$cart');";
-
-        $resultado = self::$db->query($query);
-        return $resultado;
     }
 
     public function actualizarCartera2($cartera){
-        if (!$this->id) {
-            self::$errores[] = "Error: Usuario no identificado.";
-            return false;
+        try{
+            if (!$this->id) {
+                self::$errores[] = "Error: Usuario no identificado.";
+                return false;
+            }
+            $id=$this->id;
+            $tipo=$this->tipo;
+    
+            if($tipo==='Comprador'){
+                $tabla="comprador";
+                $hash="hash_comprador";
+                $hashCartera="hash_carteraComprador";
+            } else if($tipo==='Vendedor'){
+                $tabla="vendedor";
+                $hash="hash_vendedor";
+                $hashCartera="hash_carteraVendedor";
+            } else if($tipo==='Distribuidor'){
+                $tabla="distribuidor";
+                $hash="hash_distribuidor";
+                $hashCartera="hash_carteraDistribuidor";
+            }
+            // Se hashea la cartera
+            $cart=password_hash($cartera, PASSWORD_DEFAULT);
+            // Se inserta la cartera en la tabla del usuario
+            $query = "UPDATE $tabla SET $hashCartera = '$cart' where $hash = '$id'";
+    
+            $resultado = self::$db->query($query);
+            return $resultado; 
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
         }
-        $id=$this->id;
-        $tipo=$this->tipo;
-
-        if($tipo==='Comprador'){
-            $tabla="comprador";
-            $hash="hash_comprador";
-            $hashCartera="hash_carteraComprador";
-        } else if($tipo==='Vendedor'){
-            $tabla="vendedor";
-            $hash="hash_vendedor";
-            $hashCartera="hash_carteraVendedor";
-        } else if($tipo==='Distribuidor'){
-            $tabla="distribuidor";
-            $hash="hash_distribuidor";
-            $hashCartera="hash_carteraDistribuidor";
-        }
-        // Se hashea la cartera
-        $cart=password_hash($cartera, PASSWORD_DEFAULT);
-        // Se inserta la cartera en la tabla del usuario
-        $query = "UPDATE $tabla SET $hashCartera = '$cart' where $hash = '$id'";
-
-        $resultado = self::$db->query($query);
-        return $resultado;
-
     }
 
 
     public static function bloquear($idUsuario, $username, $email) {
-        $query = "INSERT INTO bloqueado (id, username, email) VALUES ('$idUsuario', '$username', '$email')";
-        return self::$db->query($query);
+        try{
+            $query = "INSERT INTO bloqueado (id, username, email) VALUES ('$idUsuario', '$username', '$email')";
+            return self::$db->query($query);
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        }
+       
     }
 
     public static function desbloquear($username) {
-        $query = "DELETE FROM bloqueado WHERE username = '$username'";
-        return self::$db->query($query);
+        try{
+            $query = "DELETE FROM bloqueado WHERE username = '$username'";
+            return self::$db->query($query);
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        }
+        
     }
 
     // Método para buscar usuario por criterios
     public static function buscarPorCriterios($username, $email, $id) {
-        $query = "SELECT id, username, email FROM usuario WHERE username LIKE '$username' OR email LIKE '$email' OR id LIKE '$id'";
-        $resultado = self::consultarSQL($query);
-        return $resultado ? array_shift($resultado) : null;
+        try{
+            $query = "SELECT id, username, email FROM usuario WHERE username LIKE '$username' OR email LIKE '$email' OR id LIKE '$id'";
+            $resultado = self::consultarSQL($query);
+            return $resultado ? array_shift($resultado) : null;
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        }
     }
 
     // Métodos para comprobar si un usuario está bloqueado
     public static function obtenerUsuariosBloqueados() {
-        $query = "SELECT id FROM bloqueado";
-        $resultado = self::$db->query($query);
-        $usuariosBloqueados = [];
-        while ($fila = $resultado->fetch_assoc()) {
-            $usuariosBloqueados[] = $fila['id'];
+        try{
+            $query = "SELECT id FROM bloqueado";
+            $resultado = self::$db->query($query);
+            $usuariosBloqueados = [];
+            while ($fila = $resultado->fetch()) {
+                $usuariosBloqueados[] = $fila['id'];
+            }
+            return $usuariosBloqueados;
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
         }
-        return $usuariosBloqueados;
+        
     }
 
     public static function userBloq($username) {
-        $query = "SELECT username FROM bloqueado WHERE username = '$username'";
-        $resultado = self::$db->query($query);
-        if($resultado && $resultado->num_rows > 0){
-            self::$errores[] = 'El Usuario está bloqueado';
-            return true;
+        try{
+            $query = "SELECT username FROM bloqueado WHERE username = '$username'";
+            $resultado = self::$db->query($query);
+            if($resultado && $resultado->rowCount() > 0){
+                self::$errores[] = 'El Usuario está bloqueado';
+                return true;
+            }
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
         }
+        
     }
     public function eliminar() {
-        $idValue = self::$db->escape_string($this->id);
-        $query = "DELETE FROM " . static::$tabla . " WHERE id = '{$idValue}';";
-        $resultado = self::$db->query($query);
-        
-        return $resultado;
+        try{
+            $idValue = $this->id;
+            $query = "DELETE FROM " . static::$tabla . " WHERE id = '{$idValue}';";
+            $resultado = self::$db->query($query);
+            
+            return $resultado;
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        }
+       
     }
     public static function find($id) {
 
@@ -388,16 +460,21 @@ class Usuario extends ActiveRecord {
         }
     }
     public static function obtenerNombres(){
-        self::contarUsuarios();
-        $query = "SELECT id, username FROM usuario";
-        $usuarios = self::$db->query($query);
-        $cont=0;
-        foreach ($usuarios as $usuario) {
-            $nombre[$cont][0]=$usuario['id'];
-            $nombre[$cont][1]=$usuario['username'];
-            $cont++;
+        try{
+            self::contarUsuarios();
+            $query = "SELECT id, username FROM usuario";
+            $usuarios = self::$db->query($query);
+            $cont=0;
+            foreach ($usuarios as $usuario) {
+                $nombre[$cont][0]=$usuario['id'];
+                $nombre[$cont][1]=$usuario['username'];
+                $cont++;
+            }
+            return $nombre;
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
         }
-        return $nombre;
+        
     }
 
     public function erroresActualizacion($data){

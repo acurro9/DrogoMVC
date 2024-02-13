@@ -33,10 +33,10 @@
 
     // Se realiza la consulta del tipo de usuario
     $tipoQuery="SELECT tipo FROM usuario WHERE email='${usuario}';";
-    $resultadoTipo=mysqli_query($db, $tipoQuery);
+    $resultadoTipo=$db->query($tipoQuery);
 
     if ($resultadoTipo) {
-        $tipoUsuario=mysqli_fetch_assoc($resultadoTipo)['tipo'];
+        $tipoUsuario=$db->fetch($resultadoTipo)['tipo'];
         // Dependiedno del tipo de usuario la variable carteraTable tendrá un valor u otro 
         switch($tipoUsuario){
             case 'Vendedor':
@@ -68,7 +68,7 @@
     if($_SERVER['REQUEST_METHOD']==='POST'){
         // Se guardan los datos del formulario
         $updateQuery='';
-        $newValue = mysqli_real_escape_string($db, $_POST['new_value']);;
+        $newValue = $_POST['new_value'];;
 
         // Dependiendo del tipo de dato a cambiar se realiza una consulta u otra
         switch($dataType){
@@ -80,7 +80,7 @@
                 break;
             case 'password':
                 // En el caso de la contraseña pide introducirla dos veces
-                $oldValue =mysqli_real_escape_string($db, $_POST['old_value']);
+                $oldValue =$_POST['old_value'];
                 // Se comparan que las dos contraseñas introducidas sean iguales
                 if(strcmp($oldValue, $newValue)===0){
                     // Se hashea la contraseña
@@ -94,8 +94,8 @@
                 }
             case 'cartera':
                 // En el caso de cambiar la cartera hay que introducir dos veces la nueva cartera y la contraseña de la cuenta
-                $oldValue = mysqli_real_escape_string($db, $_POST['old_value']);
-                $cont = mysqli_real_escape_string($db, $_POST['contraseña']);
+                $oldValue = $_POST['old_value'];
+                $cont = $_POST['contraseña'];
                 // Se compara la contraseña introducida con la contraseña de la cuenta
                 $authCont=password_verify($cont, $_SESSION["contraseña"]);
                 if($authCont){
@@ -117,7 +117,7 @@
         }
         // En el caso de que exista la consulta
         if(!empty($updateQuery)){
-            $resultadoUpdate=mysqli_query($db, $updateQuery);
+            $resultadoUpdate=$db->query($updateQuery);
 
             if($resultadoUpdate){
                 //Si el tipo de modificación es 'email' se actualiza la variable de sesión del email del usuario
@@ -130,7 +130,7 @@
                     header('Location: /modificarDatos.php');
                 }
             }else{
-                echo "Error al actualizar los datos: " . mysqli_error($db);
+                echo "Error al actualizar los datos: " . $db->PDO::errorInfo();
             }
             
 

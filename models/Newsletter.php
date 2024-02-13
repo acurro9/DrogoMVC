@@ -1,6 +1,7 @@
 <?php
 
 namespace Model;
+use Exception;
 
 class Newsletter extends ActiveRecord {
 
@@ -15,20 +16,24 @@ class Newsletter extends ActiveRecord {
         $this->email= $args['email'] ?? null;
     }
     public function crear(){
-        // Sanitizar los datos
-      $atributos = $this->sanitizarAtributos();
+        try{
+            // Sanitizar los datos
+            $atributos = $this->sanitizarAtributos();
 
-      // Para meterle la id
-      $query = "INSERT INTO " . static::$tabla . " (";
-      $query .= join(', ', array_keys($atributos));
-      $query .= ") VALUES ('";
-      $query .= join("', '", array_values($atributos));
-      $query .= "')";
+            // Para meterle la id
+            $query = "INSERT INTO " . static::$tabla . " (";
+            $query .= join(', ', array_keys($atributos));
+            $query .= ") VALUES ('";
+            $query .= join("', '", array_values($atributos));
+            $query .= "')";
 
-      // Resultado de la consulta
-      $resultado = self::$db->query($query);
+            // Resultado de la consulta
+            $resultado = self::$db->query($query);
 
-      return $resultado;
+            return $resultado;
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        }
     }
     public function validar(){
         if(!$this->email) {
@@ -38,16 +43,25 @@ class Newsletter extends ActiveRecord {
     }
      // Método para contar el total de newsletter
      public static function contarNewsletter() {
-        $query = "SELECT COUNT(*) as total FROM newsletter";
-        $resultado = self::$db->query($query);
-        $fila = $resultado->fetch_assoc();
-        return $fila['total'];
+        try{
+            $query = "SELECT COUNT(*) as total FROM newsletter";
+            $resultado = self::$db->query($query);
+            $fila = $resultado->fetch();
+            return $fila['total'];
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        }
+        
     }
 
     // Método para obtener newsletter con paginación
     public static function obtenerNewsletterPorPagina($limit, $offset) {
-        $query = "SELECT * FROM newsletter LIMIT {$limit} OFFSET {$offset}";
-        return self::consultarSQL($query);
+        try{
+            $query = "SELECT * FROM newsletter LIMIT {$limit} OFFSET {$offset}";
+            return self::consultarSQL($query);
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+        } 
     }
 
     public static function find($id) {
@@ -73,7 +87,7 @@ class Newsletter extends ActiveRecord {
     }   
 
     public function eliminar(){
-        $idValue = self::$db->escape_string($this->id);
+        $idValue = $this->id;
         $query = "DELETE FROM " . static::$tabla . " WHERE email = '$this->email';";
         $resultado = self::$db->query($query);
 

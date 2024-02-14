@@ -1,4 +1,6 @@
-<fieldset>
+ <!-- Fragmento de código para el paginado con selección de cantidad de productos por página -->
+
+ <fieldset>
                 <legend style="color: white;">Cant x pag: </legend>
                 <div class="cen">
                     <select name="producto">

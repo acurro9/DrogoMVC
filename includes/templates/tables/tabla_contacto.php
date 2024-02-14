@@ -1,3 +1,4 @@
+<!-- Estructura de la tabla para mostrar contactos -->
 <thead>
         <tr>
             <th>ID</th>
@@ -9,6 +10,7 @@
         </tr>
     </thead>
     <tbody>
+    <!-- Bucle para mostrar cada contacto -->
     <?php foreach ($contactos as $contacto): ?>
         <tr>
             <td><?= $contacto->id;?></td>

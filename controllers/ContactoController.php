@@ -4,12 +4,34 @@
     use Model\Contacto;
     use Model\Usuario;
 
+    /**
+     * Controlador para gestionar las operaciones sobre el modelo Contacto.
+     *
+     * Provee métodos para mostrar el formulario de contacto, crear un nuevo contacto,
+     * ver los detalles de contacto y eliminar contactos, incluyendo la validación de acceso.
+     */
+
     class ContactoController{
+
+        /**
+         * Muestra el formulario de contacto.
+         * 
+         * @param Router $router Instancia del router para renderizar la vista.
+         */
         public static function contacto( Router $router ) {
             $router->render('paginas/form-contacto', [
     
             ]);
         }
+
+        /**
+         * Crea un nuevo contacto a partir de los datos enviados por el formulario.
+         * 
+         * Valida los datos del formulario y, si son correctos, guarda el nuevo contacto
+         * en la base de datos. Redirecciona a la página principal si el contacto es creado con éxito.
+         * 
+         * @param Router $router Instancia del router para renderizar la vista en caso de errores.
+         */
         public static function crearContacto(Router $router){
             $errores = [];
     
@@ -36,6 +58,15 @@
             ]);
         }
 
+        /**
+         * Muestra los contactos existentes, con soporte para paginación.
+         * 
+         * Solo accesible por usuarios con permisos de administrador. Obtiene los contactos
+         * de la base de datos y los muestra en una vista de administración.
+         * 
+         * @param Router $router Instancia del router para renderizar la vista.
+         */
+
         public static function verContacto(Router $router){
             Usuario::verificarPermisosAdmin();
             $errores = [];
@@ -61,6 +92,15 @@
             
             ]);
         }
+
+        /**
+         * Elimina un contacto específico.
+         * 
+         * Solo accesible por usuarios con permisos de administrador. Busca el contacto por su ID
+         * y lo elimina de la base de datos. Redirecciona a la vista de contactos tras la eliminación.
+         * 
+         * @param Router $router Instancia del router, aunque no se utiliza directamente en este método.
+         */
         public static function borrarContacto(Router $router){
             Usuario::verificarPermisosAdmin();
             $id = $_GET["id"];
@@ -80,4 +120,3 @@
             } 
         }
     }
-?>

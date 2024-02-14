@@ -5,7 +5,22 @@ use MVC\Router;
 use Model\Locker;
 use Model\Usuario;
 
+/**
+ * Controlador para la gestión de lockers.
+ *
+ * Provee funcionalidades para crear, visualizar, actualizar y eliminar lockers,
+ * asegurando el acceso solo a usuarios con permisos de administrador.
+ */
+
 class LockersController{
+    /**
+     * Crea un nuevo locker.
+     * 
+     * Valida los datos del formulario y, si son correctos, guarda el nuevo locker
+     * en la base de datos. Redirecciona a una página de éxito si el locker es creado.
+     * 
+     * @param Router $router Instancia del router para renderizar la vista.
+     */
     public static function crearLocker(Router $router){
         Usuario::verificarPermisosAdmin();
         $errores = [];
@@ -39,6 +54,14 @@ class LockersController{
         ]);
    }
 
+    /**
+     * Muestra los lockers existentes, con soporte para paginación.
+     * 
+     * Solo accesible por usuarios con permisos de administrador. Obtiene los lockers
+     * de la base de datos y los muestra en una vista de administración.
+     * 
+     * @param Router $router Instancia del router para renderizar la vista.
+     */
    public static function verLockers(Router $router){
     Usuario::verificarPermisosAdmin();
     $errores = [];
@@ -63,6 +86,14 @@ class LockersController{
     ]);
    }
 
+    /**
+     * Actualiza la información de un locker específico.
+     * 
+     * Solo accesible por usuarios con permisos de administrador. Permite la edición de un
+     * locker existente y actualiza sus datos en la base de datos.
+     * 
+     * @param Router $router Instancia del router para renderizar la vista con formulario de actualización.
+     */
     public static function actualizarLocker(Router $router){
         Usuario::verificarPermisosAdmin();
         $errores = [];
@@ -102,6 +133,15 @@ class LockersController{
             'errores' => $errores
         ]);
     }
+
+     /**
+     * Elimina un locker de la base de datos.
+     * 
+     * Solo accesible por usuarios con permisos de administrador. Elimina el locker especificado
+     * de la base de datos y redirecciona a la vista de lockers tras la eliminación.
+     * 
+     * @param Router $router Instancia del router, aunque no se utiliza directamente en este método.
+     */
     public static function borrarLocker(Router $router) {
         Usuario::verificarPermisosAdmin();
         $lockerID = $_GET["id"];

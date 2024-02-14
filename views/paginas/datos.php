@@ -32,7 +32,7 @@
     }
 
     // Se realiza la consulta del tipo de usuario
-    $tipoQuery="SELECT tipo FROM usuario WHERE email='${usuario}';";
+    $tipoQuery="SELECT tipo FROM usuario WHERE email='{$usuario}';";
     $resultadoTipo=$db->query($tipoQuery);
 
     if ($resultadoTipo) {

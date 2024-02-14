@@ -3,10 +3,23 @@
 namespace Model;
 use Exception;
 
+/**
+ * Clase Usuario para la gestión de usuarios en la base de datos.
+ *
+ * Proporciona funcionalidades para crear, actualizar, validar, y eliminar usuarios,
+ * así como métodos para la autenticación, bloqueo/desbloqueo, y otras operaciones relacionadas.
+ */
+
 class Usuario extends ActiveRecord {
    
-    // Base DE DATOS
+     /**
+     * @var string Nombre de la tabla en la base de datos.
+     */
     protected static $tabla = 'usuario';
+
+    /**
+     * @var array Columnas de la base de datos utilizadas por la clase.
+     */
     protected static $columnasDB = ['id', 'username', 'email', 'password_hash', 'tipo'];
 
     //Declaración de atributos para usuario
@@ -17,6 +30,12 @@ class Usuario extends ActiveRecord {
     public $tipo;
     public $passwordPlano;
 
+    /**
+     * Constructor de la clase Usuario.
+     *
+     * @param array $args Argumentos para inicializar un objeto Usuario.
+     */
+
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? '';
@@ -26,6 +45,10 @@ class Usuario extends ActiveRecord {
         $this->tipo = $args['tipo']??'';
         $this->passwordPlano = $args['passwordPlano']??'';
     }
+
+    /**
+     * Verifica los permisos del usuario para acceder a ciertas áreas.
+     */
     //Para el bloquearUsuario
     public static function verificarPermisos() {
         if (session_status() == PHP_SESSION_NONE) {
@@ -38,7 +61,10 @@ class Usuario extends ActiveRecord {
             exit;
         }
     }
-    // Se verifica que el usuario sea Administrador
+
+    /**
+     * Verifica que el usuario tenga permisos de administrador.
+     */
     public static function verificarPermisosAdmin() {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
@@ -50,8 +76,14 @@ class Usuario extends ActiveRecord {
         }
     }
 
+    
+    /**
+     * Valida los campos necesarios para el login de un usuario.
+     *
+     * @return array Retorna un array de errores si los hay.
+     */
+
     public function validarLogin() {
-        // Si no se ha proporcionado ni un nombre de usuario ni un correo electrónico
         if (!$this->username && !$this->email) {
             self::$errores[] = "El nombre de usuario o email es obligatorio";
         }
@@ -60,6 +92,12 @@ class Usuario extends ActiveRecord {
         }
         return self::$errores;
     }
+
+    /**
+     * Valida los campos necesarios para el registro de un usuario.
+     *
+     * @return array Retorna un array de errores si los hay.
+     */
     public function validarRegistro() {
         if(!$this->username){
             self::$errores[] = "El nombre de usuario es obligatorio";
@@ -82,6 +120,13 @@ class Usuario extends ActiveRecord {
         return self::$errores;
     }
 
+    /**
+     * Genera un mensaje de éxito basado en un código proporcionado.
+     *
+     * @param int $codigo Código que representa el tipo de operación realizada.
+     * @return string Retorna un mensaje de éxito personalizado.
+     */
+
     public function mssgExito($codigo){
         switch($codigo){
             case 1:
@@ -103,11 +148,22 @@ class Usuario extends ActiveRecord {
         }
     }
 
+    /**
+     * Redirige a la página de actualizar datos con los errores de validación.
+     *
+     * @param array $errores Errores de validación.
+     */
     public function validacionError($errores){
         $_SESSION['errores']=$errores;
         header("Location: /modDatos");
         exit;
     }
+
+    /**
+     * Redirige a la página correspondiente tras una operación exitosa.
+     *
+     * @param int $codigo Código que representa el tipo de operación realizada.
+     */
 
     public function validacionExito($codigo){
         $mensaje=$this->mssgExito($codigo);
@@ -121,6 +177,13 @@ class Usuario extends ActiveRecord {
     }
 
 
+    /**
+     * Busca un usuario por su nombre de usuario.
+     *
+     * @param string $usuario Nombre de usuario a buscar.
+     * @return mixed Devuelve el ID del usuario si se encuentra, de lo contrario retorna null.
+     * @throws Exception Si ocurre un error durante la consulta.
+     */
     
     public static function buscarID($usuario){
         try{
@@ -133,8 +196,17 @@ class Usuario extends ActiveRecord {
             }  
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
+            return null;
         }
     }
+
+
+    /**
+     * Verifica si un usuario ya existe en la base de datos por su nombre de usuario o email.
+     *
+     * @return bool Retorna true si el usuario no existe, false si ya existe.
+     * @throws Exception Si ocurre un error durante la consulta.
+     */
     public function existeUsuario() {
         try{
             $query = "SELECT * FROM " . self::$tabla . " WHERE username = '{$this->username}' OR email = '{$this->email}';";
@@ -146,8 +218,16 @@ class Usuario extends ActiveRecord {
             return $resultado;
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
+            return false;
         }
     }
+
+    /**
+     * Verifica si un usuario ya existe en la base de datos por su nombre de usuario o email.
+     *
+     * @return bool Retorna true si el usuario no existe, false si ya existe.
+     * @throws Exception Si ocurre un error durante la consulta.
+     */
     public function noExisteUsuario() {
         try{
             $query = "SELECT * FROM " . self::$tabla . " WHERE username = '{$this->username}' OR email = '{$this->email}';";
@@ -160,6 +240,7 @@ class Usuario extends ActiveRecord {
             return true;
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
+            return false;
         }
     }
 
@@ -195,7 +276,12 @@ class Usuario extends ActiveRecord {
         }
     }
     
-
+    /**
+     * Comprueba si la contraseña proporcionada coincide con la almacenada en la base de datos.
+     *
+     * @param Usuario $usuario Usuario a autenticar.
+     * @return bool Retorna true si la contraseña coincide, false en caso contrario.
+     */
 
     public function comprobarPassword($usuario) {
         if (!$usuario) {
@@ -212,7 +298,9 @@ class Usuario extends ActiveRecord {
         }
     }
     
-    //La función estarAutenticado ahora pertenece a usuario 
+   /**
+     * Autentica a un usuario, iniciando su sesión.
+     */
     public function autenticar() {
          // El usuario esta autenticado
          session_start();
@@ -228,13 +316,22 @@ class Usuario extends ActiveRecord {
         exit;
     }
 
+    /**
+     * Hashea la contraseña del usuario.
+     */
     public function hashPass(){
         // Hashear la contraseña antes de guardar
         $this->password_hash = password_hash($this->password_hash, PASSWORD_DEFAULT);
 
     }
 
-    // Método para contar el total de usuarios
+     /**
+     * Cuenta el total de usuarios registrados en la base de datos.
+     *
+     * @return int Retorna el número total de usuarios.
+     * @throws Exception Si ocurre un error durante la consulta.
+     */
+    
     public static function contarUsuarios() {
         try{
             $query = "SELECT COUNT(*) as total FROM usuario";
@@ -243,20 +340,35 @@ class Usuario extends ActiveRecord {
             return $fila['total'];
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
+            return -1;
         }
         
     }
 
-    // Método para obtener usuarios con paginación
+    /**
+     * Obtiene un conjunto de usuarios por página.
+     *
+     * @param int $limit Número de usuarios por página.
+     * @param int $offset Número de usuarios a saltar.
+     * @return array Retorna un array de objetos Usuario.
+     */
     public static function obtenerUsuariosPorPagina($limit, $offset) {
         try{
             $query = "SELECT * FROM usuario LIMIT {$limit} OFFSET {$offset}";
             return self::consultarSQL($query);
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
+            return [];
         }
         
     }
+
+    /**
+     * Crea un nuevo usuario en la base de datos.
+     * 
+     * @return bool Retorna true si el usuario es creado con éxito, false en caso contrario.
+     * @throws Exception Si ocurre un error durante la ejecución.
+     */
     
     public function crear() {
         try{
@@ -279,10 +391,16 @@ class Usuario extends ActiveRecord {
             return $resultado; 
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
+            return false;
         }
     }    
     
-    
+     /**
+     * Actualiza la información de un usuario existente en la base de datos.
+     * 
+     * @return bool Retorna true si la actualización es exitosa, false en caso contrario.
+     * @throws Exception Si ocurre un error durante la ejecución.
+     */
     public function actualizar() {
         try{
             // Sanitización de datos
@@ -301,8 +419,19 @@ class Usuario extends ActiveRecord {
             return self::$db->query($query);    
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
+            return false;
         }
     }
+
+    /**
+     * Actualiza la cartera del usuario especificando el tipo de usuario (Comprador, Vendedor, Distribuidor).
+     * 
+     * @param mixed $id Identificador del usuario.
+     * @param int $tipo Tipo de usuario (1 para Comprador, 2 para Vendedor, 3 para Distribuidor).
+     * @param string $cartera Valor de la cartera a actualizar.
+     * @return bool Retorna true si la actualización es exitosa, false en caso contrario.
+     * @throws Exception Si ocurre un error durante la ejecución.
+     */
     public function actualizarCartera($id, $tipo, $cartera){
         try{
             if (!$id) {
@@ -331,8 +460,17 @@ class Usuario extends ActiveRecord {
             return $resultado;
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
+            return false;
         }
     }
+
+     /**
+     * Actualiza la cartera del usuario actual basado en el tipo de usuario.
+     * 
+     * @param string $cartera Nuevo valor de la cartera a actualizar.
+     * @return bool Retorna true si la actualización es exitosa, false en caso contrario.
+     * @throws Exception Si ocurre un error durante la ejecución.
+     */
 
     public function actualizarCartera2($cartera){
         try{
@@ -365,8 +503,20 @@ class Usuario extends ActiveRecord {
             return $resultado; 
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
+            return false;
         }
     }
+
+    
+    /**
+     * Bloquea un usuario, agregándolo a la tabla de usuarios bloqueados.
+     * 
+     * @param string $idUsuario Identificador del usuario a bloquear.
+     * @param string $username Nombre de usuario.
+     * @param string $email Correo electrónico del usuario.
+     * @return bool Retorna true si el usuario es bloqueado con éxito, false en caso contrario.
+     * @throws Exception Si ocurre un error durante la ejecución.
+     */
 
 
     public static function bloquear($idUsuario, $username, $email) {
@@ -375,9 +525,18 @@ class Usuario extends ActiveRecord {
             return self::$db->query($query);
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
+            return false;
         }
        
     }
+
+     /**
+     * Desbloquea un usuario, eliminándolo de la tabla de usuarios bloqueados.
+     * 
+     * @param string $username Nombre de usuario a desbloquear.
+     * @return bool Retorna true si el usuario es desbloqueado con éxito, false en caso contrario.
+     * @throws Exception Si ocurre un error durante la ejecución.
+     */
 
     public static function desbloquear($username) {
         try{
@@ -385,11 +544,20 @@ class Usuario extends ActiveRecord {
             return self::$db->query($query);
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
+            return false;
         }
         
     }
 
-    // Método para buscar usuario por criterios
+    /**
+     * Busca usuarios por criterios específicos como el nombre de usuario, email o ID.
+     * 
+     * @param string $username Nombre de usuario.
+     * @param string $email Correo electrónico.
+     * @param mixed $id Identificador del usuario.
+     * @return array|null Retorna un array con el usuario encontrado o null si no se encuentra.
+     * @throws Exception Si ocurre un error durante la ejecución.
+     */
     public static function buscarPorCriterios($username, $email, $id) {
         try{
             $query = "SELECT id, username, email FROM usuario WHERE username LIKE '$username' OR email LIKE '$email' OR id LIKE '$id'";
@@ -397,10 +565,16 @@ class Usuario extends ActiveRecord {
             return $resultado ? array_shift($resultado) : null;
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
+            return [];
         }
     }
 
-    // Métodos para comprobar si un usuario está bloqueado
+    /**
+     * Obtiene la lista de usuarios bloqueados.
+     * 
+     * @return array Retorna un array con los IDs de los usuarios bloqueados.
+     * @throws Exception Si ocurre un error durante la ejecución.
+     */
     public static function obtenerUsuariosBloqueados() {
         try{
             $query = "SELECT id FROM bloqueado";
@@ -412,23 +586,39 @@ class Usuario extends ActiveRecord {
             return $usuariosBloqueados;
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
+            return [];
         }
         
     }
 
+    /**
+     * Verifica si un usuario está bloqueado.
+     * 
+     * @param string $username Nombre de usuario a verificar.
+     * @return bool Retorna true si el usuario está bloqueado, false en caso contrario.
+     * @throws Exception Si ocurre un error durante la ejecución.
+     */
+
     public static function userBloq($username) {
-        try{
             $query = "SELECT username FROM bloqueado WHERE username = '$username'";
             $resultado = self::$db->query($query);
             if($resultado && $resultado->rowCount() > 0){
                 self::$errores[] = 'El Usuario está bloqueado';
                 return true;
+            }else{
+                return false;
             }
-        }catch(Exception $e){
-            echo 'Error: ', $e->getMessage(), "\n";
         }
         
-    }
+    
+
+
+     /**
+     * Elimina un usuario de la base de datos por su ID.
+     *
+     * @return bool Retorna true si el usuario es eliminado con éxito, false en caso contrario.
+     * @throws Exception Si ocurre un error durante la consulta.
+     */
     public function eliminar() {
         try{
             $idValue = $this->id;
@@ -438,9 +628,21 @@ class Usuario extends ActiveRecord {
             return $resultado;
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
+            return false;
         }
        
     }
+
+    /**
+     * Encuentra un usuario por su ID.
+     * 
+     * Busca en la base de datos un usuario que coincida con el ID proporcionado.
+     * 
+     * @param mixed $id ID del usuario a buscar.
+     * @return Usuario|null Retorna un objeto Usuario si se encuentra, null en caso contrario.
+     * @throws Exception Si ocurre un error durante la consulta.
+     */
+
     public static function find($id) {
 
         try {
@@ -448,17 +650,25 @@ class Usuario extends ActiveRecord {
             $resultado = self::consultarSQL($query);
     
             if ($resultado === false || empty($resultado)) {
-                // Log del error, p.ej. error_log('Error en la consulta SQL: ' . self::$db->error);
+
                 return null;
             }
-          
             return array_shift($resultado);
-        } catch (\Exception $e) {
-            // Aquí puedes manejar la excepción y, opcionalmente, registrarla
+        } catch (Exception $e) {
             error_log('Excepción capturada en find: ' . $e->getMessage());
             return null;
         }
     }
+
+    /**
+     * Obtiene los nombres y IDs de todos los usuarios.
+     * 
+     * Realiza una consulta a la base de datos para obtener el ID y el nombre de usuario
+     * de todos los usuarios registrados.
+     * 
+     * @return array Retorna un array con el ID y el nombre de usuario de todos los usuarios.
+     * @throws Exception Si ocurre un error durante la consulta.
+     */
     public static function obtenerNombres(){
         try{
             self::contarUsuarios();
@@ -473,9 +683,19 @@ class Usuario extends ActiveRecord {
             return $nombre;
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
+            return [];
         }
         
     }
+
+      /**
+     * Valida los datos proporcionados para la actualización de un usuario.
+     * 
+     * Verifica que los campos necesarios para actualizar un usuario estén presentes y sean válidos.
+     * 
+     * @param array $data Datos del usuario a validar.
+     * @return array Retorna un array de errores si los hay.
+     */
 
     public function erroresActualizacion($data){
         //Reinicio del arreglo de errores, just in case

@@ -4,7 +4,20 @@ namespace Controllers;
 use MVC\Router;
 use Model\Usuario;
 
+/**
+ * Controlador para gestionar la autenticación y la sesión de usuarios.
+ *
+ * Proporciona funcionalidades para el login, visualización del área personal,
+ * modificación de datos del usuario, y cierre de sesión.
+ */
+
 class LoginController{
+
+    /**
+     * Muestra y procesa el formulario de login.
+     * 
+     * @param Router $router Instancia del router para renderizar la vista.
+     */
     public static function login(Router $router){
         $errores = [];
     
@@ -56,6 +69,13 @@ class LoginController{
         ]);
     }
 
+     /**
+     * Muestra el área personal del usuario autenticado.
+     * 
+     * Verifica los permisos del usuario y muestra su área personal.
+     * 
+     * @param Router $router Instancia del router para renderizar la vista.
+     */
 
     public static function areaPersonal(Router $router) {
         Usuario::verificarPermisos();
@@ -77,12 +97,26 @@ class LoginController{
         exit;
         }
     }
+
+     /**
+     * Muestra el área personal del administrador.
+     * 
+     * Solo accesible por usuarios con permisos de administrador.
+     * 
+     * @param Router $router Instancia del router para renderizar la vista.
+     */
     public static function areaPersonalAdmin( Router $router ) {
         Usuario::verificarPermisosAdmin();
         $router->render('usuarios/areaPersonalAdmin', [
 
         ]);
     }
+
+     /**
+     * Muestra y procesa el formulario de login específico para administradores.
+     * 
+     * @param Router $router Instancia del router para renderizar la vista.
+     */
     public static function loginAdmin(Router $router) {
         $errores = [];
     
@@ -134,6 +168,14 @@ class LoginController{
         ]);
     }
 
+     /**
+     * Muestra y procesa el formulario de modificación de datos del usuario.
+     * 
+     * Permite a los usuarios modificar sus datos personales.
+     * 
+     * @param Router $router Instancia del router para renderizar la vista.
+     */
+
     public static function modDatos(Router $router) {
         Usuario::verificarPermisos();
         $id = Usuario::buscarID($_SESSION['usuario']);
@@ -157,6 +199,13 @@ class LoginController{
         }
     }
 
+    
+    /**
+     * Cierra la sesión del usuario y redirecciona a la página de inicio.
+     * 
+     * @param Router $router Instancia del router, aunque no se utiliza directamente en este método.
+     */
+
     public static function cerrarSesion( Router $router ) {
         session_start();
         session_destroy();
@@ -164,6 +213,15 @@ class LoginController{
         header('Location: /');
         exit;
     }
+
+     /**
+     * Muestra y procesa el formulario de actualización de datos específicos del usuario.
+     * 
+     * Permite a los usuarios actualizar su nombre de usuario, correo electrónico, contraseña,
+     * o información de cartera, dependiendo del tipo de dato a actualizar.
+     * 
+     * @param Router $router Instancia del router para renderizar la vista.
+     */
 
     
     public static function datos(Router $router) {

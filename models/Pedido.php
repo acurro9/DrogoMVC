@@ -2,20 +2,84 @@
     namespace Model;
     use Exception;
 
+    /**
+     * Clase Pedido para gestionar los pedidos en la base de datos.
+     *
+     * Esta clase proporciona funcionalidades para crear, actualizar, validar,
+     * contar, y obtener pedidos, así como para verificar la existencia de pedidos
+     * y manejar mensajes de éxito y errores de validación.
+     */
+
     class Pedido extends ActiveRecord{
+
+          /**
+         * @var string Nombre de la tabla en la base de datos.
+         */
         protected static $tabla = 'pedido';
+
+         /**
+         * @var array Columnas de la base de datos utilizadas por la clase.
+         */
         protected static $columnasDB = ['refCompra', 'hash_comprador', 'hash_vendedor', 'fechaCompra', 'importe', 'cargoTransporte', 'cargosAdicionales', 'fechaDeposito', 'fechaRecogida', 'refLocker', 'distribuidor'];
+
+        /**
+         * @var string referencia de compra
+         */
         public $refCompra;
-        public $hash_comprador;
+
+        /**
+         * @var string hash del comprador
+         */
+        
+         public $hash_comprador;
+        /**
+         * @var string hash del vendedor
+         */
         public $hash_vendedor;
+
+        /**
+         * @var mixed fecha de compra
+         */
         public $fechaCompra;
+        /**
+         * @var float importe de la compra
+         */
         public $importe;
+
+        /**
+         * @var float cargos de transporte
+         */
         public $cargoTransporte;
+        /**
+         * @var float cargos adicionales
+         */
         public $cargosAdicionales;
+
+        /**
+         * @var mixed fecha de depósito
+         */
         public $fechaDeposito;
+
+        /**
+         * @var mixed fecha de recogida
+         */
         public $fechaRecogida;
+
+        /**
+         * @var string referencia del lockere
+         */
         public $refLocker;
+
+        /**
+         * @var bool indica si el pedido requiere de distribuidor
+         */
         public $distribuidor;
+
+        /**
+         * Constructor de la clase Pedido.
+         *
+         * @param array $args Argumentos para inicializar un objeto Pedido.
+         */
 
         public function __construct($args = []) {
             $this->refCompra = $args['refCompra'] ?? md5(uniqid(rand(), true));
@@ -30,6 +94,13 @@
             $this->refLocker = $args['refLocker'] ?? null;
             $this->distribuidor = $args['distribuidor'] ?? null;
         }
+
+
+        /**
+         * Valida los campos necesarios del pedido.
+         *
+         * @return array Retorna un array de errores si los hay.
+         */
 
         public function validar(){
             if(!$this->hash_comprador) {
@@ -65,6 +136,12 @@
             return self::$errores;
         }
 
+        /**
+         * Crea un nuevo pedido en la base de datos.
+         *
+         * @return bool Retorna true si el pedido es creado con éxito, false en caso contrario.
+         */
+
         public function crear(){
             try{
                 
@@ -85,9 +162,15 @@
             return $resultado;
             }catch(Exception $e){
                 echo 'Error: ', $e->getMessage(), "\n";
+                return false;
             }
-
         }
+
+        /**
+         * Elimina un pedido de la base de datos por su referencia de compra.
+         *
+         * @return bool Retorna true si el pedido es eliminado con éxito, false en caso contrario.
+         */
 
         public function eliminar(){
             try{
@@ -98,8 +181,16 @@
                 return $resultado;
             }catch(Exception $e){
                 echo 'Error: ', $e->getMessage(), "\n";
+                return false;
             }
         }
+
+
+        /**
+         * Actualiza un pedido existente en la base de datos.
+         *
+         * @return bool Retorna true si el pedido es actualizado con éxito, false en caso contrario.
+         */
 
         public function actualizar(){
             try{
@@ -119,8 +210,16 @@
                 return self::$db->query($query);
             }catch(Exception $e){
                 echo 'Error: ', $e->getMessage(), "\n";
+                return false;
             }
         }
+
+        /**
+         * Encuentra un pedido por su referencia de compra.
+         *
+         * @param string $id Referencia de compra del pedido a buscar.
+         * @return Pedido|null Retorna un objeto Pedido si se encuentra, null en caso contrario.
+         */
 
         public static function find($id) {
             if (!$id) {
@@ -132,18 +231,24 @@
                 $resultado = self::consultarSQL($query);
         
                 if ($resultado === false) {
-                    // Log del error, p.ej. error_log('Error en la consulta SQL: ' . self::$db->error);
+                   
                     return null;
                 }
         
                 return array_shift($resultado);
-            } catch (\Exception $e) {
-                // Aquí puedes manejar la excepción y, opcionalmente, registrarla
+            } catch (Exception $e) {
+               
                 error_log('Excepción capturada en find: ' . $e->getMessage());
                 return null;
             }
         }
-        
+
+        /**
+         * Cuenta el total de pedidos registrados en la base de datos.
+         *
+         * @return int Retorna el número total de pedidos.
+         */
+            
         public static function contarPedido() {
             try{
                 $query = "SELECT COUNT(*) as total FROM pedido";
@@ -152,8 +257,17 @@
                 return $fila['total'];
             }catch(Exception $e){
                 echo 'Error: ', $e->getMessage(), "\n";
+                return -1;
             }
         }
+
+        /**
+         * Obtiene un conjunto de pedidos por página.
+         *
+         * @param int $limit Número de pedidos por página.
+         * @param int $offset Número de pedidos a saltar.
+         * @return array Retorna un array de objetos Pedido.
+         */
 
         public static function obtenerPedidoPorPagina($limit, $offset) {
             try{
@@ -161,17 +275,33 @@
             return self::consultarSQL($query);
             }catch(Exception $e){
                 echo 'Error: ', $e->getMessage(), "\n";
+                return [];
             }
         }
 
+        /**
+         * Obtiene un conjunto de pedidos por página para un usuario específico, ya sea como comprador o vendedor.
+         *
+         * @param int $limit Número de pedidos por página.
+         * @param int $offset Número de pedidos a saltar.
+         * @param string $id Hash del comprador o vendedor.
+         * @return array Retorna un array de objetos Pedido.
+         */
         public static function obtenerPedidoPorPaginaUsuario($limit, $offset, $id) {
             try{
                 $query = "SELECT * FROM pedido where hash_comprador = '$id' or hash_vendedor = '$id' LIMIT {$limit} OFFSET {$offset};";
                 return self::consultarSQL($query);
             }catch(Exception $e){
                 echo 'Error: ', $e->getMessage(), "\n";
+                return [];
             }
         }
+
+        /**
+         * Verifica si un pedido ya existe en la base de datos.
+         *
+         * @return bool Retorna true si el pedido no existe, false si ya existe.
+         */
 
         public function noExistePedido() {
             try{
@@ -184,16 +314,33 @@
                 return true;
             }catch(Exception $e){
                 echo 'Error: ', $e->getMessage(), "\n";
+                return false;
             }
         }
+
+        /**
+         * Actualiza la información de distribución de un pedido.
+         *
+         * @param mixed $valor Nuevo valor para el campo de distribución.
+         * @param string $refCompra Referencia de compra del pedido a actualizar.
+         * @return bool Retorna true si la actualización es exitosa, false en caso contrario.
+         */
         public static function actualizarDistribucion($valor, $refCompra){
             try{
                 $query = "UPDATE pedido SET distribuidor = $valor where refCompra = '$refCompra'";
                 return self::$db->query($query);
             }catch(Exception $e){
                 echo 'Error: ', $e->getMessage(), "\n";
+                return false;
             }
         }
+
+        /**
+         * Genera un mensaje de éxito basado en un código proporcionado.
+         *
+         * @param int $codigo Código que representa el tipo de operación realizada.
+         * @return string Retorna un mensaje de éxito personalizado.
+         */
 
         public static function mssgExito($codigo){
            switch($codigo){
@@ -214,11 +361,24 @@
            return $mensaje;
         }
 
+         /**
+         * Maneja la validación y redirección tras una operación exitosa.
+         *
+         * @param int $codigo Código que representa el tipo de operación realizada.
+         */
+
         public function validacionExito($codigo){
             $mensaje=$this->mssgExito($codigo);
             $_SESSION['mensaje_exito']=$mensaje;
             header("Location: /pedidos");
         }
+
+         /**
+         * Valida los datos proporcionados para la actualización de un pedido.
+         *
+         * @param array $data Datos del pedido a validar.
+         * @return array Retorna un array de errores si los hay.
+         */
 
         public function erroresActualizacionPedido($data){
             //Reinicio del arreglo de errores, just in case

@@ -231,13 +231,13 @@
                 $resultado = self::consultarSQL($query);
         
                 if ($resultado === false) {
-                    // Log del error, p.ej. error_log('Error en la consulta SQL: ' . self::$db->error);
+                   
                     return null;
                 }
         
                 return array_shift($resultado);
-            } catch (\Exception $e) {
-                // Aquí puedes manejar la excepción y, opcionalmente, registrarla
+            } catch (Exception $e) {
+               
                 error_log('Excepción capturada en find: ' . $e->getMessage());
                 return null;
             }

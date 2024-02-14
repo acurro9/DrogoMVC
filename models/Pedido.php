@@ -174,7 +174,6 @@
 
         public function eliminar(){
             try{
-                $idValue = $this->refCompra;
                 $query = "DELETE FROM " . static::$tabla . " WHERE refCompra = '$this->refCompra';";
                 $resultado = self::$db->query($query);
 

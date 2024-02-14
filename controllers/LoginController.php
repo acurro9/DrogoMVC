@@ -148,14 +148,6 @@ class LoginController{
     
                         header('Location: /areaPersonalAdmin');
                         exit;
-                    }
-    
-                    // Verificación de password para usuarios regulares
-                    $autenticado = $auth->comprobarPassword($resultado);
-    
-                    if ($autenticado) {
-                        $_SESSION['id'] = $auth->id; 
-                        $auth->autenticar();
                     } else {
                         $errores[] = 'Contraseña incorrecta.';
                     }

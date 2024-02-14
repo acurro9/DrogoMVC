@@ -153,7 +153,6 @@ class Newsletter extends ActiveRecord {
      */
 
     public function eliminar(){
-        $idValue = $this->id;
         $query = "DELETE FROM " . static::$tabla . " WHERE email = '$this->email';";
         $resultado = self::$db->query($query);
 

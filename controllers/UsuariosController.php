@@ -3,7 +3,22 @@
     use MVC\Router;
     use Model\Usuario;
 
+    /**
+     * Controlador para gestionar las cuentas de usuario.
+     *
+     * Proporciona funcionalidades para ver, bloquear/desbloquear, actualizar y eliminar cuentas de usuario,
+     * asegurando el acceso solo a usuarios con los permisos adecuados.
+     */
+
     class UsuariosController {
+        /**
+         * Muestra las cuentas de usuario existentes, con soporte para paginación.
+         * 
+         * Solo accesible por usuarios con permisos de administrador. Obtiene las cuentas
+         * de usuario de la base de datos y las muestra en una vista de administración.
+         * 
+         * @param Router $router Instancia del router para renderizar la vista.
+         */
         public static function verCuentas(Router $router){
             Usuario::verificarPermisosAdmin();
             $tipo = $_SESSION["tipo"] ?? null;
@@ -35,6 +50,15 @@
            
         ]);
     }
+
+     /**
+     * Bloquea o desbloquea una cuenta de usuario.
+     * 
+     * Solo accesible por usuarios con permisos de administrador. Permite cambiar el estado
+     * de bloqueo de una cuenta de usuario específica y redirecciona tras realizar la acción.
+     * 
+     * @param Router $router Instancia del router para renderizar la vista.
+     */
 
     public static function bloquearUsuario(Router $router) {
         Usuario::verificarPermisosAdmin();
@@ -86,6 +110,14 @@
             'accion' => $accion
         ]);
     }
+      /**
+     * Actualiza la información de una cuenta de usuario.
+     * 
+     * Solo accesible por usuarios con permisos de administrador. Permite la edición de una
+     * cuenta de usuario existente y actualiza sus datos en la base de datos.
+     * 
+     * @param Router $router Instancia del router para renderizar la vista con formulario de actualización.
+     */
     public static function actualizarUsuario(Router $router) {
         Usuario::verificarPermisosAdmin();
         $errores = [];
@@ -121,7 +153,7 @@
                     exit;
                 } else {
                     $_SESSION['errores'];
-                    // $errores[] = 'Error updating user.';
+                   
                 }
             }
         
@@ -134,6 +166,14 @@
         ]);
     }
     
+    /**
+     * Elimina una cuenta de usuario.
+     * 
+     * Accesible por el usuario dueño de la cuenta o un administrador. Elimina la cuenta de usuario especificada
+     * de la base de datos y cierra la sesión si el usuario eliminado es el mismo que inició la sesión.
+     * 
+     * @param Router $router Instancia del router, aunque no se utiliza directamente en este método.
+     */
     public static function borrarCuenta(Router $router) {
         Usuario::verificarPermisos();
 

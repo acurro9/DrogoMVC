@@ -6,7 +6,20 @@ use Model\Locker;
 use Model\Usuario;
 use Model\Envio;
 
+/**
+ * Controlador para la gestión de pedidos.
+ *
+ * Provee funcionalidades para crear, visualizar, actualizar y eliminar pedidos,
+ * asegurando el acceso solo a usuarios con los permisos adecuados.
+ */
+
     class PedidoController{
+
+        /**
+         * Muestra los pedidos existentes, con soporte para paginación y filtrado por usuario.
+         * 
+         * @param Router $router Instancia del router para renderizar la vista.
+         */
         public static function verPedidos(Router $router){
             Usuario::verificarPermisos();
             $errores = [];
@@ -47,6 +60,15 @@ use Model\Envio;
             ]);
         }
 
+        /**
+         * Actualiza la información de un pedido específico.
+         * 
+         * Solo accesible por usuarios con permisos de administrador. Permite la edición de un
+         * pedido existente y actualiza sus datos en la base de datos, incluyendo la gestión
+         * de la distribución relacionada.
+         * 
+         * @param Router $router Instancia del router para renderizar la vista con formulario de actualización.
+         */
         public static function actualizarPedido(Router $router){
             Usuario::verificarPermisosAdmin();
             $errores = [];
@@ -102,6 +124,16 @@ use Model\Envio;
             ]);
         }
 
+        
+        /**
+         * Elimina un pedido de la base de datos.
+         * 
+         * Solo accesible por usuarios con permisos de administrador. Elimina el pedido especificado
+         * de la base de datos y, si es necesario, actualiza la información de distribución relacionada.
+         * 
+         * @param Router $router Instancia del router, aunque no se utiliza directamente en este método.
+         */
+
         public static function borrarPedido(Router $router){
             Usuario::verificarPermisosAdmin();
             $pedidoID = $_GET["id"];
@@ -122,6 +154,16 @@ use Model\Envio;
             } 
         }
 
+            
+        /**
+         * Crea un nuevo pedido.
+         * 
+         * Solo accesible por usuarios con permisos de administrador. Valida los datos del formulario
+         * y, si son correctos, guarda el nuevo pedido en la base de datos, incluyendo la gestión
+         * de la distribución si es aplicable.
+         * 
+         * @param Router $router Instancia del router para renderizar la vista en caso de errores.
+         */
         public static function crearPedido(Router $router){
             Usuario::verificarPermisosAdmin();
             $errores = [];

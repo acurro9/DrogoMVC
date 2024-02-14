@@ -5,8 +5,20 @@
     use Model\Locker;
     use Model\Usuario;
     use Model\Pedido;
+
+    /**
+     * Controlador para la gestión de envíos.
+     *
+     * Provee funcionalidades para visualizar, actualizar y eliminar envíos,
+     * asegurando el acceso solo a usuarios con los permisos adecuados.
+     */
     
         class EnvioController{
+            /**
+             * Muestra la página de envíos con paginación y filtrado por usuario si es necesario.
+             * 
+             * @param Router $router Instancia del router para renderizar la vista.
+             */
             public static function verEnvios(Router $router){
                 Usuario::verificarPermisos();
                 // if($_SESSION['tipo'] !== 'Administrador' || $_SESSION['tipo'] !== 'Distribuidor'){
@@ -49,6 +61,15 @@
                 
                 ]);
             }
+
+            /**
+             * Actualiza la información de un envío específico.
+             * 
+             * Solo accesible por usuarios con permisos de administrador. Permite la edición de un
+             * envío existente y actualiza sus datos en la base de datos.
+             * 
+             * @param Router $router Instancia del router para renderizar la vista con formulario de actualización.
+             */
     
             public static function actualizarEnvio(Router $router){
                 Usuario::verificarPermisosAdmin();
@@ -93,7 +114,14 @@
                     'pedidos' => $pedidos
                 ]);
             }
-    
+            /**
+             * Elimina un envío de la base de datos.
+             * 
+             * Solo accesible por usuarios con permisos de administrador. Elimina el envío especificado
+             * y actualiza la información de distribución relacionada en los pedidos correspondientes.
+             * 
+             * @param Router $router Instancia del router, aunque no se utiliza directamente en este método.
+             */
             public static function borrarEnvio(Router $router){
                 Usuario::verificarPermisosAdmin();
                 $envioID = $_GET["id"];

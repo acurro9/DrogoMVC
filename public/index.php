@@ -147,6 +147,7 @@ $router->post('/borrarContacto', [ContactoController::class, 'borrarContacto']);
  * Rutas de acceso al CRUD  de Pedidos con el controlador de newsletter
  */
 $router->get('/pedidos', [PedidoController::class, 'verPedidos']);
+$router->post('/pedidos', [PedidoController::class, 'verPedidos']);
 $router->get('/crearPedido', [PedidoController::class, 'crearPedido']);
 $router->post('/crearPedido', [PedidoController::class, 'crearPedido']);
 $router->get('/actualizarPedido', [PedidoController::class, 'actualizarPedido']);

@@ -1,11 +1,13 @@
 <thead>
+    <!-- Encabezado de la tabla que muestra las direcciones de email suscritas al boletín y la opción para borrarlas -->
     <tr>
         <th>Email</th>
         <th>Borrar</th>
     </tr>
 </thead>
 <tbody>
-<?php foreach ($newsletters as $news): ?>
+     <!-- Bucle que recorre cada suscripción al boletín para mostrarla en la tabla -->
+    <?php foreach ($newsletters as $news): ?>
     <tr>
         <td><?= $news->email ?></td>
         <td class="centrar">

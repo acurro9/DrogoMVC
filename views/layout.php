@@ -13,6 +13,7 @@
         <title>Drogo</title>
         <link rel="shortcut icon" href="../build/img/logos/drogobanner - copia.png">
         <link rel="stylesheet" href="../build/css/styles.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     </head>
     <body>
         <div id="header">
@@ -151,5 +152,6 @@
     <!-- Se incluye los archivos de javascript -->
     <script src="../build/js/header.js"></script>
     <script src="../build/js/index.js"></script>
+    <script src="../build/js/ajax.js"></script>
     </body>
 </html>      

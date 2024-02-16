@@ -5,7 +5,23 @@ use MVC\Router;
 use Model\Newsletter;
 use Model\Usuario;
 
+/**
+ * Controlador para gestionar la suscripción a newsletters.
+ *
+ * Proporciona funcionalidades para suscribir a newsletters, visualizar las suscripciones existentes,
+ * y eliminar suscripciones, asegurando el acceso solo a usuarios con permisos adecuados.
+ */
+
 class NewsletterController{
+
+    /**
+     * Crea una nueva suscripción a newsletter.
+     * 
+     * Valida los datos del formulario y, si son correctos, guarda la nueva suscripción
+     * en la base de datos. Redirecciona a la página principal si la suscripción es exitosa.
+     * 
+     * @param Router $router Instancia del router para renderizar la vista en caso de errores.
+     */
     public static function crearNewsletter(Router $router){
         $errores = [];
 
@@ -28,6 +44,15 @@ class NewsletterController{
             'errores' => $errores
         ]);
     }
+
+    /**
+     * Muestra las suscripciones a newsletters existentes, con soporte para paginación.
+     * 
+     * Solo accesible por usuarios con permisos de administrador. Obtiene las suscripciones
+     * de la base de datos y las muestra en una vista de administración.
+     * 
+     * @param Router $router Instancia del router para renderizar la vista.
+     */
     public static function verNewsletters(Router $router){
         Usuario::verificarPermisosAdmin();
         $errores = [];
@@ -51,6 +76,15 @@ class NewsletterController{
                 'totalNewsletters' => $totalNewsletters
             ]);
     }
+
+     /**
+     * Elimina una suscripción a newsletter de la base de datos.
+     * 
+     * Solo accesible por usuarios con permisos de administrador. Elimina la suscripción especificada
+     * de la base de datos y redirecciona a la vista de newsletters tras la eliminación.
+     * 
+     * @param Router $router Instancia del router, aunque no se utiliza directamente en este método.
+     */
     public static function borrarNewsletter(Router $router){
         Usuario::verificarPermisosAdmin();
         $id = $_GET["id"];

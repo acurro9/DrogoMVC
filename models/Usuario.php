@@ -354,7 +354,8 @@ class Usuario extends ActiveRecord {
      */
     public static function obtenerUsuariosPorPagina($limit, $offset) {
         try{
-            $query = "SELECT * FROM usuario LIMIT {$limit} OFFSET {$offset}";
+            $query = "SELECT * FROM usuario EXCEPT
+            SELECT * FROM usuario WHERE username = 'admin' LIMIT {$limit} OFFSET {$offset}";
             return self::consultarSQL($query);
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
@@ -387,8 +388,7 @@ class Usuario extends ActiveRecord {
 
             // Resultado de la consulta
             $resultado = self::$db->query($query);
-            
-            return $resultado; 
+             
         }catch(Exception $e){
             echo 'Error: ', $e->getMessage(), "\n";
             return false;
@@ -725,5 +725,13 @@ class Usuario extends ActiveRecord {
 
         //Retorna el arreglo de errores
         return self::$errores;    
+    }
+
+    public static function obtenerUsuariosAjax($param){
+        // $query = "SELECT * FROM " . static::$tabla . " WHERE username like '%{$param}%' or email like '%{$param}%' EXCEPT
+        // SELECT * FROM usuario WHERE username = 'admin';";
+        $query = "SELECT * FROM " . static::$tabla . " WHERE username like '{$param}%' or email like '{$param}%' EXCEPT
+        SELECT * FROM usuario WHERE username = 'admin';";
+        return self::consultarSQL($query);
     }
 }

@@ -8,6 +8,11 @@
 <main>
 
     <h1 class="abajo">Usuarios</h1>
+
+    <div class="input-group mb-3">
+            <input type="text" id="ajaxAaron" name="ajaxAaron" placeholder="Buscar">
+    </div>
+
     <div class="centrado">
         <form class="paginado" method="GET">
         <?php include __DIR__ . '/../../includes/templates/paginado.php'; ?>
@@ -15,7 +20,7 @@
     </div>
 
     <table class="tabla">
-        <?php include __DIR__ . '/../../includes/templates/tables/tabla_usuarios.php'; ?>
+            <?php include __DIR__ . '/../../includes/templates/tables/tabla_usuarios.php'; ?>
     </table>
 
     <div class="pagComplete">

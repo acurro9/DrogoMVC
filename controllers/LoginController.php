@@ -65,7 +65,8 @@ class LoginController{
         }
     
         $router->render('auth/login', [
-            'errores' => $errores
+            'errores' => $errores,
+            
         ]);
     }
 

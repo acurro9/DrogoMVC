@@ -7,12 +7,11 @@ $(document).ready(function () {
       data: {
         param: valor,
       },
-      beforeSend: function () {},
       success: function (response) {
-        $("body").html(response);
+        let tr = $(response).find("tr");
+        $("table").html(tr);
         $("#ajaxAaron").focus();
         $("#ajaxAaron").val(valor);
-        console.log(response);
       },
       error: function (xhr, status, error) {
         alert("Error: " + xhr.responseText);

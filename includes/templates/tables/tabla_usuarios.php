@@ -9,7 +9,7 @@
                 <th>Actualizar</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="tbody">
              <!-- Iteración sobre cada usuario para mostrar sus datos en la tabla -->
             <?php foreach ($usuarios as $usuario): ?>
                 <tr>

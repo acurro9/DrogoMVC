@@ -20,7 +20,7 @@
     </div>
 
     <table class="tabla">
-        <?php include __DIR__ . '/../../includes/templates/tables/tabla_usuarios.php'; ?>
+            <?php include __DIR__ . '/../../includes/templates/tables/tabla_usuarios.php'; ?>
     </table>
 
     <div class="pagComplete">

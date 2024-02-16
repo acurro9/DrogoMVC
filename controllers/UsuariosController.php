@@ -20,6 +20,9 @@
          * @param Router $router Instancia del router para renderizar la vista.
          */
         public static function verCuentas(Router $router){
+            if(!isset($request)){
+                $request=null;
+            }
             Usuario::verificarPermisosAdmin();
             $tipo = $_SESSION["tipo"] ?? null;
             $errores = [];
@@ -32,8 +35,15 @@
 
             $limit = $ppp;
             $offset = ($pagina - 1) * $ppp;
-            $usuarios = Usuario::obtenerUsuariosPorPagina($limit, $offset);
-            $totalPaginas = ceil($totalUsuarios / $ppp);
+
+            if($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $param=$_POST['param'];
+                $usuarios = Usuario::obtenerUsuariosAjax($param);
+                $totalPaginas=0;
+            } else{
+                $usuarios = Usuario::obtenerUsuariosPorPagina($limit, $offset);
+                $totalPaginas = ceil($totalUsuarios / $ppp);
+            }
 
             $usuariosBloqueados = Usuario::obtenerUsuariosBloqueados();
             foreach ($usuarios as $usuario) {

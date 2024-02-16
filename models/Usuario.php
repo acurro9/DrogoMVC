@@ -726,4 +726,12 @@ class Usuario extends ActiveRecord {
         //Retorna el arreglo de errores
         return self::$errores;    
     }
+
+    public static function obtenerUsuariosAjax($param){
+        // $query = "SELECT * FROM " . static::$tabla . " WHERE username like '%{$param}%' or email like '%{$param}%' EXCEPT
+        // SELECT * FROM usuario WHERE username = 'admin';";
+        $query = "SELECT * FROM " . static::$tabla . " WHERE username like '{$param}%' or email like '{$param}%' EXCEPT
+        SELECT * FROM usuario WHERE username = 'admin';";
+        return self::consultarSQL($query);
+    }
 }

@@ -19,3 +19,24 @@ $(document).ready(function () {
     });
   });
 });
+
+/**
+ * Maneja la búsqueda AJAX de lockers.
+ *
+ * Esta función se activa cuando se introduce texto en el campo de búsqueda ajaxCristina
+ * Realiza una solicitud POST al servidor con el texto de búsqueda y actualiza resultados
+ * en la tabla con los datos devueltos.
+ */
+
+  $(function(){
+    $("#ajaxCristina").on('input', function(){
+      $.post('/locker', {ajaxCristina:this.value}, function(data){
+        var htmlData = $(data);
+        var tbodyTrs = htmlData.find("tbody tr");
+        $('table tbody').empty().append(tbodyTrs);
+    }).fail(function(xhr){
+      alert("Error: "+xhr.responseText);
+    });
+  });
+  });
+

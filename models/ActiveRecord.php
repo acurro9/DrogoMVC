@@ -324,5 +324,22 @@ class ActiveRecord {
         }
     }
 
+    /**
+ * Sanitiza una cadena de texto para su uso seguro en HTML.
+ *
+ * Esta función elimina etiquetas HTML y PHP de la cadena de entrada,
+ * aplica la función `trim()` para eliminar espacios en blanco al inicio
+ * y al final, y convierte caracteres especiales en entidades HTML con
+ * `htmlspecialchars()`. Es útil para prevenir ataques XSS (Cross-Site Scripting)
+ * asegurando que el texto pueda ser mostrado de manera segura en una página web.
+ *
+ * @param string $valor La cadena de texto a sanitizar.
+ * @return string La cadena sanitizada, segura para incluir en HTML.
+ *
+ */
+
+    public static function sanitizarValor($valor){
+        return htmlspecialchars(strip_tags(trim($valor)));
+    }
 
 }

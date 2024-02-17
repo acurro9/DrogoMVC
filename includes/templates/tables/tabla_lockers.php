@@ -9,9 +9,9 @@
 <tbody>
 <?php foreach ($lockers as $locker): ?>
         <tr>
-            <td><?=$locker->refLocker ?></td>
-            <td><?=$locker->direccion ?></td>
-            <td><?=$locker->passwordLocker ?></td>
+            <td><?= htmlspecialchars($locker->refLocker) ?></td>
+            <td><?= htmlspecialchars($locker->direccion) ?></td>
+            <td><?= htmlspecialchars($locker->passwordLocker?? 'No definido') ?></td>
             <td>
                 <div class="bloque">
                     <!-- Formulario para eliminar el locker seleccionado -->

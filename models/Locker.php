@@ -310,4 +310,53 @@ class Locker extends ActiveRecord {
         //Devuelve el arreglo de errores
         return self::$errores;    
     }
+
+    
+//Para parte Ajax de Cristina
+
+/**
+ * Busca lockers en la base de datos basados en una referencia, dirección y/o contraseña proporcionadas.
+ *
+ * Este método ejecuta una consulta SQL preparada para recuperar lockers que coincidan
+ * parcialmente con una referencia, dirección y/o contraseña proporcionadas como parámetros de búsqueda.
+ * Utiliza marcadores de posición para evitar inyecciones SQL y realiza una búsqueda flexible
+ * que coincide con los valores proporcionados con cualquier texto contenido en la base de datos.
+ *
+ * @param string $refLocker Referencia del locker o parte de ella para buscar.
+ * @param string $direccion Dirección del locker o parte de ella para buscar.
+ * @param string $passwordLocker Contraseña del locker o parte de ella para buscar.
+ * @return array|null Retorna un array de objetos stdClass que representan los lockers encontrados,
+ * o null si no se encuentran resultados. Cada objeto tiene propiedades refLocker, direccion y passwordLocker.
+ * @throws \PDOException Si ocurre un error al ejecutar la consulta SQL preparada.
+ */
+public static function buscarLockersParams($refLocker, $direccion, $passwordLocker) {
+    try {
+        //Preparación de consulta a lo Andercode
+        // Define la consulta SQL para seleccionar lockers que coincidan parcialmente con la referencia o dirección proporcionada
+        $query = "SELECT refLocker, direccion, passwordLocker FROM locker WHERE refLocker LIKE :refLocker OR direccion LIKE :direccion OR passwordLocker LIKE :passwordLocker";
+        //Se usa self con la propiedad estática $db->prepare del ActiveRecord para un uso correcto
+        $stmt = self::$db->prepare($query);
+       
+        // Asigna los valores de los parámetros y añade comodines para realizar una búsqueda parcial
+
+        // El marcador de posición :refLocker se reemplaza por '%' . $refLocker . '%', lo que significa que la búsqueda incluirá cualquier cadena que contenga $refLocker en cualquier posición.
+        
+        $stmt->bindValue(':refLocker', '%' . $refLocker . '%');
+        $stmt->bindValue(':direccion', '%' . $direccion . '%');
+        $stmt->bindValue(':passwordLocker', '%' . $passwordLocker . '%');
+        
+        // Ejecuta la consulta SQL preparada
+        $stmt->execute();
+
+        // Recupera todos los resultados como objetos stdClass y los devuelve
+        $resultado = $stmt->fetchAll(\PDO::FETCH_OBJ);
+        return $resultado ? $resultado : null;
+
+    } catch(Exception $e) {
+        // Captura cualquier excepción PDO que pueda ocurrir durante la ejecución de la consulta
+        echo 'Error: ', $e->getMessage(), "\n";
+        return [];
+    }
 }
+}
+

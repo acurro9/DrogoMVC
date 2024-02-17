@@ -7,6 +7,10 @@
     endif; ?>
 <main>
     <h1 class="abajo">Lockers: </h1>
+
+    <div class="input-group mb-3">
+            <input type="text" id="ajaxCristina" name="ajaxCristina" placeholder="Buscar lockers" class="search-input">
+    </div>
     <div class="centrado">
         <!--Se le pide al usuario el número de pedidos por página-->
         <form class="paginado">

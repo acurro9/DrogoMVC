@@ -160,4 +160,70 @@ class LockersController{
             exit;
         } 
     }
+
+    // public static function encontrarLocker(Router $router) {
+    //     Usuario::verificarPermisosAdmin();
+    //     $lockerID = $_GET["id"];
+
+        // Encontrar el locker
+        // $locker = Locker::find($lockerID);
+        // if (!$locker) {
+        //     header('Location: /locker');
+        //     exit;
+        // }
+
+        // Eliminar el usuario actual
+        // if ($locker->eliminar()) {
+            // Se destruye la sesión y se redirecciona al usuario al directorio raíz
+    //         $locker->validacionExito(3);
+    //         exit;
+    //     } 
+    // }
+
+  //Para la parte Ajax de Cristina se reutiliza la función de encontrarLocker del Delete de Locker para integrar mi parte; de todos modos, la dejo comentada para que se vea la original
+ 
+
+/**
+ * Gestiona la búsqueda y eliminación de lockers.
+ *
+ * Primero verifica si el usuario tiene permisos de administrador. Luego, distingue
+ * entre dos acciones principales: eliminar un locker específico si se proporciona un ID
+ * a través de GET, o realizar una búsqueda de lockers basada en una cadena de búsqueda
+ * proporcionada a través de POST y AJAX. La búsqueda devuelve y renderiza una vista con
+ * los resultados obtenidos.
+ *
+ * @param Router $router Instancia del enrutador utilizado para renderizar la vista con los resultados.
+ * @throws \Exception Si falla la eliminación del locker o la búsqueda.
+ */
+    public static function encontrarLocker(Router $router) {
+        // Verificar permisos de administrador
+        Usuario::verificarPermisosAdmin();
+    
+        // Distinguir entre eliminación y búsqueda
+        if (isset($_GET["id"]) && $_SERVER['REQUEST_METHOD'] === 'GET') {
+            // Proceso para encontrar y eliminar un locker
+            $lockerID = $_GET["id"];
+            $locker = Locker::find($lockerID);
+            if (!$locker) {
+                header('Location: /locker');
+                exit;
+            }
+            if ($locker->eliminar()) {
+                $locker->validacionExito(3); 
+                exit;
+            }
+            //Aquí empieza el ajaxCristina
+        } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            
+            $busqueda = $_POST['ajaxCristina'] ?? '';
+            $resultados = Locker::buscarLockersParams($busqueda, $busqueda, $busqueda); 
+        
+            $router->render('lockers/lockers', [
+                'lockers' => $resultados
+            ]);
+
+        }
+    }
 }
+
+

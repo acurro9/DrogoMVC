@@ -164,6 +164,9 @@ $router->get('/actualizarEnvio', [EnvioController::class, 'actualizarEnvio']);
 $router->post('/actualizarEnvio', [EnvioController::class, 'actualizarEnvio']);
 $router->post('/borrarEnvio', [EnvioController::class, 'borrarEnvio']);
 
+
+$router->post('/locker', [LockersController::class, 'encontrarLocker']);
+
 /**
  * Comprueba y ejecuta las rutas definidas, asignando las funciones correspondientes del controlador.
  */

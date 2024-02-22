@@ -40,19 +40,18 @@
                     } else {
                         $auth->hashPass();
                         $resultado = $auth->crear();
-                        debuguear($resultado);
                         
-                        // if($resultado){
-                        //     // El usuario esta autenticado
-                        // session_start();
+                        if($resultado){
+                            // El usuario esta autenticado
+                        session_start();
  
-                        // // Se Llena el arreglo de la sesión
-                        // $_SESSION['usuario'] = $auth->username;
-                        // $_SESSION['login'] = true;
-                        // $_SESSION['tipo'] = $auth->tipo;
-                        // $_SESSION['id'] = $auth->buscarID($auth->username);
-                        //     header("Location: /registro2");
-                        // }
+                        // Se Llena el arreglo de la sesión
+                        $_SESSION['usuario'] = $auth->username;
+                        $_SESSION['login'] = true;
+                        $_SESSION['tipo'] = $auth->tipo;
+                        $_SESSION['id'] = $auth->buscarID($auth->username);
+                            header("Location: /registro2");
+                        }
                     }
                 }
             }

@@ -68,4 +68,15 @@ class PaginasController {
 
         ]);
     }
+
+    /**
+     * Muestra la página de los charts.
+     * 
+     * @param Router $router Instancia del router para renderizar la vista.
+     */
+    public static function verCharts( Router $router ) {
+        $router->render('admin/charts', [
+
+        ]);
+    }
 }

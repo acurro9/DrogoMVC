@@ -50,6 +50,7 @@
                                 <a href="/areaPersonalAdmin">Area Admin</a>
                                 <a href="/verContacto">Contacto</a>
                                 <a href="/newsletter">Newsletter</a>
+                                <a href="/charts">Gráficos</a>
                                 <!-- <a href="/bloquearUsuario">Bloquear Usuario</a> -->
                                 <a href="/logout">Cerrar Sesión</a>
                             </div>

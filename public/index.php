@@ -45,6 +45,7 @@ $router->get('/', [PaginasController::class, 'index']);
 $router->get('/nosotros', [PaginasController::class, 'equipo']);
 $router->get('/preguntasFrecuentes', [PaginasController::class, 'preguntasFrecuentes']);
 $router->get('/servicios', [PaginasController::class, 'servicios']);
+$router->get('/charts', [PaginasController::class, 'verCharts']);
 
 
 /**
@@ -163,6 +164,7 @@ $router->post('/crearEnvio', [EnvioController::class, 'crearEnvio']);
 $router->get('/actualizarEnvio', [EnvioController::class, 'actualizarEnvio']);
 $router->post('/actualizarEnvio', [EnvioController::class, 'actualizarEnvio']);
 $router->post('/borrarEnvio', [EnvioController::class, 'borrarEnvio']);
+
 
 
 $router->post('/locker', [LockersController::class, 'encontrarLocker']);

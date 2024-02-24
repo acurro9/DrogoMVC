@@ -2,31 +2,40 @@
 
 # Tabla de contenidos
 
-1. [Aviso importante](#aviso-importante)
-   1. [Leer la explicación de la base de datos](#leer-la-explicación-de-la-base-de-datos)
-2. [Descripción](#descripción)
-3. [Diagramas](#diagramas)
-   1. [Diagrama de casos de uso](#diagrama-de-casos-de-uso)
-   2. [Diagrama de clases](#diagrama-de-clases)
-   3. [Diagrama de entidad-relación](#diagrama-de-entidad-relación)
-4. [Estructura del Proyecto](#estructura-del-proyecto)
-   1. [Estructura general](#estructura-general)
-   2. [Controllers](#controllers)
-   3. [Includes](#includes)
-   4. [Models](#models)
-   5. [Public](#public)
-   6. [Views](#views)
-5. [Instrucciones de Uso](#instrucciones-de-uso)
-   1. [Requisitos Previos](#requisitos-previos)
-   2. [Configuración de la Base de Datos](#configuración-de-la-base-de-datos)
-   3. [Explicación de la Base de Datos](#explicación-de-la-base-de-datos)
-   4. [Registro y Login](#registro-y-login)
-   5. [Sección de Admin](#sección-de-admin)
-   6. [Crud Lockers](#crud-lockers)
-   7. [Crud Usuarios](#crud-usuarios)
-   8. [Crud Pedidos](#crud-pedidos)
-6. [Autoría](#autoría)
-7. [Licencia](#licencia)
+- [Proyecto Drogo (PHP)](#proyecto-drogo-php)
+- [Tabla de contenidos](#tabla-de-contenidos)
+- [Aviso importante](#aviso-importante)
+  - [Descripción](#descripción)
+  - [Diagramas](#diagramas)
+    - [Diagrama de casos de uso](#diagrama-de-casos-de-uso)
+    - [Diagrama de clases](#diagrama-de-clases)
+    - [Diagrama de entidad-relación](#diagrama-de-entidad-relación)
+  - [Estructura del proyecto](#estructura-del-proyecto)
+    - [Estructura general](#estructura-general)
+      - [Controllers](#controllers)
+      - [Includes](#includes)
+      - [Models](#models)
+      - [Descripción General de los modelos específicos](#descripción-general-de-los-modelos-específicos)
+        - [Diferencias Clave](#diferencias-clave)
+      - [Public](#public)
+      - [Views](#views)
+    - [Páginas generales](#páginas-generales)
+    - [Auth: registro y login](#auth-registro-y-login)
+    - [Sección de admin](#sección-de-admin)
+    - [Crud lockers](#crud-lockers)
+    - [Crud Usuarios](#crud-usuarios)
+    - [Crud pedidos](#crud-pedidos)
+    - [Añadidos](#añadidos)
+      - [AJAX](#ajax)
+      - [Google Charts](#google-charts)
+  - [Instrucciones de Uso](#instrucciones-de-uso)
+    - [Requisitos Previos:](#requisitos-previos)
+    - [Configuración de la Base de Datos:](#configuración-de-la-base-de-datos)
+    - [Explicación de la base de datos](#explicación-de-la-base-de-datos)
+      - [Usuarios](#usuarios)
+      - [Pedidos](#pedidos)
+  - [Autoría](#autoría)
+  - [Licencia](#licencia)
 
 # Aviso importante
 
@@ -209,6 +218,18 @@ La subdivisión de las vistas se realiza en función de los siguientes apartados
 - actualizarEnvio.php: se utiliza para la actualización de envíos en el sistema, es decir, de pedidos con distribución
 
 - actualizarPedido.php: se utiliza para la actualización de pedidos en el sistema, es decir, de pedidos sin distribución
+
+### Añadidos
+
+Se ha añadido tanto AJAX como el consumo a la API de Google Charts.
+
+#### AJAX
+
+AJAX se encuentra tanto en la tabla de usuario como de lockers, ambas solo accesibles por el administrador. En usuarios te permite hacer una busqueda en tiempo real tanto por nombre de usuario como por correo electrónico. En la tabla de lockers te permite realizar la busqueda en tiempo real por cada uno de sus campos.
+
+#### Google Charts
+
+El consumo de la API de Google Charts se realiza en /charts. EL script de javascript para esto se encuentra en /public/build/js/googleCharts.js y el controlador para la página se encuentra en PáginasController.
 
 ## Instrucciones de Uso
 

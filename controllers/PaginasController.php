@@ -76,15 +76,28 @@ class PaginasController {
      * 
      * @param Router $router Instancia del router para renderizar la vista.
      */
-    public static function verCharts( Router $router ) {
-        $usuarios = Usuario::obtenerNombresTipo('Comprador');
+
+    public static function verCharts(Router $router) {
+        // Obtención de usuarios compradores
+        $usuariosCompradores = Usuario::obtenerNombresTipo('Comprador');
         $datosComprador = [];
-        foreach($usuarios as $usuario){
+        foreach($usuariosCompradores as $usuario){
             $datosComprador[] = [$usuario->username, Pedido::obtenerPedidos($usuario->id, 'hash_comprador')];
         }
-
+    
+        // Obtención de usuarios vendedores
+        $usuariosVendedores = Usuario::obtenerNombresTipo('Vendedor');
+        $datosVendedor = [];
+        foreach($usuariosVendedores as $usuario){
+            $datosVendedor[] = [$usuario->username, Pedido::obtenerPedidos($usuario->id, 'hash_vendedor')];
+        }
+    
+        // Renderizado de la vista con los datos de compradores y vendedores
         $router->render('admin/charts', [
-            'datosComprador' => $datosComprador
+            
+            'datosComprador' => $datosComprador,
+            'datosVendedor' => $datosVendedor
         ]);
     }
+    
 }

@@ -727,11 +727,43 @@ class Usuario extends ActiveRecord {
         return self::$errores;    
     }
 
+     /**
+     * Valida los datos proporcionados para la actualización de un usuario.
+     * 
+     * Verifica que los campos necesarios para actualizar un usuario estén presentes y sean válidos.
+     * 
+     * @param string Nombre o email del usuario.
+     * @return array Retorna un array de errores si los hay.
+     */
+
     public static function obtenerUsuariosAjax($param){
         // $query = "SELECT * FROM " . static::$tabla . " WHERE username like '%{$param}%' or email like '%{$param}%' EXCEPT
         // SELECT * FROM usuario WHERE username = 'admin';";
         $query = "SELECT * FROM " . static::$tabla . " WHERE username like '{$param}%' or email like '{$param}%' EXCEPT
         SELECT * FROM usuario WHERE username = 'admin';";
         return self::consultarSQL($query);
+    }
+
+    /**
+     * Obtiene los nombres y IDs de todos los usuarios.
+     * 
+     * Realiza una consulta a la base de datos para obtener el ID y el nombre de usuario
+     * de todos los usuarios registrados.
+     * 
+     * @param string Tipo del usuario a buscar.
+     * @return array Retorna un array con el ID y el nombre de usuario de todos los usuarios.
+     * @throws Exception Si ocurre un error durante la consulta.
+     */
+    public static function obtenerNombresTipo($tipo){
+        try{
+            self::contarUsuarios();
+            $query = "SELECT id, username FROM usuario where tipo like '{$tipo}'";
+            $resultado = self::consultarSQL($query);
+            return $resultado;
+        }catch(Exception $e){
+            echo 'Error: ', $e->getMessage(), "\n";
+            return [];
+        }
+        
     }
 }

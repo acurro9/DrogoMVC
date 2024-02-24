@@ -433,6 +433,24 @@
             //Devuelve el arreglo de errores
             return self::$errores;    
         }
+
+        /**
+         * Obtiene el contador de pedidos para un usuario en concreto.
+         *
+         * @return array Retorna un array de objetos Pedido.
+         */
+
+         public static function obtenerPedidos($usuario, $hash) {
+            try{
+                $query = "SELECT count(*) as total FROM pedido where $hash like '{$usuario}'";
+                $resultado = self::$db->query($query);
+                $fila = $resultado->fetch();
+                return $fila['total'];
+            }catch(Exception $e){
+                echo 'Error: ', $e->getMessage(), "\n";
+                return [];
+            }
+        }
     }
 
     

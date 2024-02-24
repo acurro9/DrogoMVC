@@ -2,6 +2,8 @@
 
 namespace Controllers;
 use MVC\Router;
+use Model\Usuario;
+use Model\Pedido;
 
 /**
  * Controlador para gestionar el renderizado de páginas estáticas.
@@ -75,8 +77,14 @@ class PaginasController {
      * @param Router $router Instancia del router para renderizar la vista.
      */
     public static function verCharts( Router $router ) {
-        $router->render('admin/charts', [
+        $usuarios = Usuario::obtenerNombresTipo('Comprador');
+        $datosComprador = [];
+        foreach($usuarios as $usuario){
+            $datosComprador[] = [$usuario->username, Pedido::obtenerPedidos($usuario->id, 'hash_comprador')];
+        }
 
+        $router->render('admin/charts', [
+            'datosComprador' => $datosComprador
         ]);
     }
 }

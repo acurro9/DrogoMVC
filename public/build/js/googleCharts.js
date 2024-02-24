@@ -12,16 +12,20 @@ google.charts.setOnLoadCallback(drawChart);
 function drawChart() {
   // Create the data table.
   var data = new google.visualization.DataTable();
-  data.addColumn("string", "Navegadores");
-  data.addColumn("number", "Slices");
+  data.addColumn("string", "Comnpradores");
+  data.addColumn("number", "Pedidos");
 
-  data.addRows([["nombre", 1]]);
+  // Create pie chart
+  datosComp.forEach((comprador) => {
+    data.addRow(comprador);
+  });
 
   // Set chart options
   var options = {
-    title: "% de navegadores",
-    width: 400,
-    height: 300,
+    title: "Pedidos por compador",
+    width: 500,
+    height: 400,
+    is3D: true,
   };
 
   // Instantiate and draw our chart, passing in some options.
